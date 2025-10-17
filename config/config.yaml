@@ -1,0 +1,50 @@
+# Network Configuration
+network:
+  name: "avalanche"
+  rpc_url: "${AVAX_RPC_URL}"
+  chain_id: 43114
+  gas_price_gwei: 25
+  max_gas_price_gwei: 100
+
+# Blackhole DEX Configuration
+blackhole:
+  router_address: "${BLACKHOLE_ROUTER_ADDRESS}"
+  staking_address: "${BLACKHOLE_STAKING_ADDRESS}"
+  factory_address: "${BLACKHOLE_FACTORY_ADDRESS}"
+
+# Strategy Configuration
+strategy:
+  # Type: "concentrated_follower", "multi_position", "multi_pool"
+  type: "concentrated_follower"
+  
+  # Rebalancing
+  rebalance_threshold: 0.05  # Rebalance when price moves 5% from center
+  min_rebalance_interval_hours: 1  # Minimum time between rebalances
+  
+  # Position sizing
+  position_concentration: 0.5  # 0-1, higher = more concentrated around price
+  min_tick_range: 50  # Minimum tick range for positions
+  max_tick_range: 1000  # Maximum tick range
+  
+  # Gas management
+  max_gas_cost_ratio: 0.02  # Max 2% of position value
+  gas_buffer_multiplier: 1.2  # 20% buffer on gas estimates
+
+# Risk Management
+risk:
+  max_position_size_usd: 10000
+  max_positions_per_pool: 5
+  max_slippage: 0.005  # 0.5%
+  emergency_exit_threshold: 0.30  # Exit if price moves 30% suddenly
+
+# Data Collection
+data:
+  price_update_interval_seconds: 60
+  historical_data_days: 30
+  volatility_window_hours: 24
+
+# Logging
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR
+  file: "logs/optimizer.log"
+  console: true
