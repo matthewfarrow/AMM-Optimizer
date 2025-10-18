@@ -9,7 +9,7 @@ from ..utils.config import get_config
 from ..utils.math import get_tick_range, tick_to_price
 from ..data.price_data import get_price_collector
 from ..optimizer.liquidity_optimizer import get_optimizer
-from ..dex.blackhole import get_blackhole_dex
+from ..dex.uniswap import get_uniswap_v3
 
 
 class MultiPositionStrategy(BaseStrategy):
@@ -35,7 +35,7 @@ class MultiPositionStrategy(BaseStrategy):
         self.config = get_config()
         self.price_collector = get_price_collector()
         self.optimizer = get_optimizer()
-        self.dex = get_blackhole_dex()
+        self.dex = get_uniswap_v3()
         
         self.positions = []
         self.last_rebalance_times = {}

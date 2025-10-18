@@ -209,29 +209,27 @@ class LiquidityOptimizer:
         Estimate cost of rebalancing in USD.
         
         Rebalancing involves:
-        1. Unstake (if staked)
-        2. Remove liquidity
-        3. Collect fees
-        4. Add liquidity
-        5. Stake (if staking)
+        1. Remove liquidity
+        2. Collect fees
+        3. Add liquidity
         
         Returns:
             Estimated cost in USD
         """
-        # Rough estimate: 5 transactions @ 25 gwei, 500k gas each
-        # TODO: Use actual gas prices and estimates
+        # Base has very low gas fees compared to Ethereum/Avalanche
+        # Rough estimate: 3 transactions @ 0.1 gwei, 500k gas each
         
-        gas_price_gwei = self.config.get('network.gas_price_gwei', 25)
-        num_transactions = 5
+        gas_price_gwei = self.config.get('network.gas_price_gwei', 0.1)
+        num_transactions = 3
         gas_per_tx = 500_000
         
         total_gas = num_transactions * gas_per_tx
-        total_cost_avax = (total_gas * gas_price_gwei) / 1e9
+        total_cost_eth = (total_gas * gas_price_gwei) / 1e9
         
-        # TODO: Get actual AVAX price
-        avax_price_usd = 30.0  # Placeholder
+        # TODO: Get actual ETH price
+        eth_price_usd = 2500.0  # Placeholder
         
-        return total_cost_avax * avax_price_usd
+        return total_cost_eth * eth_price_usd
     
     def _calculate_target_duration(
         self,

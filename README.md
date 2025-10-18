@@ -1,10 +1,10 @@
 # AMM Liquidity Provider Optimizer
 
-Automated liquidity provision optimizer for Blackhole DEX on Avalanche.
+Automated liquidity provision optimizer for Uniswap V3 on Base Network.
 
 ## Features
 
-- **Automated Position Management**: Automatically close, unstake, and rebalance LP positions
+- **Automated Position Management**: Automatically close and rebalance Uniswap V3 LP positions
 - **Concentrated Liquidity Optimization**: Calculate optimal price bounds based on volatility and profitability
 - **Multiple Strategy Support**:
   - Single hyper-concentrated position that follows price
@@ -21,7 +21,7 @@ AMM-Optimizer/
 │   ├── config.yaml        # Main configuration
 │   └── pools.yaml         # Pool configurations
 ├── src/
-│   ├── dex/               # Blackhole DEX interface
+│   ├── dex/               # Uniswap V3 interface
 │   ├── data/              # Price data collection and storage
 │   ├── optimizer/         # Optimization algorithms
 │   ├── strategies/        # LP strategies
@@ -44,19 +44,19 @@ pip install -r requirements.txt
 
 3. Set your private key in environment variable:
 ```bash
-export AVAX_PRIVATE_KEY="your_private_key"
+export BASE_PRIVATE_KEY="your_private_key"
 ```
 
 ## Usage
 
 ### Backtesting
 ```bash
-python scripts/backtest.py --strategy concentrated --pool AVAX-USDC
+python scripts/backtest.py --strategy concentrated --pool WETH-USDC
 ```
 
 ### Live Trading
 ```bash
-python scripts/run_optimizer.py --strategy concentrated --pool AVAX-USDC
+python scripts/run_optimizer.py --strategy concentrated --pool WETH-USDC
 ```
 
 ## Strategies

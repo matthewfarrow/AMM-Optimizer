@@ -1,51 +1,63 @@
-# Pool Configurations
+# Pool Configurations for Uniswap V3 on Base
 # Add pools you want to provide liquidity to
 
 pools:
-  - name: "AVAX-USDC"
-    address: "0x..."  # Update with actual pool address
-    token0: "WAVAX"
+  - name: "WETH-USDC"
+    address: "0xd0b53D9277642d899DF5C87A3966A349A798F224"  # Uniswap V3 Pool on Base
+    token0: "WETH"
     token1: "USDC"
-    token0_address: "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
-    token1_address: "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E"
-    fee_tier: 3000  # 0.3%
+    token0_address: "0x4200000000000000000000000000000000000006"  # WETH on Base
+    token1_address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"  # USDC on Base
+    fee_tier: 500  # 0.05%
     decimals0: 18
     decimals1: 6
     priority: 1  # Higher = allocate more capital
     enabled: true
     
-  - name: "AVAX-USDT"
-    address: "0x..."
-    token0: "WAVAX"
-    token1: "USDT"
-    token0_address: "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
-    token1_address: "0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7"
-    fee_tier: 3000
+  - name: "WETH-USDbC"
+    address: "0x4C36388bE6F416A29C8d8Eee81C771cE6bE14B18"  # USDbC pool
+    token0: "WETH"
+    token1: "USDbC"
+    token0_address: "0x4200000000000000000000000000000000000006"
+    token1_address: "0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA"  # USDbC (Bridged USDC)
+    fee_tier: 500
     decimals0: 18
     decimals1: 6
     priority: 2
     enabled: true
     
-  - name: "AVAX-BTC.b"
-    address: "0x..."
-    token0: "WAVAX"
-    token1: "BTC.b"
-    token0_address: "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
-    token1_address: "0x152b9d0FdC40C096757F570A51E494bd4b943E50"
-    fee_tier: 3000
+  - name: "WETH-DAI"
+    address: "0x..."  # Update with actual pool address
+    token0: "WETH"
+    token1: "DAI"
+    token0_address: "0x4200000000000000000000000000000000000006"
+    token1_address: "0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb"  # DAI on Base
+    fee_tier: 500
     decimals0: 18
-    decimals1: 8
+    decimals1: 18
     priority: 3
     enabled: false
     
-  - name: "USDC-USDT"
-    address: "0x..."
+  - name: "WETH-cbBTC"
+    address: "0x..."  # Update with actual pool address
+    token0: "WETH"
+    token1: "cbBTC"
+    token0_address: "0x4200000000000000000000000000000000000006"
+    token1_address: "0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf"  # Coinbase Wrapped BTC
+    fee_tier: 3000  # 0.3% for more volatile pairs
+    decimals0: 18
+    decimals1: 8
+    priority: 4
+    enabled: false
+    
+  - name: "USDC-USDbC"
+    address: "0x..."  # Update with actual pool address
     token0: "USDC"
-    token1: "USDT"
-    token0_address: "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E"
-    token1_address: "0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7"
-    fee_tier: 500  # 0.05% for stablecoin pairs
+    token1: "USDbC"
+    token0_address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"
+    token1_address: "0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA"
+    fee_tier: 100  # 0.01% for stablecoin pairs
     decimals0: 6
     decimals1: 6
-    priority: 4
+    priority: 5
     enabled: false

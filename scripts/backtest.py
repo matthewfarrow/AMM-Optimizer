@@ -14,7 +14,7 @@ from src.utils.config import get_config
 
 def parse_args():
     """Parse command line arguments."""
-    parser = argparse.ArgumentParser(description='Backtest LP Strategies')
+    parser = argparse.ArgumentParser(description='Backtest LP Strategies on Base Network')
     
     parser.add_argument(
         '--strategy',
@@ -28,7 +28,7 @@ def parse_args():
         '--pool',
         type=str,
         required=True,
-        help='Pool name (e.g., AVAX-USDC)'
+        help='Pool name (e.g., WETH-USDC)'
     )
     
     parser.add_argument(

@@ -81,20 +81,20 @@ class Config:
     @property
     def private_key(self) -> str:
         """Get private key from environment."""
-        key = os.getenv('AVAX_PRIVATE_KEY')
+        key = os.getenv('BASE_PRIVATE_KEY')
         if not key:
-            raise ValueError("AVAX_PRIVATE_KEY not set in environment")
+            raise ValueError("BASE_PRIVATE_KEY not set in environment")
         return key
     
     @property
     def rpc_url(self) -> str:
         """Get RPC URL."""
-        return self.get('network.rpc_url', 'https://api.avax.network/ext/bc/C/rpc')
+        return self.get('network.rpc_url', 'https://mainnet.base.org')
     
     @property
     def chain_id(self) -> int:
         """Get chain ID."""
-        return self.get('network.chain_id', 43114)
+        return self.get('network.chain_id', 8453)
 
 
 # Global config instance

@@ -8,7 +8,7 @@ from ..utils.logger import log
 from ..utils.config import get_config
 from ..data.price_data import get_price_collector
 from ..optimizer.liquidity_optimizer import get_optimizer
-from ..dex.blackhole import get_blackhole_dex
+from ..dex.uniswap import get_uniswap_v3
 
 
 class ConcentratedFollowerStrategy(BaseStrategy):
@@ -26,7 +26,7 @@ class ConcentratedFollowerStrategy(BaseStrategy):
         self.config = get_config()
         self.price_collector = get_price_collector()
         self.optimizer = get_optimizer()
-        self.dex = get_blackhole_dex()
+        self.dex = get_uniswap_v3()
         
         self.current_position = None
         self.last_rebalance_time = 0
@@ -205,7 +205,7 @@ class ConcentratedFollowerStrategy(BaseStrategy):
                 return []
         
         except NotImplementedError:
-            log.warning("DEX interface not implemented yet - simulating success")
+            log.warning("Uniswap V3 interface not fully implemented yet - simulating success")
             return ['0xsimulated']
     
     def _rebalance_position(self, analysis: Dict[str, Any]) -> List[str]:
@@ -237,5 +237,5 @@ class ConcentratedFollowerStrategy(BaseStrategy):
             return [close_tx, open_tx]
         
         except NotImplementedError:
-            log.warning("DEX interface not implemented yet - simulating success")
+            log.warning("Uniswap V3 interface not fully implemented yet - simulating success")
             return ['0xsimulated_close', '0xsimulated_open']

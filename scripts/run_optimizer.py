@@ -17,7 +17,7 @@ from src.strategies.multi_position import MultiPositionStrategy
 
 def parse_args():
     """Parse command line arguments."""
-    parser = argparse.ArgumentParser(description='AMM Liquidity Optimizer')
+    parser = argparse.ArgumentParser(description='AMM Liquidity Optimizer for Base Network')
     
     parser.add_argument(
         '--strategy',
@@ -31,7 +31,7 @@ def parse_args():
         '--pool',
         type=str,
         required=True,
-        help='Pool name (e.g., AVAX-USDC)'
+        help='Pool name (e.g., WETH-USDC)'
     )
     
     parser.add_argument(

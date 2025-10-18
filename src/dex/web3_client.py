@@ -1,5 +1,5 @@
 """
-Web3 connection and transaction management.
+Web3 connection and transaction management for Base Network.
 """
 from typing import Optional, Dict, Any
 from web3 import Web3
@@ -10,7 +10,7 @@ from ..utils.logger import log
 
 
 class Web3Client:
-    """Web3 client for Avalanche network."""
+    """Web3 client for Base network."""
     
     def __init__(self, rpc_url: Optional[str] = None, private_key: Optional[str] = None):
         """
@@ -29,7 +29,7 @@ class Web3Client:
         # Initialize Web3
         self.w3 = Web3(Web3.HTTPProvider(self.rpc_url))
         
-        # Add POA middleware for Avalanche C-Chain
+        # Base is EVM-compatible, may need POA middleware
         self.w3.middleware_onion.inject(geth_poa_middleware, layer=0)
         
         # Set up account
@@ -42,17 +42,17 @@ class Web3Client:
         if not self.w3.is_connected():
             raise ConnectionError(f"Cannot connect to RPC: {self.rpc_url}")
         
-        log.info(f"Connected to Avalanche C-Chain (Chain ID: {self.chain_id})")
+        log.info(f"Connected to Base Network (Chain ID: {self.chain_id})")
     
     def get_balance(self, address: Optional[str] = None) -> float:
         """
-        Get AVAX balance.
+        Get ETH balance on Base.
         
         Args:
             address: Address to check (defaults to wallet address)
         
         Returns:
-            Balance in AVAX
+            Balance in ETH
         """
         addr = address or self.address
         balance_wei = self.w3.eth.get_balance(addr)

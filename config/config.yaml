@@ -1,16 +1,17 @@
 # Network Configuration
 network:
-  name: "avalanche"
-  rpc_url: "${AVAX_RPC_URL}"
-  chain_id: 43114
-  gas_price_gwei: 25
-  max_gas_price_gwei: 100
+  name: "base"
+  rpc_url: "${BASE_RPC_URL}"
+  chain_id: 8453
+  gas_price_gwei: 0.1  # Base has low gas fees
+  max_gas_price_gwei: 1.0
 
-# Blackhole DEX Configuration
-blackhole:
-  router_address: "${BLACKHOLE_ROUTER_ADDRESS}"
-  staking_address: "${BLACKHOLE_STAKING_ADDRESS}"
-  factory_address: "${BLACKHOLE_FACTORY_ADDRESS}"
+# Uniswap V3 Configuration
+uniswap:
+  factory_address: "${UNISWAP_V3_FACTORY}"
+  router_address: "${UNISWAP_V3_ROUTER}"
+  position_manager_address: "${UNISWAP_V3_POSITION_MANAGER}"
+  quoter_address: "${UNISWAP_V3_QUOTER}"
 
 # Strategy Configuration
 strategy:

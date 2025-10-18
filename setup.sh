@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Setup script for AMM Optimizer
+# Setup script for AMM Optimizer (Base Network + Uniswap V3)
 
-echo "Setting up AMM Optimizer..."
+echo "Setting up AMM Optimizer for Base Network..."
 
 # Create virtual environment
 echo "Creating virtual environment..."
@@ -36,10 +36,9 @@ echo "Setup complete!"
 echo ""
 echo "Next steps:"
 echo "1. Edit .env file with your private key and RPC URL"
-echo "2. Edit config/pools.yaml with actual pool addresses"
-echo "3. Update src/dex/blackhole.py with actual Blackhole DEX ABIs"
-echo "4. Run examples: python scripts/examples.py"
-echo "5. Run optimizer: python scripts/run_optimizer.py --pool AVAX-USDC --capital 1000"
+echo "2. Pools are pre-configured for Uniswap V3 on Base in config/pools.yaml"
+echo "3. Run examples: python scripts/examples.py"
+echo "4. Run optimizer: python scripts/run_optimizer.py --pool WETH-USDC --capital 1000"
 echo ""
 echo "To activate the virtual environment in the future:"
 echo "  source venv/bin/activate"
