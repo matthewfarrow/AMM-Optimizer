@@ -50,7 +50,9 @@ class Config:
         
         def replacer(match):
             var_name = match.group(1)
-            return os.getenv(var_name, match.group(0))
+            value = os.getenv(var_name, match.group(0))
+            # Don't quote the value - let YAML parser handle type conversion
+            return value
         
         return re.sub(pattern, replacer, content)
     
@@ -63,6 +65,15 @@ class Config:
             if isinstance(value, dict) and k in value:
                 value = value[k]
             else:
+                # Also try direct environment variable for backwards compatibility
+                env_key = f"{keys[0].upper()}_{keys[1].upper()}" if len(keys) == 2 else key.upper().replace('.', '_')
+                env_value = os.getenv(env_key)
+                if env_value:
+                    # Try to convert to int if it looks like a number
+                    try:
+                        return int(env_value)
+                    except (ValueError, TypeError):
+                        return env_value
                 return default
         
         return value

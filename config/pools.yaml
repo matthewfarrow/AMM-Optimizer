@@ -2,12 +2,13 @@
 # Add pools you want to provide liquidity to
 
 pools:
+  # Base Sepolia Testnet Pools
   - name: "WETH-USDC"
-    address: "0xd0b53D9277642d899DF5C87A3966A349A798F224"  # Uniswap V3 Pool on Base
+    address: "0x94bfc0574FF48E92cE43d495376C477B1d0EEeC0"  # Uniswap V3 on Base Sepolia
     token0: "WETH"
     token1: "USDC"
-    token0_address: "0x4200000000000000000000000000000000000006"  # WETH on Base
-    token1_address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"  # USDC on Base
+    token0_address: "0x4200000000000000000000000000000000000006"  # WETH on Base Sepolia
+    token1_address: "0x036CbD53842c5426634e7929541eC2318f3dCF7e"  # USDC on Base Sepolia
     fee_tier: 500  # 0.05%
     decimals0: 18
     decimals1: 6

@@ -2,7 +2,7 @@
 network:
   name: "base"
   rpc_url: "${BASE_RPC_URL}"
-  chain_id: 8453
+  chain_id: ${BASE_CHAIN_ID}
   gas_price_gwei: 0.1  # Base has low gas fees
   max_gas_price_gwei: 1.0
 
