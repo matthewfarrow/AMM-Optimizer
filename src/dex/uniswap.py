@@ -207,7 +207,8 @@ class UniswapV3:
         token0_address: str,
         token1_address: str,
         fee: int,
-        deadline: Optional[int] = None
+        deadline: Optional[int] = None,
+        dry_run: bool = False
     ) -> Dict[str, Any]:
         """
         Add liquidity to a pool (mint new position).
@@ -278,6 +279,19 @@ class UniswapV3:
             'gasPrice': self.w3.eth.gas_price
         })
         
+        if dry_run:
+            logger.info("🔍 DRY RUN - Would mint position with parameters:")
+            logger.info(f"  Token0: {token0_amount} wei")
+            logger.info(f"  Token1: {token1_amount} wei")
+            logger.info(f"  Tick range: [{tick_lower}, {tick_upper}]")
+            logger.info("✅ Dry run complete - no transaction sent")
+            return {
+                'success': True,
+                'dry_run': True,
+                'tx_hash': 'dry-run-no-tx',
+                'receipt': None
+            }
+        
         # Sign and send
         signed_tx = self.w3.eth.account.sign_transaction(tx, self.web3_client.private_key)
         tx_hash = self.w3.eth.send_raw_transaction(signed_tx.rawTransaction)
@@ -307,7 +321,8 @@ class UniswapV3:
         self,
         token_id: int,
         liquidity_percent: float = 1.0,
-        deadline: Optional[int] = None
+        deadline: Optional[int] = None,
+        dry_run: bool = False
     ) -> Dict[str, Any]:
         """
         Remove liquidity from an existing position.
@@ -353,6 +368,20 @@ class UniswapV3:
             'gas': 300000,
             'gasPrice': self.w3.eth.gas_price
         })
+        
+        if dry_run:
+            logger.info("🔍 DRY RUN - Would remove liquidity with parameters:")
+            logger.info(f"  Token ID: {token_id}")
+            logger.info(f"  Liquidity to remove: {liquidity_to_remove}")
+            logger.info("✅ Dry run complete - no transaction sent")
+            return {
+                'success': True,
+                'dry_run': True,
+                'tx_hash': 'dry-run-no-tx',
+                'receipt': None,
+                'amount0': 0,
+                'amount1': 0
+            }
         
         # Sign and send
         signed_tx = self.w3.eth.account.sign_transaction(tx, self.web3_client.private_key)
@@ -452,6 +481,54 @@ class UniswapV3:
         
         logger.info(f"Found {len(positions)} positions")
         return positions
+    
+    def swap_tokens(
+        self,
+        token_in: str,
+        token_out: str,
+        amount_in: float,
+        fee_tier: str = 'medium',
+        slippage: float = 1.0,
+        dry_run: bool = False
+    ) -> dict:
+        """
+        Swap tokens using Uniswap V3 router.
+        
+        Args:
+            token_in: Symbol of input token (e.g., 'USDC', 'WETH')
+            token_out: Symbol of output token (e.g., 'WETH', 'USDC')
+            amount_in: Amount of input token to swap
+            fee_tier: Fee tier ('lowest', 'low', 'medium', 'high')
+            slippage: Maximum slippage tolerance in percent
+            dry_run: If True, simulate without executing
+            
+        Returns:
+            Dict with swap result
+        """
+        # Import here to avoid circular imports
+        from scripts.swap_tokens import swap_tokens as do_swap
+        
+        logger.info(f"Swapping {amount_in} {token_in} for {token_out} (dry_run: {dry_run})")
+        
+        try:
+            # Call the existing swap function
+            result = do_swap(
+                token_in=token_in,
+                token_out=token_out,
+                amount_in=amount_in,
+                fee_tier=fee_tier,
+                slippage=slippage,
+                dry_run=dry_run
+            )
+            
+            if result is None:
+                return {'success': False, 'error': 'Swap failed - check logs'}
+            
+            return {'success': True, 'result': result}
+            
+        except Exception as e:
+            logger.error(f"Swap error: {e}")
+            return {'success': False, 'error': str(e)}
 
 
 # Singleton instance
