@@ -10,12 +10,13 @@ from src.utils.config import get_config
 from src.utils.logger import log
 from web3 import Web3
 
-# Common testnet tokens on Base Sepolia
+# Common tokens on Base Mainnet
 TESTNET_TOKENS = {
     'WETH': '0x4200000000000000000000000000000000000006',  # Wrapped ETH
-    'USDC': '0x036CbD53842c5426634e7929541eC2318f3dCF7e',  # Test USDC
-    'DAI': '0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb',   # Test DAI (if exists)
-    'USDT': '0xf08A50178dfcDe18524640EA6618a1f965821715',  # Test USDT (if exists)
+    'USDC': '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',  # USDC
+    'DAI': '0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb',   # DAI
+    'USDbC': '0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA', # USD Base Coin
+    'cbETH': '0x2Ae3F1Ec7F1F5012CFEab0185bfc7aa3cf0DEc22', # Coinbase Wrapped Staked ETH
 }
 
 # Fee tiers
@@ -37,8 +38,8 @@ FACTORY_ABI = [
 
 
 def find_pools():
-    """Find available Uniswap V3 pools on testnet."""
-    log.info("Finding Uniswap V3 pools on Base Sepolia testnet...")
+    """Find available Uniswap V3 pools on Base mainnet."""
+    log.info("Finding Uniswap V3 pools on Base Mainnet...")
     
     config = get_config()
     client = get_web3_client()
@@ -57,10 +58,11 @@ def find_pools():
     # Try all token pairs
     token_pairs = [
         ('WETH', 'USDC'),
+        ('WETH', 'USDbC'),
         ('WETH', 'DAI'),
-        ('WETH', 'USDT'),
+        ('WETH', 'cbETH'),
+        ('USDC', 'USDbC'),
         ('USDC', 'DAI'),
-        ('USDC', 'USDT'),
     ]
     
     for token0_name, token1_name in token_pairs:
