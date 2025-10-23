@@ -5,9 +5,9 @@ import { useAccount } from 'wagmi';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { AlertTriangle, TrendingUp, Shield, Zap, BarChart3, Target, Sparkles } from 'lucide-react';
+import { AlertTriangle, Zap, BarChart3, Target, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 

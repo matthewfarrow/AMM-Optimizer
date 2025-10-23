@@ -12,8 +12,8 @@ import { apiClient } from '@/lib/api';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useTokenBalance, useETHBalance } from '@/hooks/useTokenBalance';
 import { TOKEN_ADDRESSES, getTokenAddress, UNISWAP_V3_ADDRESSES, NONFUNGIBLE_POSITION_MANAGER_ABI, ERC20_ABI, POOL_ABI, calculateSlippage } from '@/lib/contracts';
-import { TickMath, Position, Pool, Token, FeeAmount } from '@uniswap/v3-sdk';
-import { Token as UniswapToken } from '@uniswap/sdk-core';
+// import { TickMath, Position, Token, FeeAmount } from '@uniswap/v3-sdk';
+// import { Token as UniswapToken } from '@uniswap/sdk-core';
 import { useWriteContract, useWaitForTransactionReceipt, useReadContract } from 'wagmi';
 import { parseUnits, formatUnits } from 'viem';
 import JSBI from 'jsbi';
@@ -98,9 +98,9 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
         apiClient.getStrategyRecommendations(pool.address, 1000, 'medium')
       ]);
       
-      setPriceData(priceResponse.data || []);
-      setVolatilityData(volatilityResponse);
-      setRecommendations(recommendationsResponse);
+      setPriceData((priceResponse as any).data || []);
+      setVolatilityData(volatilityResponse as any);
+      setRecommendations(recommendationsResponse as any);
     } catch (error) {
       console.error('Error fetching analytics:', error);
     } finally {
@@ -116,7 +116,7 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
         checkInterval,
         timeframe
       );
-      setOutOfRangeData(response);
+      setOutOfRangeData(response as any);
     } catch (error) {
       console.error('Error fetching out of range probability:', error);
     }
@@ -126,19 +126,19 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
   const calculateTokenAmounts = useMemo(() => {
     console.log('🔄 calculateTokenAmounts called:', {
       pool: pool?.address,
-      currentPrice: volatilityData?.current_price,
+      currentPrice: (volatilityData as any)?.current_price,
       amount0,
       amount1,
       tickRange
     });
 
-    if (!volatilityData?.current_price || (!amount0 && !amount1)) {
+    if (!(volatilityData as any)?.current_price || (!amount0 && !amount1)) {
       console.log('❌ Missing required data for calculation');
       return { amount0: '', amount1: '' };
     }
 
     try {
-      const currentPrice = volatilityData.current_price;
+      const currentPrice = (volatilityData as any).current_price;
       console.log('💰 Current price:', currentPrice);
       
       // Simple tick calculation - avoid complex SDK calls that cause errors
@@ -205,15 +205,15 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
 
   // Allocation functions
   const handleAllocation = (percentage: number) => {
-    const totalValue = parseFloat(token0Balance.formatted) * (volatilityData?.current_price || 0) + 
-                      parseFloat(token1Balance.formatted);
+    const totalValue = parseFloat(token0Balance.formatted) * ((volatilityData as any)?.current_price || 0) + 
+                       parseFloat(token1Balance.formatted);
     const targetValue = (totalValue * percentage) / 100;
     
-    if (volatilityData?.current_price) {
+    if ((volatilityData as any)?.current_price) {
       const amount0Value = targetValue / 2;
       const amount1Value = targetValue / 2;
       
-      setAmount0((amount0Value / volatilityData.current_price).toFixed(6));
+      setAmount0((amount0Value / (volatilityData as any).current_price).toFixed(6));
       setAmount1(amount1Value.toFixed(6));
     }
   };
@@ -253,14 +253,14 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
   const createPosition = useCallback(async () => {
     console.log('🚀 createPosition called:', {
       address,
-      currentPrice: volatilityData?.current_price,
+      currentPrice: (volatilityData as any)?.current_price,
       amount0,
       amount1,
       pool: pool?.address
     });
 
-    if (!address || !volatilityData?.current_price) {
-      console.error('❌ Missing required data:', { address, currentPrice: volatilityData?.current_price });
+    if (!address || !(volatilityData as any)?.current_price) {
+      console.error('❌ Missing required data:', { address, currentPrice: (volatilityData as any)?.current_price });
       toast.error('Missing required data');
       return;
     }
@@ -342,13 +342,13 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
             abi: NONFUNGIBLE_POSITION_MANAGER_ABI,
             functionName: 'mint',
             args: [mintParams],
-            value: 0n, // No ETH value for this position
-            gas: 500000n, // Reasonable gas limit for Base network
+            value: BigInt(0), // No ETH value for this position
+            gas: BigInt(500000), // Reasonable gas limit for Base network
           });
           toast.success('Position creation transaction submitted!');
           return;
-        } catch (error: any) {
-          if (error.message?.includes('rate limited') && retries > 1) {
+        } catch (error: unknown) {
+          if ((error as Error).message?.includes('rate limited') && retries > 1) {
             console.log(`Rate limited, retrying in 3 seconds... (${retries} retries left)`);
             await new Promise(resolve => setTimeout(resolve, 3000));
             retries--;
@@ -377,12 +377,12 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
             abi: ERC20_ABI,
             functionName: 'approve',
             args: [UNISWAP_V3_ADDRESSES.NONFUNGIBLE_POSITION_MANAGER as `0x${string}`, amount],
-            gas: 100000n, // Reasonable gas limit for ERC20 approval
+            gas: BigInt(100000), // Reasonable gas limit for ERC20 approval
           });
           toast.success('Approval transaction submitted!');
           return;
-        } catch (error: any) {
-          if (error.message?.includes('rate limited') && retries > 1) {
+        } catch (error: unknown) {
+          if ((error as Error).message?.includes('rate limited') && retries > 1) {
             console.log(`Rate limited, retrying in 2 seconds... (${retries} retries left)`);
             await new Promise(resolve => setTimeout(resolve, 2000));
             retries--;
@@ -557,13 +557,13 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
             <div>
               <Label className="text-slate-400">Current Price</Label>
               <div className="text-slate-200 font-medium">
-                {volatilityData ? formatPrice(volatilityData.current_price) : 'Loading...'}
+                {volatilityData ? formatPrice((volatilityData as any).current_price) : 'Loading...'}
               </div>
             </div>
             <div>
               <Label className="text-slate-400">Volatility</Label>
               <div className="text-slate-200 font-medium">
-                {volatilityData ? formatPercentage(volatilityData.volatility_percentage) : 'Loading...'}
+                {volatilityData ? formatPercentage((volatilityData as any).volatility_percentage) : 'Loading...'}
               </div>
             </div>
             <div>
@@ -775,19 +775,19 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-slate-400">Recommended Range:</span>
                     <Badge variant="secondary">
-                      ±{recommendations.recommendations.tick_range} ticks
+                      ±{(recommendations as any).recommendations.tick_range} ticks
                     </Badge>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-slate-400">Expected APR:</span>
                     <span className="text-orange-400 font-medium">
-                      {formatPercentage(recommendations.recommendations.expected_apr)}
+                      {formatPercentage((recommendations as any).recommendations.expected_apr)}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-slate-400">Liquidation Risk:</span>
                     <span className={`font-medium ${
-                      recommendations.recommendations.liquidation_probability > 20 
+                      (recommendations as any).recommendations.liquidation_probability > 20 
                         ? 'text-red-400' 
                         : 'text-green-400'
                     }`}>

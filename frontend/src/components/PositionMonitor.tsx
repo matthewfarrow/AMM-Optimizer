@@ -43,7 +43,7 @@ export function PositionMonitor({ onBack }: PositionMonitorProps) {
       // In a real app, you'd get the user address from the wallet
       const mockAddress = '0x1234567890123456789012345678901234567890';
       const data = await apiClient.getUserPositions(mockAddress);
-      setPositions(data);
+      setPositions(data as any);
     } catch (error) {
       console.error('Error fetching positions:', error);
     } finally {
@@ -177,7 +177,7 @@ export function PositionMonitor({ onBack }: PositionMonitorProps) {
               <AlertCircle className="w-12 h-12 text-slate-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-slate-200 mb-2">No Positions Found</h3>
               <p className="text-slate-400 mb-4">
-                You don't have any active positions yet. Create your first position to get started.
+                You don&apos;t have any active positions yet. Create your first position to get started.
               </p>
               <Button onClick={onBack} className="bg-gradient-to-r from-orange-500 to-red-500">
                 Create Position

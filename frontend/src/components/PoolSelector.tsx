@@ -46,7 +46,7 @@ export function PoolSelector({ onPoolSelect }: PoolSelectorProps) {
         sort_order: sortOrder,
         limit: 50,
       });
-      setPools(data);
+      setPools(data as any);
     } catch (error) {
       console.error('Error fetching pools:', error);
     } finally {

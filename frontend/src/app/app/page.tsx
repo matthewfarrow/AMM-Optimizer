@@ -1,11 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useAccount } from 'wagmi';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -15,13 +16,20 @@ import { PositionMonitor } from '@/components/PositionMonitor';
 
 type Tab = 'pools' | 'strategy' | 'monitor';
 
-export default function AppPage() {
+function AppPageContent() {
   const { isConnected, address } = useAccount();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState<Tab>('pools');
   const [selectedPool, setSelectedPool] = useState<any>(null);
   // Whitelist feature removed - all users can access the app
+
+  // Get tab from URL params
+  const urlTab = searchParams.get('tab') as Tab || 'pools';
+
+  useEffect(() => {
+    setActiveTab(urlTab);
+  }, [urlTab]);
 
   // Redirect if not connected
   if (!isConnected) {
@@ -47,9 +55,6 @@ export default function AppPage() {
   }
 
   // Whitelist restrictions removed - proceed directly to app
-
-  // Get tab from URL params
-  const tab = searchParams.get('tab') as Tab || 'pools';
 
   const handlePoolSelect = (pool: any) => {
     setSelectedPool(pool);
@@ -169,6 +174,14 @@ export default function AppPage() {
         {renderTabContent()}
       </main>
     </div>
+  );
+}
+
+export default function AppPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <AppPageContent />
+    </Suspense>
   );
 }
 
