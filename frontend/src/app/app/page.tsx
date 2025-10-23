@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { AlertTriangle, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { PoolSelector } from '@/components/PoolSelector';
 import { StrategyConfig } from '@/components/StrategyConfig';
 import { PositionMonitor } from '@/components/PositionMonitor';
@@ -49,16 +50,16 @@ export default function AppPage() {
   // Redirect if not connected
   if (!isConnected) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
-        <Card className="w-full max-w-md">
+      <div className="min-h-screen bg-gradient-to-br from-tangerine-cream via-orange-50 to-tangerine-cream flex items-center justify-center">
+        <Card className="w-full max-w-md bg-white/80 border-tangerine-primary/20">
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl">Wallet Required</CardTitle>
-            <p className="text-slate-600">Please connect your wallet to access the app</p>
+            <CardTitle className="text-2xl text-tangerine-black">Wallet Required</CardTitle>
+            <p className="text-tangerine-black/70">Please connect your wallet to access the app</p>
           </CardHeader>
           <CardContent className="text-center">
             <ConnectButton />
             <Link href="/" className="block mt-4">
-              <Button variant="outline" className="w-full">
+              <Button variant="outline" className="w-full border-tangerine-primary text-tangerine-black hover:bg-tangerine-primary/10">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back to Home
               </Button>
@@ -72,10 +73,10 @@ export default function AppPage() {
   // Show loading state
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-tangerine-cream via-orange-50 to-tangerine-cream flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
-          <p className="text-slate-300">Checking whitelist status...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-tangerine-primary mx-auto mb-4"></div>
+          <p className="text-tangerine-black/70">Checking whitelist status...</p>
         </div>
       </div>
     );
@@ -84,29 +85,29 @@ export default function AppPage() {
   // Show not whitelisted message
   if (!isWhitelisted) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
-        <Card className="w-full max-w-md">
+      <div className="min-h-screen bg-gradient-to-br from-tangerine-cream via-orange-50 to-tangerine-cream flex items-center justify-center">
+        <Card className="w-full max-w-md bg-white/80 border-tangerine-primary/20">
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl text-red-400">Access Restricted</CardTitle>
-            <p className="text-slate-600">Your wallet is not whitelisted for beta testing</p>
+            <CardTitle className="text-2xl text-tangerine-accent">Access Restricted</CardTitle>
+            <p className="text-tangerine-black/70">Your wallet is not whitelisted for beta testing</p>
           </CardHeader>
           <CardContent className="text-center space-y-4">
-            <Badge variant="destructive" className="w-full justify-center">
+            <Badge className="w-full justify-center bg-tangerine-accent/10 text-tangerine-accent border-tangerine-accent/30">
               <AlertTriangle className="w-4 h-4 mr-1" />
               Beta Access Required
             </Badge>
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-tangerine-black/60">
               This app is currently in beta testing. Please sign up for whitelist access.
             </p>
             <div className="space-y-2">
               <Button 
                 onClick={() => window.open('https://forms.gle/your-beta-signup-form', '_blank')}
-                className="w-full"
+                className="w-full bg-tangerine-primary hover:bg-tangerine-dark text-white"
               >
                 Sign Up for Beta Access
               </Button>
               <Link href="/">
-                <Button variant="outline" className="w-full">
+                <Button variant="outline" className="w-full border-tangerine-primary text-tangerine-black hover:bg-tangerine-primary/10">
                   <ArrowLeft className="w-4 h-4 mr-2" />
                   Back to Home
                 </Button>
@@ -162,17 +163,21 @@ export default function AppPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-tangerine-cream via-orange-50 to-tangerine-cream">
       {/* Header */}
-      <header className="border-b border-slate-800 bg-slate-900/95 backdrop-blur-sm sticky top-0 z-50">
+      <header className="border-b border-tangerine-primary/20 bg-white/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-4">
-              <Link href="/" className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-gradient-to-r from-orange-500 to-red-500 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">AO</span>
-                </div>
-                <span className="text-xl font-bold text-white">AMM Optimizer</span>
+              <Link href="/" className="flex items-center space-x-3">
+                <Image 
+                  src="/tangerine-logo.svg" 
+                  alt="Tangerine.trading" 
+                  width={32} 
+                  height={32}
+                  className="w-8 h-8"
+                />
+                <span className="text-xl font-bold text-tangerine-black">Tangerine.trading</span>
               </Link>
               
               {/* Tab Navigation */}
@@ -183,7 +188,10 @@ export default function AppPage() {
                     setActiveTab('pools');
                     router.push('/app?tab=pools');
                   }}
-                  className="text-slate-300 hover:text-white hover:bg-slate-700"
+                  className={activeTab === 'pools' 
+                    ? "bg-tangerine-primary text-white hover:bg-tangerine-dark" 
+                    : "text-tangerine-black hover:text-tangerine-primary hover:bg-tangerine-primary/10"
+                  }
                 >
                   Select Pool
                 </Button>
@@ -194,7 +202,10 @@ export default function AppPage() {
                     router.push('/app?tab=strategy');
                   }}
                   disabled={!selectedPool}
-                  className="text-slate-300 hover:text-white hover:bg-slate-700"
+                  className={activeTab === 'strategy' 
+                    ? "bg-tangerine-primary text-white hover:bg-tangerine-dark" 
+                    : "text-tangerine-black hover:text-tangerine-primary hover:bg-tangerine-primary/10"
+                  }
                 >
                   Configure Strategy
                 </Button>
@@ -204,7 +215,10 @@ export default function AppPage() {
                     setActiveTab('monitor');
                     router.push('/app?tab=monitor');
                   }}
-                  className="text-slate-300 hover:text-white hover:bg-slate-700"
+                  className={activeTab === 'monitor' 
+                    ? "bg-tangerine-primary text-white hover:bg-tangerine-dark" 
+                    : "text-tangerine-black hover:text-tangerine-primary hover:bg-tangerine-primary/10"
+                  }
                 >
                   Deploy & Monitor
                 </Button>
@@ -212,7 +226,7 @@ export default function AppPage() {
             </div>
             
             <div className="flex items-center space-x-4">
-              <Badge variant="secondary" className="hidden sm:inline-flex">
+              <Badge variant="secondary" className="hidden sm:inline-flex bg-tangerine-primary/10 text-tangerine-black border-tangerine-primary/20">
                 {address?.slice(0, 6)}...{address?.slice(-4)}
               </Badge>
               <ConnectButton />

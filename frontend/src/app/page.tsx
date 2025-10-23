@@ -58,8 +58,8 @@ export default function LandingPage() {
                 ✅ Wallet Connected: {address?.slice(0, 6)}...{address?.slice(-4)}
               </p>
               <Link href="/app">
-                <Button size="lg" className="bg-gradient-to-r from-tangerine-primary to-tangerine-accent hover:from-tangerine-dark hover:to-tangerine-primary text-white">
-                  Start Juicing Yields
+                <Button size="lg" className="bg-gradient-to-r from-tangerine-primary to-tangerine-accent hover:from-tangerine-dark hover:to-tangerine-primary text-white font-semibold">
+                  Launch App
                 </Button>
               </Link>
             </div>
