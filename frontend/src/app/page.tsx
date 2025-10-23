@@ -2,6 +2,8 @@
 
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount } from 'wagmi';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -11,6 +13,14 @@ import Image from 'next/image';
 
 export default function LandingPage() {
   const { isConnected, address } = useAccount();
+  const router = useRouter();
+
+  // Redirect connected users to the app
+  useEffect(() => {
+    if (isConnected) {
+      router.push('/app?tab=pools');
+    }
+  }, [isConnected, router]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-tangerine-cream via-orange-50 to-tangerine-cream">
@@ -57,7 +67,7 @@ export default function LandingPage() {
               <p className="text-tangerine-green font-medium">
                 ✅ Wallet Connected: {address?.slice(0, 6)}...{address?.slice(-4)}
               </p>
-              <Link href="/app">
+              <Link href="/app?tab=pools">
                 <Button size="lg" className="bg-gradient-to-r from-tangerine-primary to-tangerine-accent hover:from-tangerine-dark hover:to-tangerine-primary text-white font-semibold">
                   Launch App
                 </Button>
