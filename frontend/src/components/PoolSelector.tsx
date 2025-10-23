@@ -76,8 +76,8 @@ export function PoolSelector({ onPoolSelect }: PoolSelectorProps) {
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h1 className="text-3xl font-bold text-slate-200 mb-2">Select a Pool</h1>
-        <p className="text-slate-400">
+        <h1 className="text-3xl font-bold text-tangerine-black mb-2">Select a Pool</h1>
+        <p className="text-tangerine-black/70">
           Choose a Uniswap V3 pool to provide liquidity to
         </p>
       </div>
@@ -88,19 +88,19 @@ export function PoolSelector({ onPoolSelect }: PoolSelectorProps) {
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-tangerine-black/70 w-4 h-4" />
                 <Input
                   placeholder="Search pools by token name..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 bg-slate-700 border-slate-600 text-slate-200"
+                  className="pl-10 bg-white border-tangerine-primary/30 text-tangerine-black"
                 />
               </div>
             </div>
             
             <div className="flex gap-2">
               <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="w-40 bg-slate-700 border-slate-600">
+                <SelectTrigger className="w-40 bg-white border-tangerine-primary/30">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -115,7 +115,7 @@ export function PoolSelector({ onPoolSelect }: PoolSelectorProps) {
               <Button
                 variant="outline"
                 onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-                className="bg-slate-700 border-slate-600"
+                className="bg-white border-tangerine-primary/30"
               >
                 {sortOrder === 'asc' ? '↑' : '↓'}
               </Button>
@@ -127,7 +127,7 @@ export function PoolSelector({ onPoolSelect }: PoolSelectorProps) {
       {/* Pools Table */}
       <Card className="bg-slate-800/50 border-slate-700">
         <CardHeader>
-          <CardTitle className="text-slate-200 flex items-center">
+          <CardTitle className="text-tangerine-black flex items-center">
             <Activity className="w-5 h-5 mr-2" />
             Available Pools ({filteredPools.length})
           </CardTitle>
@@ -136,30 +136,30 @@ export function PoolSelector({ onPoolSelect }: PoolSelectorProps) {
           {loading ? (
             <div className="text-center py-8">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500 mx-auto mb-4"></div>
-              <p className="text-slate-400">Loading pools...</p>
+              <p className="text-tangerine-black/70">Loading pools...</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow className="border-slate-700">
-                    <TableHead className="text-slate-300">Pool</TableHead>
-                    <TableHead className="text-slate-300">Fee Tier</TableHead>
-                    <TableHead className="text-slate-300">TVL</TableHead>
-                    <TableHead className="text-slate-300">APR</TableHead>
-                    <TableHead className="text-slate-300">1D Volume</TableHead>
-                    <TableHead className="text-slate-300">30D Volume</TableHead>
-                    <TableHead className="text-slate-300">Vol/TVL</TableHead>
-                    <TableHead className="text-slate-300">Action</TableHead>
+                    <TableHead className="text-tangerine-black/80">Pool</TableHead>
+                    <TableHead className="text-tangerine-black/80">Fee Tier</TableHead>
+                    <TableHead className="text-tangerine-black/80">TVL</TableHead>
+                    <TableHead className="text-tangerine-black/80">APR</TableHead>
+                    <TableHead className="text-tangerine-black/80">1D Volume</TableHead>
+                    <TableHead className="text-tangerine-black/80">30D Volume</TableHead>
+                    <TableHead className="text-tangerine-black/80">Vol/TVL</TableHead>
+                    <TableHead className="text-tangerine-black/80">Action</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {filteredPools.map((pool) => (
                     <TableRow key={pool.address} className="border-slate-700 hover:bg-slate-700/50">
-                      <TableCell className="text-slate-200">
+                      <TableCell className="text-tangerine-black">
                         <div className="flex items-center space-x-2">
                           <div className="w-8 h-8 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center">
-                            <span className="text-slate-200 font-bold text-xs">
+                            <span className="text-tangerine-black font-bold text-xs">
                               {pool.token0[0]}{pool.token1[0]}
                             </span>
                           </div>
@@ -181,25 +181,25 @@ export function PoolSelector({ onPoolSelect }: PoolSelectorProps) {
                           {(pool.fee_tier / 10000).toFixed(2)}%
                         </Badge>
                       </TableCell>
-                      <TableCell className="text-slate-200">
+                      <TableCell className="text-tangerine-black">
                         <div className="flex items-center">
                           <DollarSign className="w-4 h-4 mr-1 text-green-400" />
                           {formatNumber(pool.tvl)}
                         </div>
                       </TableCell>
-                      <TableCell className="text-slate-200">
+                      <TableCell className="text-tangerine-black">
                         <div className="flex items-center">
                           <TrendingUp className="w-4 h-4 mr-1 text-orange-400" />
                           {formatPercentage(pool.apr)}
                         </div>
                       </TableCell>
-                      <TableCell className="text-slate-300">
+                      <TableCell className="text-tangerine-black/80">
                         {formatNumber(pool.volume_1d)}
                       </TableCell>
-                      <TableCell className="text-slate-300">
+                      <TableCell className="text-tangerine-black/80">
                         {formatNumber(pool.volume_30d)}
                       </TableCell>
-                      <TableCell className="text-slate-300">
+                      <TableCell className="text-tangerine-black/80">
                         {pool.vol_tvl_ratio.toFixed(2)}
                       </TableCell>
                       <TableCell>

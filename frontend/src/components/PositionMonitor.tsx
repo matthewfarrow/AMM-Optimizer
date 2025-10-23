@@ -91,8 +91,8 @@ export function PositionMonitor({ onBack }: PositionMonitorProps) {
             Back
           </Button>
           <div>
-            <h1 className="text-3xl font-bold text-slate-200">Deploy & Monitor</h1>
-            <p className="text-slate-400">Manage your active liquidity positions</p>
+            <h1 className="text-3xl font-bold text-tangerine-black">Deploy & Monitor</h1>
+            <p className="text-tangerine-black/70">Manage your active liquidity positions</p>
           </div>
         </div>
         <Button 
@@ -110,8 +110,8 @@ export function PositionMonitor({ onBack }: PositionMonitorProps) {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-slate-400 text-sm">Total Positions</p>
-                <p className="text-2xl font-bold text-slate-200">{positions.length}</p>
+                <p className="text-tangerine-black/70 text-sm">Total Positions</p>
+                <p className="text-2xl font-bold text-tangerine-black">{positions.length}</p>
               </div>
               <TrendingUp className="w-8 h-8 text-orange-500" />
             </div>
@@ -122,7 +122,7 @@ export function PositionMonitor({ onBack }: PositionMonitorProps) {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-slate-400 text-sm">Active</p>
+                <p className="text-tangerine-black/70 text-sm">Active</p>
                 <p className="text-2xl font-bold text-green-400">
                   {positions.filter(p => p.active).length}
                 </p>
@@ -136,7 +136,7 @@ export function PositionMonitor({ onBack }: PositionMonitorProps) {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-slate-400 text-sm">Paused</p>
+                <p className="text-tangerine-black/70 text-sm">Paused</p>
                 <p className="text-2xl font-bold text-yellow-400">
                   {positions.filter(p => !p.active).length}
                 </p>
@@ -150,8 +150,8 @@ export function PositionMonitor({ onBack }: PositionMonitorProps) {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-slate-400 text-sm">Total Value</p>
-                <p className="text-2xl font-bold text-slate-200">
+                <p className="text-tangerine-black/70 text-sm">Total Value</p>
+                <p className="text-2xl font-bold text-tangerine-black">
                   ${positions.reduce((sum, p) => sum + p.amount0 + p.amount1, 0).toFixed(0)}
                 </p>
               </div>
@@ -164,19 +164,19 @@ export function PositionMonitor({ onBack }: PositionMonitorProps) {
       {/* Positions List */}
       <Card className="bg-slate-800/50 border-slate-700">
         <CardHeader>
-          <CardTitle className="text-slate-200">Your Positions</CardTitle>
+          <CardTitle className="text-tangerine-black">Your Positions</CardTitle>
         </CardHeader>
         <CardContent>
           {loading ? (
             <div className="text-center py-8">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500 mx-auto mb-4"></div>
-              <p className="text-slate-400">Loading positions...</p>
+              <p className="text-tangerine-black/70">Loading positions...</p>
             </div>
           ) : positions.length === 0 ? (
             <div className="text-center py-8">
-              <AlertCircle className="w-12 h-12 text-slate-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-slate-200 mb-2">No Positions Found</h3>
-              <p className="text-slate-400 mb-4">
+              <AlertCircle className="w-12 h-12 text-tangerine-black/70 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-tangerine-black mb-2">No Positions Found</h3>
+              <p className="text-tangerine-black/70 mb-4">
                 You don&apos;t have any active positions yet. Create your first position to get started.
               </p>
               <Button onClick={onBack} className="bg-gradient-to-r from-orange-500 to-red-500">
@@ -195,18 +195,18 @@ export function PositionMonitor({ onBack }: PositionMonitorProps) {
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-4">
                           <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center">
-                            <span className="text-slate-200 font-bold">
+                            <span className="text-tangerine-black font-bold">
                               {position.pool_address.slice(0, 2).toUpperCase()}
                             </span>
                           </div>
                           <div>
-                            <h3 className="text-lg font-medium text-slate-200">
+                            <h3 className="text-lg font-medium text-tangerine-black">
                               Position #{position.id}
                             </h3>
-                            <p className="text-sm text-slate-400">
+                            <p className="text-sm text-tangerine-black/70">
                               Pool: {position.pool_address.slice(0, 6)}...{position.pool_address.slice(-4)}
                             </p>
-                            <p className="text-sm text-slate-400">
+                            <p className="text-sm text-tangerine-black/70">
                               Range: {position.tick_lower} to {position.tick_upper}
                             </p>
                           </div>
@@ -220,10 +220,10 @@ export function PositionMonitor({ onBack }: PositionMonitorProps) {
                                 {statusInfo.status}
                               </Badge>
                             </div>
-                            <p className="text-sm text-slate-400">
+                            <p className="text-sm text-tangerine-black/70">
                               Created: {formatDate(position.created_at)}
                             </p>
-                            <p className="text-sm text-slate-400">
+                            <p className="text-sm text-tangerine-black/70">
                               Amount: {position.amount0.toFixed(4)} / {position.amount1.toFixed(2)}
                             </p>
                           </div>
@@ -254,7 +254,7 @@ export function PositionMonitor({ onBack }: PositionMonitorProps) {
                             <Button
                               variant="outline"
                               size="sm"
-                              className="bg-red-600 border-red-500 text-slate-200 hover:bg-red-700"
+                              className="bg-red-600 border-red-500 text-tangerine-black hover:bg-red-700"
                             >
                               Withdraw
                             </Button>
@@ -265,22 +265,22 @@ export function PositionMonitor({ onBack }: PositionMonitorProps) {
                       {/* Position Details */}
                       <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-slate-600">
                         <div>
-                          <p className="text-sm text-slate-400">Check Interval</p>
-                          <p className="text-slate-200 font-medium">{position.check_interval}s</p>
+                          <p className="text-sm text-tangerine-black/70">Check Interval</p>
+                          <p className="text-tangerine-black font-medium">{position.check_interval}s</p>
                         </div>
                         <div>
-                          <p className="text-sm text-slate-400">Last Updated</p>
-                          <p className="text-slate-200 font-medium">{formatDate(position.updated_at)}</p>
+                          <p className="text-sm text-tangerine-black/70">Last Updated</p>
+                          <p className="text-tangerine-black font-medium">{formatDate(position.updated_at)}</p>
                         </div>
                         <div>
-                          <p className="text-sm text-slate-400">Token ID</p>
-                          <p className="text-slate-200 font-medium">
+                          <p className="text-sm text-tangerine-black/70">Token ID</p>
+                          <p className="text-tangerine-black font-medium">
                             {position.token_id ? `#${position.token_id}` : 'Not deployed'}
                           </p>
                         </div>
                         <div>
-                          <p className="text-sm text-slate-400">Status</p>
-                          <p className="text-slate-200 font-medium">
+                          <p className="text-sm text-tangerine-black/70">Status</p>
+                          <p className="text-tangerine-black font-medium">
                             {position.active ? 'Monitoring' : 'Paused'}
                           </p>
                         </div>

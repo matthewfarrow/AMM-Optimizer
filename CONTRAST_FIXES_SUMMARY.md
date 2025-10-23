@@ -97,3 +97,4 @@ The application now has:
 
 All contrast issues have been resolved, making the app much more user-friendly and professional-looking.
 
+

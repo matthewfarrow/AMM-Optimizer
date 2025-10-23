@@ -528,8 +528,8 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
             Back
           </Button>
           <div>
-            <h1 className="text-3xl font-bold text-slate-200">Configure Strategy</h1>
-            <p className="text-slate-400">Set up your liquidity position parameters</p>
+            <h1 className="text-3xl font-bold text-tangerine-black">Configure Strategy</h1>
+            <p className="text-tangerine-black/70">Set up your liquidity position parameters</p>
           </div>
         </div>
       </div>
@@ -537,9 +537,9 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
       {/* Pool Info */}
       <Card className="bg-slate-800/50 border-slate-700">
         <CardHeader>
-          <CardTitle className="text-slate-200 flex items-center">
+          <CardTitle className="text-tangerine-black flex items-center">
             <div className="w-8 h-8 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center mr-3">
-              <span className="text-slate-200 font-bold text-xs">
+              <span className="text-tangerine-black font-bold text-xs">
                 {pool.token0[0]}{pool.token1[0]}
               </span>
             </div>
@@ -549,26 +549,26 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div>
-              <Label className="text-slate-400">Fee Tier</Label>
-              <div className="text-slate-200 font-medium">
+              <Label className="text-tangerine-black/70">Fee Tier</Label>
+              <div className="text-tangerine-black font-medium">
                 {(pool.fee_tier / 10000).toFixed(2)}%
               </div>
             </div>
             <div>
-              <Label className="text-slate-400">Current Price</Label>
-              <div className="text-slate-200 font-medium">
+              <Label className="text-tangerine-black/70">Current Price</Label>
+              <div className="text-tangerine-black font-medium">
                 {volatilityData ? formatPrice((volatilityData as any).current_price) : 'Loading...'}
               </div>
             </div>
             <div>
-              <Label className="text-slate-400">Volatility</Label>
-              <div className="text-slate-200 font-medium">
+              <Label className="text-tangerine-black/70">Volatility</Label>
+              <div className="text-tangerine-black font-medium">
                 {volatilityData ? formatPercentage((volatilityData as any).volatility_percentage) : 'Loading...'}
               </div>
             </div>
             <div>
-              <Label className="text-slate-400">TVL</Label>
-              <div className="text-slate-200 font-medium">
+              <Label className="text-tangerine-black/70">TVL</Label>
+              <div className="text-tangerine-black font-medium">
                 ${(pool.tvl / 1000000).toFixed(1)}M
               </div>
             </div>
@@ -581,7 +581,7 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
         <Card className="bg-slate-800/50 border-slate-700">
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle className="text-slate-200 flex items-center">
+              <CardTitle className="text-tangerine-black flex items-center">
                 <BarChart3 className="w-5 h-5 mr-2" />
                 Price Chart
               </CardTitle>
@@ -641,12 +641,12 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
         {/* Strategy Configuration */}
         <Card className="bg-slate-800/90 border-slate-600 shadow-xl">
           <CardHeader>
-            <CardTitle className="text-slate-200 font-semibold">Strategy Parameters</CardTitle>
+            <CardTitle className="text-tangerine-black font-semibold">Strategy Parameters</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Tick Range */}
             <div>
-              <Label className="text-slate-200 font-medium">Tick Range (±{tickRange} ticks)</Label>
+              <Label className="text-tangerine-black font-medium">Tick Range (±{tickRange} ticks)</Label>
               <div className="mt-2">
                 <Input
                   type="range"
@@ -656,32 +656,32 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
                   onChange={(e) => setTickRange(Number(e.target.value))}
                   className="w-full"
                 />
-                <div className="flex justify-between text-xs text-slate-400 mt-1">
+                <div className="flex justify-between text-xs text-tangerine-black/70 mt-1">
                   <span>±10 ticks (0.1%)</span>
                   <span>±500 ticks (5%)</span>
                 </div>
               </div>
-              <div className="mt-2 text-sm text-slate-300">
+              <div className="mt-2 text-sm text-tangerine-black/80">
                 Range: ±{(tickRange / 100).toFixed(1)}% from current price
               </div>
             </div>
 
             {/* Wallet Balances */}
             <div className="space-y-2">
-              <Label className="text-slate-200 font-medium flex items-center">
+              <Label className="text-tangerine-black font-medium flex items-center">
                 <Wallet className="w-4 h-4 mr-2" />
                 Wallet Balances
               </Label>
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div className="bg-slate-700/50 p-3 rounded-lg">
-                  <div className="text-slate-400">{token0Symbol}</div>
-                  <div className="text-slate-200 font-medium">
+                  <div className="text-tangerine-black/70">{token0Symbol}</div>
+                  <div className="text-tangerine-black font-medium">
                     {token0Balance.isLoading ? 'Loading...' : `${token0Balance.formatted} ${token0Balance.symbol}`}
                   </div>
                 </div>
                 <div className="bg-slate-700/50 p-3 rounded-lg">
-                  <div className="text-slate-400">{token1Symbol}</div>
-                  <div className="text-slate-200 font-medium">
+                  <div className="text-tangerine-black/70">{token1Symbol}</div>
+                  <div className="text-tangerine-black font-medium">
                     {token1Balance.isLoading ? 'Loading...' : `${token1Balance.formatted} ${token1Balance.symbol}`}
                   </div>
                 </div>
@@ -691,13 +691,13 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
             {/* Amounts with Allocation Buttons */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label className="text-slate-200 font-medium">{token0Symbol} Amount</Label>
+                <Label className="text-tangerine-black font-medium">{token0Symbol} Amount</Label>
                 <Input
                   type="number"
                   placeholder="0.0"
                   value={amount0}
                   onChange={(e) => setAmount0(e.target.value)}
-                  className={`bg-slate-700 border-slate-600 text-slate-200 ${
+                  className={`bg-white border-tangerine-primary/30 text-tangerine-black ${
                     token0Insufficient ? 'border-red-500' : ''
                   }`}
                 />
@@ -714,7 +714,7 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
                       variant="outline"
                       size="sm"
                       onClick={() => handleAllocation(percentage)}
-                      className="bg-tangerine-primary/20 border-tangerine-primary hover:bg-tangerine-primary hover:text-slate-200 text-tangerine-black font-medium text-xs"
+                      className="bg-tangerine-primary/20 border-tangerine-primary hover:bg-tangerine-primary hover:text-tangerine-black text-tangerine-black font-medium text-xs"
                     >
                       {percentage}%
                     </Button>
@@ -722,13 +722,13 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
                 </div>
               </div>
               <div>
-                <Label className="text-slate-200 font-medium">{token1Symbol} Amount</Label>
+                <Label className="text-tangerine-black font-medium">{token1Symbol} Amount</Label>
                 <Input
                   type="number"
                   placeholder="0.0"
                   value={amount1}
                   onChange={(e) => setAmount1(e.target.value)}
-                  className={`bg-slate-700 border-slate-600 text-slate-200 ${
+                  className={`bg-white border-tangerine-primary/30 text-tangerine-black ${
                     token1Insufficient ? 'border-red-500' : ''
                   }`}
                 />
@@ -745,7 +745,7 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
                       variant="outline"
                       size="sm"
                       onClick={() => handleAllocation(percentage)}
-                      className="bg-tangerine-primary/20 border-tangerine-primary hover:bg-tangerine-primary hover:text-slate-200 text-tangerine-black font-medium text-xs"
+                      className="bg-tangerine-primary/20 border-tangerine-primary hover:bg-tangerine-primary hover:text-tangerine-black text-tangerine-black font-medium text-xs"
                     >
                       {percentage}%
                     </Button>
@@ -756,36 +756,36 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
 
             {/* Check Interval */}
             <div>
-              <Label className="text-slate-300">Check Interval (minutes)</Label>
+              <Label className="text-tangerine-black/80">Check Interval (minutes)</Label>
               <Input
                 type="number"
                 min="1"
                 max="60"
                 value={checkInterval}
                 onChange={(e) => setCheckInterval(Number(e.target.value))}
-                className="bg-slate-700 border-slate-600 text-slate-200"
+                className="bg-white border-tangerine-primary/30 text-tangerine-black"
               />
             </div>
 
             {/* Recommendations */}
             {recommendations && (
               <div className="space-y-2">
-                <Label className="text-slate-300">AI Recommendations</Label>
+                <Label className="text-tangerine-black/80">AI Recommendations</Label>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-slate-400">Recommended Range:</span>
+                    <span className="text-sm text-tangerine-black/70">Recommended Range:</span>
                     <Badge variant="secondary">
                       ±{(recommendations as any).recommendations.tick_range} ticks
                     </Badge>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-slate-400">Expected APR:</span>
+                    <span className="text-sm text-tangerine-black/70">Expected APR:</span>
                     <span className="text-orange-400 font-medium">
                       {formatPercentage((recommendations as any).recommendations.expected_apr)}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-slate-400">Liquidation Risk:</span>
+                    <span className="text-sm text-tangerine-black/70">Liquidation Risk:</span>
                     <span className={`font-medium ${
                       (recommendations as any).recommendations.liquidation_probability > 20 
                         ? 'text-red-400' 
@@ -801,39 +801,39 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
             {/* Real-time Risk Analysis */}
             {outOfRangeData && (
               <div className="space-y-2">
-                <Label className="text-slate-300">Risk Analysis</Label>
+                <Label className="text-tangerine-black/80">Risk Analysis</Label>
                 <div className={`p-3 rounded-lg border ${
-                  outOfRangeData.risk_level === 'low' 
+                  (outOfRangeData as any).risk_level === 'low' 
                     ? 'bg-green-900/20 border-green-800' 
-                    : outOfRangeData.risk_level === 'medium'
+                    : (outOfRangeData as any).risk_level === 'medium'
                     ? 'bg-yellow-900/20 border-yellow-800'
                     : 'bg-red-900/20 border-red-800'
                 }`}>
                   <div className="flex items-start space-x-2">
                     <AlertTriangle className={`w-4 h-4 mt-0.5 flex-shrink-0 ${
-                      outOfRangeData.risk_level === 'low' 
+                      (outOfRangeData as any).risk_level === 'low' 
                         ? 'text-green-400' 
-                        : outOfRangeData.risk_level === 'medium'
+                        : (outOfRangeData as any).risk_level === 'medium'
                         ? 'text-yellow-400'
                         : 'text-red-400'
                     }`} />
                     <div className="space-y-1">
                       <div className={`text-sm font-medium ${
-                        outOfRangeData.risk_level === 'low' 
+                        (outOfRangeData as any).risk_level === 'low' 
                           ? 'text-green-300' 
-                          : outOfRangeData.risk_level === 'medium'
+                          : (outOfRangeData as any).risk_level === 'medium'
                           ? 'text-yellow-300'
                           : 'text-red-300'
                       }`}>
-                        Position has {outOfRangeData.out_of_range_probability}% chance of going out of range
+                        Position has {(outOfRangeData as any).out_of_range_probability}% chance of going out of range
                       </div>
-                      <div className="text-xs text-slate-400">
-                        Volatility: {outOfRangeData.volatility_percentage}% | 
-                        Range: ${outOfRangeData.price_bounds.lower} - ${outOfRangeData.price_bounds.upper} | 
+                      <div className="text-xs text-tangerine-black/70">
+                        Volatility: {(outOfRangeData as any).volatility_percentage}% | 
+                        Range: ${(outOfRangeData as any).price_bounds.lower} - ${(outOfRangeData as any).price_bounds.upper} | 
                         Check interval: {checkInterval} minutes
                       </div>
-                      <div className="text-xs text-slate-300">
-                        {outOfRangeData.recommendation}
+                      <div className="text-xs text-tangerine-black/80">
+                        {(outOfRangeData as any).recommendation}
                       </div>
                     </div>
                   </div>
@@ -842,9 +842,9 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
             )}
 
             {/* Legacy Warnings */}
-            {recommendations?.warnings && recommendations.warnings.length > 0 && (
+            {(recommendations as any)?.warnings && recommendations.warnings.length > 0 && (
               <div className="space-y-2">
-                {recommendations.warnings.map((warning, index) => (
+                {(recommendations as any).warnings.map((warning: any, index: number) => (
                   <div key={index} className="flex items-start space-x-2 p-3 bg-yellow-900/20 border border-yellow-800 rounded-lg">
                     <AlertTriangle className="w-4 h-4 text-yellow-400 mt-0.5 flex-shrink-0" />
                     <span className="text-sm text-yellow-300">{warning}</span>
@@ -874,7 +874,7 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
             {/* Transaction Status */}
             {hash && (
               <div className="text-center">
-                <div className="text-sm text-slate-400">
+                <div className="text-sm text-tangerine-black/70">
                   Transaction Hash: 
                   <a 
                     href={`https://basescan.org/tx/${hash}`}
