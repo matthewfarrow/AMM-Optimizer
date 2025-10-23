@@ -528,7 +528,7 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
             Back
           </Button>
           <div>
-            <h1 className="text-3xl font-bold text-white">Configure Strategy</h1>
+            <h1 className="text-3xl font-bold text-slate-200">Configure Strategy</h1>
             <p className="text-slate-400">Set up your liquidity position parameters</p>
           </div>
         </div>
@@ -537,9 +537,9 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
       {/* Pool Info */}
       <Card className="bg-slate-800/50 border-slate-700">
         <CardHeader>
-          <CardTitle className="text-white flex items-center">
+          <CardTitle className="text-slate-200 flex items-center">
             <div className="w-8 h-8 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center mr-3">
-              <span className="text-white font-bold text-xs">
+              <span className="text-slate-200 font-bold text-xs">
                 {pool.token0[0]}{pool.token1[0]}
               </span>
             </div>
@@ -550,25 +550,25 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div>
               <Label className="text-slate-400">Fee Tier</Label>
-              <div className="text-white font-medium">
+              <div className="text-slate-200 font-medium">
                 {(pool.fee_tier / 10000).toFixed(2)}%
               </div>
             </div>
             <div>
               <Label className="text-slate-400">Current Price</Label>
-              <div className="text-white font-medium">
+              <div className="text-slate-200 font-medium">
                 {volatilityData ? formatPrice(volatilityData.current_price) : 'Loading...'}
               </div>
             </div>
             <div>
               <Label className="text-slate-400">Volatility</Label>
-              <div className="text-white font-medium">
+              <div className="text-slate-200 font-medium">
                 {volatilityData ? formatPercentage(volatilityData.volatility_percentage) : 'Loading...'}
               </div>
             </div>
             <div>
               <Label className="text-slate-400">TVL</Label>
-              <div className="text-white font-medium">
+              <div className="text-slate-200 font-medium">
                 ${(pool.tvl / 1000000).toFixed(1)}M
               </div>
             </div>
@@ -581,7 +581,7 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
         <Card className="bg-slate-800/50 border-slate-700">
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle className="text-white flex items-center">
+              <CardTitle className="text-slate-200 flex items-center">
                 <BarChart3 className="w-5 h-5 mr-2" />
                 Price Chart
               </CardTitle>
@@ -641,7 +641,7 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
         {/* Strategy Configuration */}
         <Card className="bg-slate-800/90 border-slate-600 shadow-xl">
           <CardHeader>
-            <CardTitle className="text-white font-semibold">Strategy Parameters</CardTitle>
+            <CardTitle className="text-slate-200 font-semibold">Strategy Parameters</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Tick Range */}
@@ -675,13 +675,13 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div className="bg-slate-700/50 p-3 rounded-lg">
                   <div className="text-slate-400">{token0Symbol}</div>
-                  <div className="text-white font-medium">
+                  <div className="text-slate-200 font-medium">
                     {token0Balance.isLoading ? 'Loading...' : `${token0Balance.formatted} ${token0Balance.symbol}`}
                   </div>
                 </div>
                 <div className="bg-slate-700/50 p-3 rounded-lg">
                   <div className="text-slate-400">{token1Symbol}</div>
-                  <div className="text-white font-medium">
+                  <div className="text-slate-200 font-medium">
                     {token1Balance.isLoading ? 'Loading...' : `${token1Balance.formatted} ${token1Balance.symbol}`}
                   </div>
                 </div>
@@ -697,7 +697,7 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
                   placeholder="0.0"
                   value={amount0}
                   onChange={(e) => setAmount0(e.target.value)}
-                  className={`bg-slate-700 border-slate-600 text-white ${
+                  className={`bg-slate-700 border-slate-600 text-slate-200 ${
                     token0Insufficient ? 'border-red-500' : ''
                   }`}
                 />
@@ -714,7 +714,7 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
                       variant="outline"
                       size="sm"
                       onClick={() => handleAllocation(percentage)}
-                      className="bg-tangerine-primary/20 border-tangerine-primary hover:bg-tangerine-primary hover:text-white text-tangerine-black font-medium text-xs"
+                      className="bg-tangerine-primary/20 border-tangerine-primary hover:bg-tangerine-primary hover:text-slate-200 text-tangerine-black font-medium text-xs"
                     >
                       {percentage}%
                     </Button>
@@ -728,7 +728,7 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
                   placeholder="0.0"
                   value={amount1}
                   onChange={(e) => setAmount1(e.target.value)}
-                  className={`bg-slate-700 border-slate-600 text-white ${
+                  className={`bg-slate-700 border-slate-600 text-slate-200 ${
                     token1Insufficient ? 'border-red-500' : ''
                   }`}
                 />
@@ -745,7 +745,7 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
                       variant="outline"
                       size="sm"
                       onClick={() => handleAllocation(percentage)}
-                      className="bg-tangerine-primary/20 border-tangerine-primary hover:bg-tangerine-primary hover:text-white text-tangerine-black font-medium text-xs"
+                      className="bg-tangerine-primary/20 border-tangerine-primary hover:bg-tangerine-primary hover:text-slate-200 text-tangerine-black font-medium text-xs"
                     >
                       {percentage}%
                     </Button>
@@ -763,7 +763,7 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
                 max="60"
                 value={checkInterval}
                 onChange={(e) => setCheckInterval(Number(e.target.value))}
-                className="bg-slate-700 border-slate-600 text-white"
+                className="bg-slate-700 border-slate-600 text-slate-200"
               />
             </div>
 

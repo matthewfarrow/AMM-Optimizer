@@ -76,7 +76,7 @@ export function PoolSelector({ onPoolSelect }: PoolSelectorProps) {
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h1 className="text-3xl font-bold text-white mb-2">Select a Pool</h1>
+        <h1 className="text-3xl font-bold text-slate-200 mb-2">Select a Pool</h1>
         <p className="text-slate-400">
           Choose a Uniswap V3 pool to provide liquidity to
         </p>
@@ -93,7 +93,7 @@ export function PoolSelector({ onPoolSelect }: PoolSelectorProps) {
                   placeholder="Search pools by token name..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 bg-slate-700 border-slate-600 text-white"
+                  className="pl-10 bg-slate-700 border-slate-600 text-slate-200"
                 />
               </div>
             </div>
@@ -127,7 +127,7 @@ export function PoolSelector({ onPoolSelect }: PoolSelectorProps) {
       {/* Pools Table */}
       <Card className="bg-slate-800/50 border-slate-700">
         <CardHeader>
-          <CardTitle className="text-white flex items-center">
+          <CardTitle className="text-slate-200 flex items-center">
             <Activity className="w-5 h-5 mr-2" />
             Available Pools ({filteredPools.length})
           </CardTitle>
@@ -156,10 +156,10 @@ export function PoolSelector({ onPoolSelect }: PoolSelectorProps) {
                 <TableBody>
                   {filteredPools.map((pool) => (
                     <TableRow key={pool.address} className="border-slate-700 hover:bg-slate-700/50">
-                      <TableCell className="text-white">
+                      <TableCell className="text-slate-200">
                         <div className="flex items-center space-x-2">
                           <div className="w-8 h-8 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center">
-                            <span className="text-white font-bold text-xs">
+                            <span className="text-slate-200 font-bold text-xs">
                               {pool.token0[0]}{pool.token1[0]}
                             </span>
                           </div>
@@ -181,13 +181,13 @@ export function PoolSelector({ onPoolSelect }: PoolSelectorProps) {
                           {(pool.fee_tier / 10000).toFixed(2)}%
                         </Badge>
                       </TableCell>
-                      <TableCell className="text-white">
+                      <TableCell className="text-slate-200">
                         <div className="flex items-center">
                           <DollarSign className="w-4 h-4 mr-1 text-green-400" />
                           {formatNumber(pool.tvl)}
                         </div>
                       </TableCell>
-                      <TableCell className="text-white">
+                      <TableCell className="text-slate-200">
                         <div className="flex items-center">
                           <TrendingUp className="w-4 h-4 mr-1 text-orange-400" />
                           {formatPercentage(pool.apr)}
