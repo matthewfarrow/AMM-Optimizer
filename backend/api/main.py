@@ -10,7 +10,7 @@ import uvicorn
 import os
 from dotenv import load_dotenv
 
-from routers import pools, analytics, whitelist, positions
+from .routers import pools, analytics, whitelist, positions
 from database import init_db
 
 # Load environment variables
@@ -66,6 +66,7 @@ if __name__ == "__main__":
         port=port,
         reload=True
     )
+
 
 
 
