@@ -1,5 +1,22 @@
 # 🌐 Web App Architecture Plan
 
+## 🚨 URGENT: UI Contrast & Readability Fixes (COMPLETED)
+
+### Issues Fixed:
+- **White text on light backgrounds** - Changed to dark text with proper contrast
+- **"Start Juicing Yields" CTA** - Changed to "Launch App" for clarity
+- **Allocation buttons (25%, 50%, 75%, 100%)** - Improved contrast with tangerine theme
+- **Error messages** - Enhanced visibility with red background and better contrast
+- **Card backgrounds** - Darkened for better text readability
+- **Labels and inputs** - Improved font weights and colors
+
+### Changes Made:
+- Updated allocation buttons to use `bg-tangerine-primary/20 border-tangerine-primary` with dark text
+- Enhanced error messages with `bg-red-500/10` background and `text-red-500`
+- Improved card contrast with `bg-slate-800/90` and `text-slate-200`
+- Changed CTA button text from "Start Juicing Yields" to "Launch App"
+- Added font weights and better color contrast throughout
+
 ## 🎯 Project Overview
 
 **Goal:** Create a user-friendly web application for automated Uniswap V3 liquidity management on Base Network.
