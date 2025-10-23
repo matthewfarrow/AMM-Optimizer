@@ -1,19 +1,17 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useAccount } from 'wagmi';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { AlertTriangle, ArrowLeft } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { PoolSelector } from '@/components/PoolSelector';
 import { StrategyConfig } from '@/components/StrategyConfig';
 import { PositionMonitor } from '@/components/PositionMonitor';
-import { apiClient } from '@/lib/api';
 
 type Tab = 'pools' | 'strategy' | 'monitor';
 
@@ -23,29 +21,7 @@ export default function AppPage() {
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState<Tab>('pools');
   const [selectedPool, setSelectedPool] = useState<any>(null);
-  const [isWhitelisted, setIsWhitelisted] = useState<boolean | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  // Check whitelist status on mount
-  useEffect(() => {
-    if (address) {
-      checkWhitelistStatus();
-    } else {
-      setLoading(false);
-    }
-  }, [address]);
-
-  const checkWhitelistStatus = async () => {
-    try {
-      const status = await apiClient.checkWhitelistStatus(address!);
-      setIsWhitelisted(status.whitelisted);
-    } catch (error) {
-      console.error('Error checking whitelist status:', error);
-      setIsWhitelisted(false);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Whitelist feature removed - all users can access the app
 
   // Redirect if not connected
   if (!isConnected) {
@@ -70,54 +46,7 @@ export default function AppPage() {
     );
   }
 
-  // Show loading state
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-tangerine-cream via-orange-50 to-tangerine-cream flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-tangerine-primary mx-auto mb-4"></div>
-          <p className="text-tangerine-black/70">Checking whitelist status...</p>
-        </div>
-      </div>
-    );
-  }
-
-  // Show not whitelisted message
-  if (!isWhitelisted) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-tangerine-cream via-orange-50 to-tangerine-cream flex items-center justify-center">
-        <Card className="w-full max-w-md bg-white/80 border-tangerine-primary/20">
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl text-tangerine-accent">Access Restricted</CardTitle>
-            <p className="text-tangerine-black/70">Your wallet is not whitelisted for beta testing</p>
-          </CardHeader>
-          <CardContent className="text-center space-y-4">
-            <Badge className="w-full justify-center bg-tangerine-accent/10 text-tangerine-accent border-tangerine-accent/30">
-              <AlertTriangle className="w-4 h-4 mr-1" />
-              Beta Access Required
-            </Badge>
-            <p className="text-sm text-tangerine-black/60">
-              This app is currently in beta testing. Please sign up for whitelist access.
-            </p>
-            <div className="space-y-2">
-              <Button 
-                onClick={() => window.open('https://forms.gle/your-beta-signup-form', '_blank')}
-                className="w-full bg-tangerine-primary hover:bg-tangerine-dark text-white"
-              >
-                Sign Up for Beta Access
-              </Button>
-              <Link href="/">
-                <Button variant="outline" className="w-full border-tangerine-primary text-tangerine-black hover:bg-tangerine-primary/10">
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  Back to Home
-                </Button>
-              </Link>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
+  // Whitelist restrictions removed - proceed directly to app
 
   // Get tab from URL params
   const tab = searchParams.get('tab') as Tab || 'pools';
