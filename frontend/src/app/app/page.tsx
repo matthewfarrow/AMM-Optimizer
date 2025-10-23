@@ -183,7 +183,7 @@ export default function AppPage() {
                     setActiveTab('pools');
                     router.push('/app?tab=pools');
                   }}
-                  className="text-slate-300 hover:text-white"
+                  className="text-slate-300 hover:text-white hover:bg-slate-700"
                 >
                   Select Pool
                 </Button>
@@ -194,7 +194,7 @@ export default function AppPage() {
                     router.push('/app?tab=strategy');
                   }}
                   disabled={!selectedPool}
-                  className="text-slate-300 hover:text-white"
+                  className="text-slate-300 hover:text-white hover:bg-slate-700"
                 >
                   Configure Strategy
                 </Button>
@@ -204,7 +204,7 @@ export default function AppPage() {
                     setActiveTab('monitor');
                     router.push('/app?tab=monitor');
                   }}
-                  className="text-slate-300 hover:text-white"
+                  className="text-slate-300 hover:text-white hover:bg-slate-700"
                 >
                   Deploy & Monitor
                 </Button>

@@ -11,7 +11,7 @@ import { ArrowLeft, TrendingUp, AlertTriangle, BarChart3, Wallet, Percent } from
 import { apiClient } from '@/lib/api';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useTokenBalance, useETHBalance } from '@/hooks/useTokenBalance';
-import { TOKEN_ADDRESSES, getTokenAddress, UNISWAP_V3_ADDRESSES, NONFUNGIBLE_POSITION_MANAGER_ABI, ERC20_ABI, calculateSlippage } from '@/lib/contracts';
+import { TOKEN_ADDRESSES, getTokenAddress, UNISWAP_V3_ADDRESSES, NONFUNGIBLE_POSITION_MANAGER_ABI, ERC20_ABI, POOL_ABI, calculateSlippage } from '@/lib/contracts';
 import { TickMath, Position, Pool, Token, FeeAmount } from '@uniswap/v3-sdk';
 import { Token as UniswapToken } from '@uniswap/sdk-core';
 import { useWriteContract, useWaitForTransactionReceipt, useReadContract } from 'wagmi';
@@ -40,8 +40,8 @@ interface StrategyConfigProps {
 export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps) {
   const { address } = useAccount();
   const [timeframe, setTimeframe] = useState('1d');
-  const [tickRange, setTickRange] = useState(50);
-  const [amount0, setAmount0] = useState('');
+  const [tickRange, setTickRange] = useState(500); // 5% range for testing
+  const [amount0, setAmount0] = useState('0.10'); // Default to 10 cents for testing
   const [amount1, setAmount1] = useState('');
   const [checkInterval, setCheckInterval] = useState(60);
   const [priceData, setPriceData] = useState([]);
@@ -53,6 +53,8 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
   const [creatingPosition, setCreatingPosition] = useState(false);
   const [txHash, setTxHash] = useState<string | null>(null);
   const [currentStep, setCurrentStep] = useState<string>('');
+  const [approvalChecked, setApprovalChecked] = useState(false);
+  const [lastApprovalAttempt, setLastApprovalAttempt] = useState<number>(0);
 
   // Contract interaction hooks
   const { writeContract, data: hash, error: writeError, isPending } = useWriteContract();
@@ -65,6 +67,7 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
   const token1Address = getTokenAddress(pool.token1);
   
   // Ensure token0 < token1 by address (Uniswap V3 requirement)
+  // WETH (0x420...) < USDC (0x833...) = false, so WETH is token0, USDC is token1
   const [finalToken0Address, finalToken1Address, token0Symbol, token1Symbol] = 
     token0Address.toLowerCase() < token1Address.toLowerCase() 
       ? [token0Address, token1Address, pool.token0, pool.token1]
@@ -121,57 +124,63 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
 
   // Uniswap V3 SDK calculations
   const calculateTokenAmounts = useMemo(() => {
-    if (!volatilityData?.current_price || !amount0 && !amount1) {
+    console.log('🔄 calculateTokenAmounts called:', {
+      pool: pool?.address,
+      currentPrice: volatilityData?.current_price,
+      amount0,
+      amount1,
+      tickRange
+    });
+
+    if (!volatilityData?.current_price || (!amount0 && !amount1)) {
+      console.log('❌ Missing required data for calculation');
       return { amount0: '', amount1: '' };
     }
 
     try {
       const currentPrice = volatilityData.current_price;
-      const tickSpacing = 10; // For 0.05% fee tier
+      console.log('💰 Current price:', currentPrice);
       
-      // Calculate tick bounds
-      const tickLower = TickMath.getTickAtSqrtRatio(
-        TickMath.getSqrtRatioAtTick(
-          TickMath.getTickAtSqrtRatio(
-            JSBI.BigInt(Math.floor(Math.sqrt(currentPrice) * 2**96))
-          ) - tickRange
-        )
-      );
+      // Simple tick calculation - avoid complex SDK calls that cause errors
+      const tickSpacing = pool?.fee_tier === 500 ? 10 : pool?.fee_tier === 3000 ? 60 : 200;
+      console.log('📏 Tick spacing:', tickSpacing);
       
-      const tickUpper = TickMath.getTickAtSqrtRatio(
-        TickMath.getSqrtRatioAtTick(
-          TickMath.getTickAtSqrtRatio(
-            JSBI.BigInt(Math.floor(Math.sqrt(currentPrice) * 2**96))
-          ) + tickRange
-        )
-      );
+      // Calculate tick bounds using simple math
+      const currentTick = Math.floor(Math.log(currentPrice) / Math.log(1.0001));
+      const tickLower = Math.floor((currentTick - tickRange) / tickSpacing) * tickSpacing;
+      const tickUpper = Math.floor((currentTick + tickRange) / tickSpacing) * tickSpacing;
+      
+      console.log('🎯 Tick bounds:', { currentTick, tickLower, tickUpper, tickRange });
 
-      // Create mock tokens for calculation
-      const token0 = new UniswapToken(8453, token0Address, 18, pool.token0, pool.token0);
-      const token1 = new UniswapToken(8453, token1Address, 6, pool.token1, pool.token1);
-
-      // Create position
-      const position = new Position({
-        pool: new Pool(token0, token1, FeeAmount.LOW, JSBI.BigInt(Math.floor(Math.sqrt(currentPrice) * 2**96)), 0, 0),
-        tickLower,
-        tickUpper,
-        liquidity: JSBI.BigInt(0)
-      });
-
+      // Simple calculation without complex SDK calls
       if (amount0) {
-        // Calculate amount1 based on amount0
-        const amount0BigInt = JSBI.BigInt(Math.floor(parseFloat(amount0) * 10**18));
-        const amount1BigInt = position.amount1;
+        // Calculate amount1 based on amount0 and current price
+        const amount0Num = parseFloat(amount0);
+        const amount1Num = amount0Num * currentPrice;
+        
+        console.log('💱 Amount calculation:', {
+          amount0: amount0Num,
+          currentPrice,
+          amount1: amount1Num
+        });
+        
         return {
           amount0,
-          amount1: (Number(amount1BigInt) / 10**6).toFixed(6)
+          amount1: amount1Num.toFixed(6)
         };
       } else if (amount1) {
-        // Calculate amount0 based on amount1
-        const amount1BigInt = JSBI.BigInt(Math.floor(parseFloat(amount1) * 10**6));
-        const amount0BigInt = position.amount0;
+        // Calculate amount0 based on amount1 and current price
+        const amount1Num = parseFloat(amount1);
+        const amount0Num = amount1Num / currentPrice;
+        
+        console.log('💱 Amount calculation:', {
+          amount1: amount1Num,
+          currentPrice,
+          amount0: amount0Num
+        });
+        
         return {
-          amount0: (Number(amount0BigInt) / 10**18).toFixed(6),
+          amount0: amount0Num.toFixed(6),
           amount1
         };
       }
@@ -232,22 +241,42 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
     args: address ? [address, UNISWAP_V3_ADDRESSES.NONFUNGIBLE_POSITION_MANAGER as `0x${string}`] : undefined,
   });
 
+  // Read current tick from pool contract
+  const { data: slot0 } = useReadContract({
+    address: pool.address as `0x${string}`,
+    abi: POOL_ABI,
+    functionName: 'slot0',
+  });
+
+  const currentTick = slot0 ? slot0[1] : 0; // slot0[1] is the tick
+
   const createPosition = async () => {
+    console.log('🚀 createPosition called:', {
+      address,
+      currentPrice: volatilityData?.current_price,
+      amount0,
+      amount1,
+      pool: pool?.address
+    });
+
     if (!address || !volatilityData?.current_price) {
+      console.error('❌ Missing required data:', { address, currentPrice: volatilityData?.current_price });
       toast.error('Missing required data');
       return;
     }
 
+    // No minimum amount validation - allow any amount
+
     try {
       setCreatingPosition(true);
+      console.log('✅ Starting position creation...');
       
-      // Calculate tick bounds
-      const currentPrice = volatilityData.current_price;
-      const tickSpacing = 10; // For 0.05% fee tier
+      // Get correct tick spacing based on fee tier
+      const tickSpacing = pool.fee_tier === 500 ? 10 : pool.fee_tier === 3000 ? 60 : 200;
       
-      // Calculate tick bounds using proper Uniswap V3 math
-      const tickLower = Math.floor(Math.log(currentPrice * (1 - tickRange / 10000)) / Math.log(1.0001));
-      const tickUpper = Math.floor(Math.log(currentPrice * (1 + tickRange / 10000)) / Math.log(1.0001));
+      // Calculate tick bounds from ACTUAL current tick (not from price)
+      const tickLower = currentTick - tickRange;
+      const tickUpper = currentTick + tickRange;
       
       // Ensure ticks are aligned with tick spacing
       const alignedTickLower = Math.floor(tickLower / tickSpacing) * tickSpacing;
@@ -257,9 +286,9 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
       const finalTickLower = Math.min(alignedTickLower, alignedTickUpper);
       const finalTickUpper = Math.max(alignedTickLower, alignedTickUpper);
 
-      // Parse amounts
-      const amount0Desired = parseUnits(amount0, 18);
-      const amount1Desired = parseUnits(amount1, 6);
+      // Parse amounts with correct decimals
+      const amount0Desired = parseUnits(amount0, token0Symbol === 'USDC' ? 6 : 18);
+      const amount1Desired = parseUnits(amount1, token1Symbol === 'USDC' ? 6 : 18);
       
       // Calculate minimum amounts with 0.5% slippage
       const amount0Min = calculateSlippage(amount0Desired, 0.5);
@@ -268,28 +297,66 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
       // Set deadline (20 minutes from now)
       const deadline = Math.floor(Date.now() / 1000) + 20 * 60;
 
-      // Create position
-      writeContract({
-        address: UNISWAP_V3_ADDRESSES.NONFUNGIBLE_POSITION_MANAGER as `0x${string}`,
-        abi: NONFUNGIBLE_POSITION_MANAGER_ABI,
-        functionName: 'mint',
-        args: [{
-          token0: finalToken0Address as `0x${string}`,
-          token1: finalToken1Address as `0x${string}`,
-          fee: pool.fee_tier,
-          tickLower: finalTickLower,
-          tickUpper: finalTickUpper,
-          amount0Desired,
-          amount1Desired,
-          amount0Min,
-          amount1Min,
-          recipient: address,
-          deadline: BigInt(deadline)
-        }],
-        value: 0n, // No ETH value for this position
+      // Log transaction parameters for debugging
+      const mintParams = {
+        token0: finalToken0Address as `0x${string}`,
+        token1: finalToken1Address as `0x${string}`,
+        fee: pool.fee_tier,
+        tickLower: finalTickLower,
+        tickUpper: finalTickUpper,
+        amount0Desired,
+        amount1Desired,
+        amount0Min,
+        amount1Min,
+        recipient: address,
+        deadline: BigInt(deadline)
+      };
+      
+      console.log('📋 Creating position with params:', {
+        poolAddress: pool.address,
+        positionManager: UNISWAP_V3_ADDRESSES.NONFUNGIBLE_POSITION_MANAGER,
+        token0Symbol,
+        token1Symbol,
+        finalToken0Address,
+        finalToken1Address,
+        currentTick,
+        tickSpacing,
+        finalTickLower,
+        finalTickUpper,
+        amount0: amount0,
+        amount1: amount1,
+        amount0Desired: amount0Desired.toString(),
+        amount1Desired: amount1Desired.toString(),
+        amount0Min: amount0Min.toString(),
+        amount1Min: amount1Min.toString(),
+        deadline,
+        mintParams
       });
 
-      toast.success('Position creation transaction submitted!');
+      // Create position with retry logic
+      let retries = 3;
+      while (retries > 0) {
+        try {
+          writeContract({
+            address: UNISWAP_V3_ADDRESSES.NONFUNGIBLE_POSITION_MANAGER as `0x${string}`,
+            abi: NONFUNGIBLE_POSITION_MANAGER_ABI,
+            functionName: 'mint',
+            args: [mintParams],
+            value: 0n, // No ETH value for this position
+            gas: 500000n, // Reasonable gas limit for Base network
+          });
+          toast.success('Position creation transaction submitted!');
+          return;
+        } catch (error: any) {
+          if (error.message?.includes('rate limited') && retries > 1) {
+            console.log(`Rate limited, retrying in 3 seconds... (${retries} retries left)`);
+            await new Promise(resolve => setTimeout(resolve, 3000));
+            retries--;
+            continue;
+          }
+          throw error;
+        }
+      }
       
     } catch (error) {
       console.error('Error creating position:', error);
@@ -301,16 +368,32 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
 
   const approveToken = async (tokenAddress: string, amount: bigint) => {
     try {
-      writeContract({
-        address: tokenAddress as `0x${string}`,
-        abi: ERC20_ABI,
-        functionName: 'approve',
-        args: [UNISWAP_V3_ADDRESSES.NONFUNGIBLE_POSITION_MANAGER as `0x${string}`, amount],
-      });
-      toast.success('Approval transaction submitted!');
+      // Add retry logic for rate limiting
+      let retries = 3;
+      while (retries > 0) {
+        try {
+          writeContract({
+            address: tokenAddress as `0x${string}`,
+            abi: ERC20_ABI,
+            functionName: 'approve',
+            args: [UNISWAP_V3_ADDRESSES.NONFUNGIBLE_POSITION_MANAGER as `0x${string}`, amount],
+            gas: 100000n, // Reasonable gas limit for ERC20 approval
+          });
+          toast.success('Approval transaction submitted!');
+          return;
+        } catch (error: any) {
+          if (error.message?.includes('rate limited') && retries > 1) {
+            console.log(`Rate limited, retrying in 2 seconds... (${retries} retries left)`);
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            retries--;
+            continue;
+          }
+          throw error;
+        }
+      }
     } catch (error) {
       console.error('Error approving token:', error);
-      toast.error('Failed to approve token');
+      toast.error('Failed to approve token - try again in a few seconds');
     }
   };
 
@@ -325,15 +408,43 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
       return;
     }
 
+    // Prevent rapid re-submission (5 second cooldown)
+    const now = Date.now();
+    if (now - lastApprovalAttempt < 5000) {
+      console.log('⚠️  Cooldown active - preventing rapid retry');
+      return;
+    }
+    setLastApprovalAttempt(now);
+
+    // Prevent approval loop - if we're already loading, don't start again
+    if (loading || creatingPosition) {
+      console.log('⚠️  Already processing - preventing loop');
+      return;
+    }
+
     try {
       setLoading(true);
       
-      const amount0BigInt = parseUnits(amount0, 18);
-      const amount1BigInt = parseUnits(amount1, 6);
+      const amount0BigInt = parseUnits(amount0, token0Symbol === 'USDC' ? 6 : 18);
+      const amount1BigInt = parseUnits(amount1, token1Symbol === 'USDC' ? 6 : 18);
       
       // Check if approvals are needed
+      console.log('🔍 Approval check:', {
+        token0Symbol,
+        token1Symbol,
+        token0Allowance: token0Allowance?.toString(),
+        token1Allowance: token1Allowance?.toString(),
+        amount0BigInt: amount0BigInt.toString(),
+        amount1BigInt: amount1BigInt.toString()
+      });
+      
       const needsToken0Approval = !token0Allowance || token0Allowance < amount0BigInt;
       const needsToken1Approval = !token1Allowance || token1Allowance < amount1BigInt;
+      
+      console.log('📋 Approval needed:', {
+        needsToken0Approval,
+        needsToken1Approval
+      });
       
       if (needsToken0Approval) {
         setCurrentStep(`Approving ${token0Symbol} (1/3)`);
@@ -350,6 +461,7 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
       }
       
       // Both tokens are approved, create position
+      console.log('✅ No approval needed - proceeding directly to position creation');
       setCurrentStep('Creating Position (3/3)');
       toast.info('Creating position...');
       await createPosition();
@@ -379,7 +491,13 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
         // This was an approval transaction, now retry position creation
         toast.success('Token approved! Continuing with position creation...');
         setTimeout(() => {
-          handleSubmit();
+          // Only retry if we're not already in a loop and not already processing
+          if (!loading && !creatingPosition && !isPending) {
+            console.log('🔄 Retrying position creation after approval...');
+            handleSubmit();
+          } else {
+            console.log('⚠️  Skipping retry - already processing or in loop');
+          }
         }, 2000); // Wait 2 seconds for the approval to be processed
       }
     }
@@ -570,28 +688,7 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
               </div>
             </div>
 
-            {/* Allocation Buttons */}
-            <div className="space-y-2">
-              <Label className="text-slate-300 flex items-center">
-                <Percent className="w-4 h-4 mr-2" />
-                Quick Allocation
-              </Label>
-              <div className="grid grid-cols-4 gap-2">
-                {[25, 50, 75, 100].map((percentage) => (
-                  <Button
-                    key={percentage}
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleAllocation(percentage)}
-                    className="bg-slate-700 border-slate-600 hover:bg-slate-600"
-                  >
-                    {percentage}%
-                  </Button>
-                ))}
-              </div>
-            </div>
-
-            {/* Amounts */}
+            {/* Amounts with Allocation Buttons */}
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label className="text-slate-300">{token0Symbol} Amount</Label>
@@ -609,6 +706,20 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
                     Insufficient {token0Symbol} balance
                   </div>
                 )}
+                {/* Allocation buttons inside token0 input */}
+                <div className="grid grid-cols-4 gap-1 mt-2">
+                  {[25, 50, 75, 100].map((percentage) => (
+                    <Button
+                      key={percentage}
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleAllocation(percentage)}
+                      className="bg-slate-700 border-slate-600 hover:bg-slate-600 text-white text-xs"
+                    >
+                      {percentage}%
+                    </Button>
+                  ))}
+                </div>
               </div>
               <div>
                 <Label className="text-slate-300">{token1Symbol} Amount</Label>
@@ -626,6 +737,20 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
                     Insufficient {token1Symbol} balance
                   </div>
                 )}
+                {/* Allocation buttons inside token1 input */}
+                <div className="grid grid-cols-4 gap-1 mt-2">
+                  {[25, 50, 75, 100].map((percentage) => (
+                    <Button
+                      key={percentage}
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleAllocation(percentage)}
+                      className="bg-slate-700 border-slate-600 hover:bg-slate-600 text-white text-xs"
+                    >
+                      {percentage}%
+                    </Button>
+                  ))}
+                </div>
               </div>
             </div>
 

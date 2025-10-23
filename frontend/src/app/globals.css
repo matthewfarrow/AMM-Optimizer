@@ -45,71 +45,82 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  
+  /* Tangerine Brand Colors */
+  --tangerine-primary: #FF8C42;      /* Bright orange */
+  --tangerine-dark: #E67635;         /* Deep orange */
+  --tangerine-black: #1A1A1A;        /* Near black */
+  --tangerine-cream: #FFF5E6;        /* Light cream */
+  --tangerine-green: #4CAF50;        /* Success/yields */
+  --tangerine-accent: #FF6B35;       /* Vibrant accent */
+  
+  /* Light theme - Tangerine */
+  --background: #FFF5E6;             /* Tangerine cream */
+  --foreground: #1A1A1A;             /* Tangerine black */
+  --card: #FFFFFF;
+  --card-foreground: #1A1A1A;
+  --popover: #FFFFFF;
+  --popover-foreground: #1A1A1A;
+  --primary: #FF8C42;                /* Tangerine primary */
+  --primary-foreground: #FFFFFF;
+  --secondary: #FFE4CC;              /* Light orange */
+  --secondary-foreground: #1A1A1A;
+  --muted: #FFE4CC;
+  --muted-foreground: #666666;
+  --accent: #FF6B35;                 /* Tangerine accent */
+  --accent-foreground: #FFFFFF;
+  --destructive: #FF4444;
+  --border: #FFD4A3;                 /* Light orange border */
+  --input: #FFE4CC;
+  --ring: #FF8C42;
+  --chart-1: #FF8C42;                /* Tangerine primary */
+  --chart-2: #FF6B35;                /* Tangerine accent */
+  --chart-3: #4CAF50;                /* Success green */
+  --chart-4: #E67635;                /* Tangerine dark */
+  --chart-5: #FFD4A3;                /* Light orange */
+  --sidebar: #FFFFFF;
+  --sidebar-foreground: #1A1A1A;
+  --sidebar-primary: #FF8C42;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #FFE4CC;
+  --sidebar-accent-foreground: #1A1A1A;
+  --sidebar-border: #FFD4A3;
+  --sidebar-ring: #FF8C42;
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  /* Dark theme - Tangerine */
+  --background: #1A1A1A;             /* Tangerine black */
+  --foreground: #FFF5E6;             /* Tangerine cream */
+  --card: #2A2A2A;                   /* Dark gray */
+  --card-foreground: #FFF5E6;
+  --popover: #2A2A2A;
+  --popover-foreground: #FFF5E6;
+  --primary: #FF8C42;                /* Tangerine primary */
+  --primary-foreground: #1A1A1A;
+  --secondary: #3A3A3A;              /* Dark gray */
+  --secondary-foreground: #FFF5E6;
+  --muted: #3A3A3A;
+  --muted-foreground: #CCCCCC;
+  --accent: #FF6B35;                 /* Tangerine accent */
+  --accent-foreground: #1A1A1A;
+  --destructive: #FF4444;
+  --border: #4A4A4A;                 /* Dark border */
+  --input: #3A3A3A;
+  --ring: #FF8C42;
+  --chart-1: #FF8C42;                /* Tangerine primary */
+  --chart-2: #FF6B35;                /* Tangerine accent */
+  --chart-3: #4CAF50;                /* Success green */
+  --chart-4: #E67635;                /* Tangerine dark */
+  --chart-5: #FFD4A3;                /* Light orange */
+  --sidebar: #2A2A2A;
+  --sidebar-foreground: #FFF5E6;
+  --sidebar-primary: #FF8C42;
+  --sidebar-primary-foreground: #1A1A1A;
+  --sidebar-accent: #3A3A3A;
+  --sidebar-accent-foreground: #FFF5E6;
+  --sidebar-border: #4A4A4A;
+  --sidebar-ring: #FF8C42;
 }
 
 @layer base {

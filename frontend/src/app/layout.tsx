@@ -7,8 +7,11 @@ import { Toaster } from 'sonner';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'AMM Liquidity Optimizer',
-  description: 'Automated Uniswap V3 liquidity management on Base Network',
+  title: 'Tangerine.trading - Squeeze Maximum Yields',
+  description: 'The Citrus Swap Revolution - Optimize your concentrated liquidity positions on Uniswap V3 for Base Network',
+  icons: {
+    icon: '/favicon.svg',
+  },
 };
 
 export default function RootLayout({

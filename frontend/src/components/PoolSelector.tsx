@@ -165,7 +165,14 @@ export function PoolSelector({ onPoolSelect }: PoolSelectorProps) {
                           </div>
                           <div>
                             <div className="font-medium">{pool.name}</div>
-                            <div className="text-xs text-slate-400">{pool.address.slice(0, 6)}...{pool.address.slice(-4)}</div>
+                            <a 
+                              href={`https://basescan.org/address/${pool.address}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-xs text-blue-400 hover:text-blue-300 underline"
+                            >
+                              {pool.address.slice(0, 6)}...{pool.address.slice(-4)}
+                            </a>
                           </div>
                         </div>
                       </TableCell>
