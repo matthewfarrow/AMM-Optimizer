@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useAccount } from 'wagmi';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -250,7 +250,7 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
 
   const currentTick = slot0 ? slot0[1] : 0; // slot0[1] is the tick
 
-  const createPosition = async () => {
+  const createPosition = useCallback(async () => {
     console.log('🚀 createPosition called:', {
       address,
       currentPrice: volatilityData?.current_price,
@@ -364,9 +364,9 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
     } finally {
       setCreatingPosition(false);
     }
-  };
+  }, [address, volatilityData, amount0, amount1, pool, currentTick, tickRange, token0Symbol, token1Symbol, finalToken0Address, finalToken1Address, writeContract]);
 
-  const approveToken = async (tokenAddress: string, amount: bigint) => {
+  const approveToken = useCallback(async (tokenAddress: string, amount: bigint) => {
     try {
       // Add retry logic for rate limiting
       let retries = 3;
@@ -395,9 +395,9 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
       console.error('Error approving token:', error);
       toast.error('Failed to approve token - try again in a few seconds');
     }
-  };
+  }, [writeContract]);
 
-  const handleSubmit = async () => {
+  const handleSubmit = useCallback(async () => {
     if (!address) {
       toast.error('Please connect your wallet');
       return;
@@ -472,7 +472,7 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
     } finally {
       setLoading(false);
     }
-  };
+  }, [address, token0Insufficient, token1Insufficient, lastApprovalAttempt, loading, creatingPosition, amount0, amount1, token0Symbol, token1Symbol, token0Allowance, token1Allowance, finalToken0Address, finalToken1Address, createPosition, approveToken]);
 
   // Handle transaction success
   useEffect(() => {
@@ -639,14 +639,14 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
         </Card>
 
         {/* Strategy Configuration */}
-        <Card className="bg-slate-800/50 border-slate-700">
+        <Card className="bg-slate-800/90 border-slate-600 shadow-xl">
           <CardHeader>
-            <CardTitle className="text-white">Strategy Parameters</CardTitle>
+            <CardTitle className="text-white font-semibold">Strategy Parameters</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Tick Range */}
             <div>
-              <Label className="text-slate-300">Tick Range (±{tickRange} ticks)</Label>
+              <Label className="text-slate-200 font-medium">Tick Range (±{tickRange} ticks)</Label>
               <div className="mt-2">
                 <Input
                   type="range"
@@ -668,7 +668,7 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
 
             {/* Wallet Balances */}
             <div className="space-y-2">
-              <Label className="text-slate-300 flex items-center">
+              <Label className="text-slate-200 font-medium flex items-center">
                 <Wallet className="w-4 h-4 mr-2" />
                 Wallet Balances
               </Label>
@@ -691,7 +691,7 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
             {/* Amounts with Allocation Buttons */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label className="text-slate-300">{token0Symbol} Amount</Label>
+                <Label className="text-slate-200 font-medium">{token0Symbol} Amount</Label>
                 <Input
                   type="number"
                   placeholder="0.0"
@@ -702,7 +702,7 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
                   }`}
                 />
                 {token0Insufficient && (
-                  <div className="text-red-400 text-xs mt-1">
+                  <div className="text-red-500 text-xs mt-1 font-medium bg-red-500/10 px-2 py-1 rounded">
                     Insufficient {token0Symbol} balance
                   </div>
                 )}
@@ -714,7 +714,7 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
                       variant="outline"
                       size="sm"
                       onClick={() => handleAllocation(percentage)}
-                      className="bg-slate-700 border-slate-600 hover:bg-slate-600 text-white text-xs"
+                      className="bg-tangerine-primary/20 border-tangerine-primary hover:bg-tangerine-primary hover:text-white text-tangerine-black font-medium text-xs"
                     >
                       {percentage}%
                     </Button>
@@ -722,7 +722,7 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
                 </div>
               </div>
               <div>
-                <Label className="text-slate-300">{token1Symbol} Amount</Label>
+                <Label className="text-slate-200 font-medium">{token1Symbol} Amount</Label>
                 <Input
                   type="number"
                   placeholder="0.0"
@@ -733,7 +733,7 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
                   }`}
                 />
                 {token1Insufficient && (
-                  <div className="text-red-400 text-xs mt-1">
+                  <div className="text-red-500 text-xs mt-1 font-medium bg-red-500/10 px-2 py-1 rounded">
                     Insufficient {token1Symbol} balance
                   </div>
                 )}
@@ -745,7 +745,7 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
                       variant="outline"
                       size="sm"
                       onClick={() => handleAllocation(percentage)}
-                      className="bg-slate-700 border-slate-600 hover:bg-slate-600 text-white text-xs"
+                      className="bg-tangerine-primary/20 border-tangerine-primary hover:bg-tangerine-primary hover:text-white text-tangerine-black font-medium text-xs"
                     >
                       {percentage}%
                     </Button>
