@@ -1,114 +1,56 @@
-# AMM Liquidity Optimizer
+# 🍊 Tangerine Trading
 
-Automated Uniswap V3 liquidity management on Base Network with intelligent rebalancing, volatility analysis, and risk management.
+> Slice your liquidity into optimized wedges. Each wedge, an isolated strategy. Together, complete market coverage.
 
-## 🚀 Quick Start
+Tangerine Trading leverages advanced AI to optimize your concentrated liquidity positions on Uniswap V3 for Base Network. Experience the next generation of automated yield farming through intelligent wedge-based strategies.
 
-### Prerequisites
+## 🚀 Quick Start (3 steps)
 
-- Python 3.11+
-- Node.js 18+
-- Git
-
-### 1. Clone and Setup
-
+### 1. Setup Environment
 ```bash
+# Clone and install dependencies
 git clone <repository-url>
 cd AMM-Optimizer
-
-# Install Python dependencies
+npm install
 pip install -r requirements.txt
 pip install -r backend/requirements.txt
 
-# Install Node.js dependencies
-cd frontend
-npm install
-cd ..
-
-# Install Hardhat dependencies
-npm install
-```
-
-### 2. Environment Setup
-
-Create environment files:
-
-```bash
-# Copy example environment files
+# Copy environment template
 cp env.example .env
-cp frontend/env.local.example frontend/.env.local
-
-# Edit the files with your configuration
-# - Add your private key for deployment
-# - Add WalletConnect project ID
-# - Set contract addresses after deployment
+# Edit .env with your configuration (see docs/DEVELOPMENT.md)
 ```
 
-### 3. Start All Services
-
+### 2. Start Services
 ```bash
-# Start everything (API + Frontend + Monitoring)
+# Start all services (API + Frontend + Monitoring)
 python start_all_services.py
 
 # Or start individually:
-# Backend API: cd backend/api && python main.py
-# Frontend: cd frontend && npm run dev
-# Monitoring: cd backend && python start_monitor.py
+# Backend API: cd backend && python start_backend.py
+# Frontend: npm run dev
 ```
 
-### 4. Access the Application
-
+### 3. Access the Application
 - **Frontend**: http://localhost:3000
 - **Backend API**: http://localhost:8000
 - **API Docs**: http://localhost:8000/docs
 
-## 🏗️ Architecture
-
-### Smart Contracts (`contracts/`)
-- **LiquidityManager.sol**: Main contract for position management
-- Multicall pattern for efficient rebalancing
-- Whitelist enforcement for beta testing
-- Emergency withdrawal functions
-
-### Backend (`backend/`)
-- **FastAPI Server**: REST API for frontend communication
-- **Monitoring Service**: Automated position monitoring and rebalancing
-- **Database**: SQLite for MVP (easily upgradeable to PostgreSQL)
-
-### Frontend (`frontend/`)
-- **Next.js 14**: Modern React framework with App Router
-- **Web3 Integration**: wagmi + RainbowKit for wallet connection
-- **UI Components**: shadcn/ui + Tailwind CSS
-- **Three-Tab Interface**: Pool Selection → Strategy Configuration → Monitoring
-
-## 📋 Features
+## 🍊 Features
 
 ### ✅ Implemented
-- [x] Smart contract with multicall rebalancing
-- [x] Whitelist management system
-- [x] Pool data aggregation from Uniswap
-- [x] Volatility analysis and risk calculations
-- [x] Interactive price charts
-- [x] Strategy configuration interface
-- [x] Position monitoring dashboard
-- [x] Wallet connection (MetaMask, Rainbow, etc.)
-- [x] Responsive design for mobile/desktop
-
-### 🔄 In Progress
-- [ ] Real-time position monitoring
-- [ ] Smart contract deployment to Base
-- [ ] End-to-end testing
-
-### 📅 Planned
-- [ ] Multi-position support
-- [ ] Advanced analytics
-- [ ] Mobile app
-- [ ] Governance token
+- [x] **Wedge Strategy Engine**: Each liquidity wedge operates as an isolated strategy
+- [x] **Smart Contract**: Multicall rebalancing with whitelist management
+- [x] **Pool Data Aggregation**: Real-time Uniswap V3 pool data
+- [x] **Volatility Analysis**: AI-powered risk calculations
+- [x] **Interactive Charts**: Real-time price visualization
+- [x] **Strategy Configuration**: Wedge-based position setup
+- [x] **Position Monitoring**: Automated rebalancing dashboard
+- [x] **Wallet Integration**: MetaMask, Rainbow, and more
+- [x] **Responsive Design**: Mobile and desktop optimized
 
 ## 🛠️ Development
 
 ### Smart Contract Development
-
 ```bash
 # Compile contracts
 npx hardhat compile
@@ -124,33 +66,21 @@ npx hardhat run scripts/deploy.ts --network base
 ```
 
 ### Backend Development
-
 ```bash
 # Start API server
-cd backend/api
-python main.py
+cd backend && python start_backend.py
 
 # Start monitoring service
-cd backend
-python start_monitor.py
-
-# Run tests
-pytest backend/tests/
+cd backend && python start_monitor.py
 ```
 
 ### Frontend Development
-
 ```bash
-cd frontend
-
 # Start development server
 npm run dev
 
 # Build for production
 npm run build
-
-# Start production server
-npm start
 ```
 
 ## 🔧 Configuration
@@ -167,7 +97,7 @@ BASE_SEPOLIA_RPC_URL=https://sepolia.base.org
 UNISWAP_V3_POSITION_MANAGER=0x03a520b32C04BF3bEEf7BFdF5497F0D5c9b18b5b
 UNISWAP_V3_ROUTER=0x2626664c2603336E57B271c5C0b26F421741e481
 
-# Private Key (for deployment)
+# Private Key (for deployment) - NEVER COMMIT TO GIT
 PRIVATE_KEY=your_private_key_here
 
 # Backend Configuration
@@ -199,12 +129,6 @@ NEXT_PUBLIC_CONTRACT_ADDRESS_BASE_SEPOLIA=0x...
 - Emergency withdrawal functions
 - Gas cost validation before rebalancing
 - Rate limiting on API endpoints
-
-### Risk Controls
-- Liquidation probability calculations
-- Volatility-based position sizing
-- Minimum profitability thresholds
-- Configurable check intervals
 
 ## 📊 API Documentation
 
@@ -244,7 +168,6 @@ pytest tests/
 
 ### Frontend Tests
 ```bash
-cd frontend
 npm test
 ```
 
@@ -291,10 +214,10 @@ MIT License - see LICENSE file for details
 
 ## 🆘 Support
 
-- **Documentation**: [Project Wiki](link-to-wiki)
+- **Documentation**: [docs/](docs/)
 - **Issues**: [GitHub Issues](link-to-issues)
 - **Discord**: [Community Server](link-to-discord)
-- **Email**: support@ammoptimizer.com
+- **Email**: support@tangerine.trading
 
 ## 🙏 Acknowledgments
 
@@ -307,3 +230,5 @@ MIT License - see LICENSE file for details
 ---
 
 **Built for Base Hackathon 2024** 🏆
+
+**Slice. Optimize. Conquer.** 🍊
