@@ -46,81 +46,85 @@
 :root {
   --radius: 0.625rem;
   
-  /* Tangerine Brand Colors */
-  --tangerine-primary: #FF8C42;      /* Bright orange */
-  --tangerine-dark: #E67635;         /* Deep orange */
-  --tangerine-black: #1A1A1A;        /* Near black */
-  --tangerine-cream: #FFF5E6;        /* Light cream */
-  --tangerine-green: #4CAF50;        /* Success/yields */
-  --tangerine-accent: #FF6B35;       /* Vibrant accent */
+  /* Futuristic Brand Colors - Gemini Inspired */
+  --tangerine-primary: #00D4FF;      /* Electric blue */
+  --tangerine-dark: #0099CC;         /* Deep blue */
+  --tangerine-black: #0A0A0A;        /* Deep black */
+  --tangerine-cream: #F8FAFC;        /* Clean white */
+  --tangerine-green: #00FF88;        /* Electric green */
+  --tangerine-accent: #FF6B35;       /* Orange accent */
+  --tangerine-purple: #8B5CF6;       /* Purple accent */
+  --tangerine-cyan: #06B6D4;         /* Cyan accent */
+  --tangerine-gray: #1E293B;         /* Dark gray */
+  --tangerine-light-gray: #64748B;   /* Light gray */
   
-  /* Light theme - Tangerine */
-  --background: #FFF5E6;             /* Tangerine cream */
-  --foreground: #1A1A1A;             /* Tangerine black */
+  /* Light theme - Futuristic */
+  --background: #F8FAFC;             /* Clean white */
+  --foreground: #0A0A0A;             /* Deep black */
   --card: #FFFFFF;
-  --card-foreground: #1A1A1A;
+  --card-foreground: #0A0A0A;
   --popover: #FFFFFF;
-  --popover-foreground: #1A1A1A;
-  --primary: #FF8C42;                /* Tangerine primary */
+  --popover-foreground: #0A0A0A;
+  --primary: #00D4FF;                /* Electric blue */
   --primary-foreground: #FFFFFF;
-  --secondary: #FFE4CC;              /* Light orange */
-  --secondary-foreground: #1A1A1A;
-  --muted: #FFE4CC;
-  --muted-foreground: #666666;
-  --accent: #FF6B35;                 /* Tangerine accent */
+  --secondary: #F1F5F9;              /* Light gray */
+  --secondary-foreground: #0A0A0A;
+  --muted: #F1F5F9;
+  --muted-foreground: #64748B;
+  --accent: #8B5CF6;                 /* Purple accent */
   --accent-foreground: #FFFFFF;
-  --destructive: #FF4444;
-  --border: #FFD4A3;                 /* Light orange border */
-  --input: #FFE4CC;
-  --ring: #FF8C42;
-  --chart-1: #FF8C42;                /* Tangerine primary */
-  --chart-2: #FF6B35;                /* Tangerine accent */
-  --chart-3: #4CAF50;                /* Success green */
-  --chart-4: #E67635;                /* Tangerine dark */
-  --chart-5: #FFD4A3;                /* Light orange */
+  --destructive: #EF4444;
+  --border: #E2E8F0;                 /* Light border */
+  --input: #F1F5F9;
+  --ring: #00D4FF;
+  --chart-1: #00D4FF;                /* Electric blue */
+  --chart-2: #8B5CF6;                /* Purple */
+  --chart-3: #00FF88;                /* Electric green */
+  --chart-4: #FF6B35;                /* Orange */
+  --chart-5: #06B6D4;                /* Cyan */
   --sidebar: #FFFFFF;
-  --sidebar-foreground: #1A1A1A;
-  --sidebar-primary: #FF8C42;
+  --sidebar-foreground: #0A0A0A;
+  --sidebar-primary: #00D4FF;
   --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #FFE4CC;
-  --sidebar-accent-foreground: #1A1A1A;
-  --sidebar-border: #FFD4A3;
-  --sidebar-ring: #FF8C42;
+  --sidebar-accent: #F1F5F9;
+  --sidebar-accent-foreground: #0A0A0A;
+  --sidebar-border: #E2E8F0;
+  --sidebar-ring: #00D4FF;
 }
 
 .dark {
-  /* Dark theme - Tangerine */
-  --background: #1A1A1A;             /* Tangerine black */
-  --foreground: #FFF5E6;             /* Tangerine cream */
-  --card: #2A2A2A;                   /* Dark gray */
-  --card-foreground: #FFF5E6;
-  --popover: #2A2A2A;
-  --popover-foreground: #FFF5E6;
-  --primary: #FF8C42;                /* Tangerine primary */
-  --primary-foreground: #1A1A1A;
-  --secondary: #3A3A3A;              /* Dark gray */
-  --secondary-foreground: #FFF5E6;
-  --muted: #3A3A3A;
-  --muted-foreground: #CCCCCC;
-  --accent: #FF6B35;                 /* Tangerine accent */
-  --accent-foreground: #1A1A1A;
-  --destructive: #FF4444;
-  --border: #4A4A4A;                 /* Dark border */
-  --input: #3A3A3A;
-  --ring: #FF8C42;
-  --chart-1: #FF8C42;                /* Tangerine primary */
-  --chart-2: #FF6B35;                /* Tangerine accent */
-  --chart-3: #4CAF50;                /* Success green */
-  --chart-4: #E67635;                /* Tangerine dark */
-  --chart-5: #FFD4A3;                /* Light orange */
-  --sidebar: #2A2A2A;
-  --sidebar-foreground: #FFF5E6;
-  --sidebar-primary: #FF8C42;
-  --sidebar-primary-foreground: #1A1A1A;
-  --sidebar-accent: #3A3A3A;
-  --sidebar-accent-foreground: #FFF5E6;
-  --sidebar-border: #4A4A4A;
-  --sidebar-ring: #FF8C42;
+  /* Dark theme - Futuristic */
+  --background: #0A0A0A;             /* Deep black */
+  --foreground: #F8FAFC;             /* Clean white */
+  --card: #1E293B;                   /* Dark gray */
+  --card-foreground: #F8FAFC;
+  --popover: #1E293B;
+  --popover-foreground: #F8FAFC;
+  --primary: #00D4FF;                /* Electric blue */
+  --primary-foreground: #0A0A0A;
+  --secondary: #334155;              /* Dark gray */
+  --secondary-foreground: #F8FAFC;
+  --muted: #334155;
+  --muted-foreground: #94A3B8;
+  --accent: #8B5CF6;                 /* Purple accent */
+  --accent-foreground: #F8FAFC;
+  --destructive: #EF4444;
+  --border: #475569;                 /* Dark border */
+  --input: #334155;
+  --ring: #00D4FF;
+  --chart-1: #00D4FF;                /* Electric blue */
+  --chart-2: #8B5CF6;                /* Purple */
+  --chart-3: #00FF88;                /* Electric green */
+  --chart-4: #FF6B35;                /* Orange */
+  --chart-5: #06B6D4;                /* Cyan */
+  --sidebar: #1E293B;
+  --sidebar-foreground: #F8FAFC;
+  --sidebar-primary: #00D4FF;
+  --sidebar-primary-foreground: #0A0A0A;
+  --sidebar-accent: #334155;
+  --sidebar-accent-foreground: #F8FAFC;
+  --sidebar-border: #475569;
+  --sidebar-ring: #00D4FF;
 }
 
 @layer base {
@@ -129,5 +133,110 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 1s ease-in-out;
+  }
+  
+  .animate-slide-up {
+    animation: slideUp 0.6s ease-out;
+  }
+  
+  .animate-bounce-gentle {
+    animation: bounceGentle 2s infinite;
+  }
+  
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+  
+  .animate-pulse-slow {
+    animation: pulseSlow 3s ease-in-out infinite;
+  }
+  
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .gradient-text {
+    background: linear-gradient(135deg, #00D4FF, #8B5CF6, #00FF88);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .glass-effect {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .neon-border {
+    border: 1px solid #00D4FF;
+    box-shadow: 0 0 10px rgba(0, 212, 255, 0.3), inset 0 0 10px rgba(0, 212, 255, 0.1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounceGentle {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+  }
+  to {
+    box-shadow: 0 0 30px rgba(0, 212, 255, 0.6), 0 0 40px rgba(139, 92, 246, 0.3);
+  }
+}
+
+@keyframes pulseSlow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
   }
 }

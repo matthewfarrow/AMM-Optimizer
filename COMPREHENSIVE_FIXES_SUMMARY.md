@@ -124,3 +124,6 @@ const approveToken = useCallback(async (tokenAddress: string, amount: bigint) =>
 All critical fixes have been implemented. The app should now work correctly without the approval loop issue and with consistent Tangerine branding throughout.
 
 
+
+
+

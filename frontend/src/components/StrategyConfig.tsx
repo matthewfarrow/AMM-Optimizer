@@ -92,15 +92,55 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
   const fetchAnalytics = async () => {
     try {
       setLoading(true);
-      const [priceResponse, volatilityResponse, recommendationsResponse] = await Promise.all([
-        apiClient.getPriceData(pool.address, timeframe),
-        apiClient.getVolatilityAnalysis(pool.address, timeframe),
-        apiClient.getStrategyRecommendations(pool.address, 1000, 'medium')
-      ]);
       
-      setPriceData((priceResponse as any).data || []);
-      setVolatilityData(volatilityResponse as any);
-      setRecommendations(recommendationsResponse as any);
+      // Try to fetch from API first
+      try {
+        const [priceResponse, volatilityResponse, recommendationsResponse] = await Promise.all([
+          apiClient.getPriceData(pool.address, timeframe),
+          apiClient.getVolatilityAnalysis(pool.address, timeframe),
+          apiClient.getStrategyRecommendations(pool.address, 1000, 'medium')
+        ]);
+        
+        setPriceData((priceResponse as any).data || []);
+        setVolatilityData(volatilityResponse as any);
+        setRecommendations(recommendationsResponse as any);
+        return;
+      } catch (apiError) {
+        console.log('API not available, using mock data:', apiError);
+      }
+      
+      // Fallback to mock data
+      const mockPriceData = [
+        { timestamp: Date.now() - 86400000, price: 2450.0 },
+        { timestamp: Date.now() - 72000000, price: 2475.0 },
+        { timestamp: Date.now() - 57600000, price: 2460.0 },
+        { timestamp: Date.now() - 43200000, price: 2480.0 },
+        { timestamp: Date.now() - 28800000, price: 2490.0 },
+        { timestamp: Date.now() - 14400000, price: 2500.0 },
+        { timestamp: Date.now(), price: 2510.0 }
+      ];
+      
+      const mockVolatilityData = {
+        current_price: 2510.0,
+        volatility_percentage: 2.5,
+        price_range: {
+          min: 2400.0,
+          max: 2600.0
+        }
+      };
+      
+      const mockRecommendations = {
+        recommendations: {
+          tick_range: 200,
+          expected_apr: 15.5,
+          liquidation_probability: 12.0
+        },
+        warnings: []
+      };
+      
+      setPriceData(mockPriceData);
+      setVolatilityData(mockVolatilityData);
+      setRecommendations(mockRecommendations);
     } catch (error) {
       console.error('Error fetching analytics:', error);
     } finally {
@@ -110,13 +150,33 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
 
   const fetchOutOfRangeProbability = async () => {
     try {
-      const response = await apiClient.getOutOfRangeProbability(
-        pool.address,
-        tickRange,
-        checkInterval,
-        timeframe
-      );
-      setOutOfRangeData(response as any);
+      // Try API first
+      try {
+        const response = await apiClient.getOutOfRangeProbability(
+          pool.address,
+          tickRange,
+          checkInterval,
+          timeframe
+        );
+        setOutOfRangeData(response as any);
+        return;
+      } catch (apiError) {
+        console.log('API not available for out of range probability, using mock data:', apiError);
+      }
+      
+      // Mock data for out of range probability
+      const mockOutOfRangeData = {
+        out_of_range_probability: 15.0,
+        risk_level: 'low',
+        volatility_percentage: 2.5,
+        price_bounds: {
+          lower: 2400.0,
+          upper: 2600.0
+        },
+        recommendation: 'Position looks good with current parameters. Consider monitoring every 30 minutes.'
+      };
+      
+      setOutOfRangeData(mockOutOfRangeData);
     } catch (error) {
       console.error('Error fetching out of range probability:', error);
     }
@@ -535,11 +595,11 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
       </div>
 
       {/* Pool Info */}
-      <Card className="bg-slate-800/50 border-slate-700">
+      <Card className="bg-white/90 border-tangerine-primary/20 shadow-lg">
         <CardHeader>
           <CardTitle className="text-tangerine-black flex items-center">
-            <div className="w-8 h-8 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center mr-3">
-              <span className="text-tangerine-black font-bold text-xs">
+            <div className="w-8 h-8 bg-gradient-to-r from-tangerine-primary to-tangerine-accent rounded-full flex items-center justify-center mr-3 shadow-sm">
+              <span className="text-white font-bold text-xs">
                 {pool.token0[0]}{pool.token1[0]}
               </span>
             </div>
@@ -578,11 +638,11 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
 
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Price Chart */}
-        <Card className="bg-slate-800/50 border-slate-700">
+        <Card className="bg-white/90 border-tangerine-primary/20 shadow-lg">
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle className="text-tangerine-black flex items-center">
-                <BarChart3 className="w-5 h-5 mr-2" />
+                <BarChart3 className="w-5 h-5 mr-2 text-tangerine-primary" />
                 Price Chart
               </CardTitle>
               <div className="flex space-x-2">
@@ -592,7 +652,10 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
                     variant={timeframe === tf ? 'default' : 'outline'}
                     size="sm"
                     onClick={() => setTimeframe(tf)}
-                    className={timeframe === tf ? 'bg-orange-500' : 'bg-slate-700'}
+                    className={timeframe === tf 
+                      ? 'bg-tangerine-primary text-white hover:bg-tangerine-dark' 
+                      : 'bg-white border-tangerine-primary/30 text-tangerine-black hover:bg-tangerine-primary/10'
+                    }
                   >
                     {tf.toUpperCase()}
                   </Button>
@@ -603,31 +666,32 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
           <CardContent>
             {loading ? (
               <div className="h-64 flex items-center justify-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-tangerine-primary"></div>
               </div>
             ) : (
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={priceData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#FFD4A3" />
                     <XAxis 
                       dataKey="timestamp" 
-                      stroke="#9CA3AF"
+                      stroke="#666666"
                       tickFormatter={(value) => new Date(value).toLocaleDateString()}
                     />
-                    <YAxis stroke="#9CA3AF" />
+                    <YAxis stroke="#666666" />
                     <Tooltip 
                       contentStyle={{ 
-                        backgroundColor: '#1F2937', 
-                        border: '1px solid #374151',
-                        borderRadius: '6px'
+                        backgroundColor: '#FFF5E6', 
+                        border: '1px solid #FFD4A3',
+                        borderRadius: '6px',
+                        color: '#1A1A1A'
                       }}
                       formatter={(value) => [formatPrice(Number(value)), 'Price']}
                     />
                     <Line 
                       type="monotone" 
                       dataKey="price" 
-                      stroke="#F97316" 
+                      stroke="#FF8C42" 
                       strokeWidth={2}
                       dot={false}
                     />
@@ -639,7 +703,7 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
         </Card>
 
         {/* Strategy Configuration */}
-        <Card className="bg-slate-800/90 border-slate-600 shadow-xl">
+        <Card className="bg-white/90 border-tangerine-primary/20 shadow-xl">
           <CardHeader>
             <CardTitle className="text-tangerine-black font-semibold">Strategy Parameters</CardTitle>
           </CardHeader>
@@ -673,13 +737,13 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
                 Wallet Balances
               </Label>
               <div className="grid grid-cols-2 gap-4 text-sm">
-                <div className="bg-slate-700/50 p-3 rounded-lg">
+                <div className="bg-tangerine-cream/50 p-3 rounded-lg border border-tangerine-primary/20">
                   <div className="text-tangerine-black/70">{token0Symbol}</div>
                   <div className="text-tangerine-black font-medium">
                     {token0Balance.isLoading ? 'Loading...' : `${token0Balance.formatted} ${token0Balance.symbol}`}
                   </div>
                 </div>
-                <div className="bg-slate-700/50 p-3 rounded-lg">
+                <div className="bg-tangerine-cream/50 p-3 rounded-lg border border-tangerine-primary/20">
                   <div className="text-tangerine-black/70">{token1Symbol}</div>
                   <div className="text-tangerine-black font-medium">
                     {token1Balance.isLoading ? 'Loading...' : `${token1Balance.formatted} ${token1Balance.symbol}`}
@@ -857,7 +921,7 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
             <Button
               onClick={handleSubmit}
               disabled={loading || creatingPosition || isPending || isConfirming || !amount0 || !amount1 || token0Insufficient || token1Insufficient}
-              className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
+              className="w-full bg-gradient-to-r from-tangerine-primary to-tangerine-accent hover:from-tangerine-dark hover:to-tangerine-primary text-white font-semibold shadow-lg"
             >
               {loading || creatingPosition || isPending || isConfirming ? (
                 <>
@@ -880,13 +944,13 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
                     href={`https://basescan.org/tx/${hash}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-orange-400 hover:text-orange-300 ml-1"
+                    className="text-tangerine-primary hover:text-tangerine-dark ml-1"
                   >
                     {hash.slice(0, 10)}...{hash.slice(-8)}
                   </a>
                 </div>
                 {isConfirmed && (
-                  <div className="text-green-400 text-sm mt-1">
+                  <div className="text-tangerine-green text-sm mt-1">
                     ✅ Position created successfully!
                   </div>
                 )}

@@ -1,25 +1,15 @@
 {
-  "name": "amm-optimizer",
+  "name": "tangerine-trading",
   "version": "1.0.0",
-  "description": "Automated Uniswap V3 Liquidity Management on Base",
+  "description": "Futuristic AMM Liquidity Optimizer for Base Network",
   "scripts": {
-    "compile": "hardhat compile",
-    "test": "hardhat test",
-    "deploy:base-sepolia": "hardhat run scripts/deploy.ts --network baseSepolia",
-    "deploy:base": "hardhat run scripts/deploy.ts --network base",
-    "verify:base-sepolia": "hardhat verify --network baseSepolia",
-    "verify:base": "hardhat verify --network base"
+    "dev": "cd frontend && npm run dev",
+    "build": "cd frontend && npm run build",
+    "start": "cd frontend && npm start",
+    "deploy": "./deploy.sh",
+    "clean": "rm -rf node_modules frontend/node_modules backend/__pycache__ backend/api/__pycache__ backend/api/logs/*.log"
   },
-  "devDependencies": {
-    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
-    "@nomicfoundation/hardhat-verify": "^2.0.0",
-    "@types/node": "^20.0.0",
-    "hardhat": "^2.19.0",
-    "typescript": "^5.0.0"
-  },
-  "dependencies": {
-    "@openzeppelin/contracts": "^4.9.0",
-    "dotenv": "^16.0.0"
-  }
+  "keywords": ["defi", "amm", "liquidity", "uniswap", "base", "optimizer"],
+  "author": "Tangerine.trading",
+  "license": "MIT"
 }
-

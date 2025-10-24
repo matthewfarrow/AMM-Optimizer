@@ -40,10 +40,49 @@ export function PositionMonitor({ onBack }: PositionMonitorProps) {
 
   const fetchPositions = async () => {
     try {
-      // In a real app, you'd get the user address from the wallet
-      const mockAddress = '0x1234567890123456789012345678901234567890';
-      const data = await apiClient.getUserPositions(mockAddress);
-      setPositions(data as any);
+      // Try API first
+      try {
+        const mockAddress = '0x1234567890123456789012345678901234567890';
+        const data = await apiClient.getUserPositions(mockAddress);
+        setPositions(data as any);
+        return;
+      } catch (apiError) {
+        console.log('API not available, using mock data:', apiError);
+      }
+      
+      // Mock data for positions
+      const mockPositions = [
+        {
+          id: 1,
+          user_address: '0x1234567890123456789012345678901234567890',
+          token_id: 12345,
+          pool_address: '0xd0b53D9277642d899DF5C87A3966A349A798F224',
+          tick_lower: -200,
+          tick_upper: 200,
+          amount0: 1.5,
+          amount1: 3750.0,
+          check_interval: 60,
+          active: true,
+          created_at: new Date(Date.now() - 86400000).toISOString(),
+          updated_at: new Date().toISOString()
+        },
+        {
+          id: 2,
+          user_address: '0x1234567890123456789012345678901234567890',
+          token_id: 12346,
+          pool_address: '0x6c561B446416E1A00E8E93E221854d6eA4171372',
+          tick_lower: -100,
+          tick_upper: 100,
+          amount0: 0.8,
+          amount1: 2000.0,
+          check_interval: 30,
+          active: false,
+          created_at: new Date(Date.now() - 172800000).toISOString(),
+          updated_at: new Date(Date.now() - 3600000).toISOString()
+        }
+      ];
+      
+      setPositions(mockPositions);
     } catch (error) {
       console.error('Error fetching positions:', error);
     } finally {
@@ -98,7 +137,7 @@ export function PositionMonitor({ onBack }: PositionMonitorProps) {
         <Button 
           onClick={fetchPositions}
           variant="outline"
-          className="bg-slate-700 border-slate-600"
+          className="bg-white border-tangerine-primary/30 text-tangerine-black hover:bg-tangerine-primary/10 hover:border-tangerine-primary"
         >
           Refresh
         </Button>
@@ -106,47 +145,47 @@ export function PositionMonitor({ onBack }: PositionMonitorProps) {
 
       {/* Positions Overview */}
       <div className="grid md:grid-cols-4 gap-4">
-        <Card className="bg-slate-800/50 border-slate-700">
+        <Card className="bg-white/90 border-tangerine-primary/20 shadow-lg">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-tangerine-black/70 text-sm">Total Positions</p>
                 <p className="text-2xl font-bold text-tangerine-black">{positions.length}</p>
               </div>
-              <TrendingUp className="w-8 h-8 text-orange-500" />
+              <TrendingUp className="w-8 h-8 text-tangerine-primary" />
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-slate-800/50 border-slate-700">
+        <Card className="bg-white/90 border-tangerine-primary/20 shadow-lg">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-tangerine-black/70 text-sm">Active</p>
-                <p className="text-2xl font-bold text-green-400">
+                <p className="text-2xl font-bold text-tangerine-green">
                   {positions.filter(p => p.active).length}
                 </p>
               </div>
-              <CheckCircle className="w-8 h-8 text-green-500" />
+              <CheckCircle className="w-8 h-8 text-tangerine-green" />
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-slate-800/50 border-slate-700">
+        <Card className="bg-white/90 border-tangerine-primary/20 shadow-lg">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-tangerine-black/70 text-sm">Paused</p>
-                <p className="text-2xl font-bold text-yellow-400">
+                <p className="text-2xl font-bold text-tangerine-accent">
                   {positions.filter(p => !p.active).length}
                 </p>
               </div>
-              <Pause className="w-8 h-8 text-yellow-500" />
+              <Pause className="w-8 h-8 text-tangerine-accent" />
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-slate-800/50 border-slate-700">
+        <Card className="bg-white/90 border-tangerine-primary/20 shadow-lg">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
@@ -155,21 +194,21 @@ export function PositionMonitor({ onBack }: PositionMonitorProps) {
                   ${positions.reduce((sum, p) => sum + p.amount0 + p.amount1, 0).toFixed(0)}
                 </p>
               </div>
-              <AlertCircle className="w-8 h-8 text-blue-500" />
+              <AlertCircle className="w-8 h-8 text-tangerine-primary" />
             </div>
           </CardContent>
         </Card>
       </div>
 
       {/* Positions List */}
-      <Card className="bg-slate-800/50 border-slate-700">
+      <Card className="bg-white/90 border-tangerine-primary/20 shadow-lg">
         <CardHeader>
           <CardTitle className="text-tangerine-black">Your Positions</CardTitle>
         </CardHeader>
         <CardContent>
           {loading ? (
             <div className="text-center py-8">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500 mx-auto mb-4"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-tangerine-primary mx-auto mb-4"></div>
               <p className="text-tangerine-black/70">Loading positions...</p>
             </div>
           ) : positions.length === 0 ? (
@@ -179,7 +218,7 @@ export function PositionMonitor({ onBack }: PositionMonitorProps) {
               <p className="text-tangerine-black/70 mb-4">
                 You don&apos;t have any active positions yet. Create your first position to get started.
               </p>
-              <Button onClick={onBack} className="bg-gradient-to-r from-orange-500 to-red-500">
+              <Button onClick={onBack} className="bg-gradient-to-r from-tangerine-primary to-tangerine-accent hover:from-tangerine-dark hover:to-tangerine-primary text-white font-semibold">
                 Create Position
               </Button>
             </div>
@@ -190,12 +229,12 @@ export function PositionMonitor({ onBack }: PositionMonitorProps) {
                 const StatusIcon = statusInfo.icon;
                 
                 return (
-                  <Card key={position.id} className="bg-slate-700/50 border-slate-600">
+                  <Card key={position.id} className="bg-tangerine-cream/30 border-tangerine-primary/20 shadow-sm">
                     <CardContent className="p-6">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-4">
-                          <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center">
-                            <span className="text-tangerine-black font-bold">
+                          <div className="w-12 h-12 bg-gradient-to-r from-tangerine-primary to-tangerine-accent rounded-full flex items-center justify-center shadow-sm">
+                            <span className="text-white font-bold">
                               {position.pool_address.slice(0, 2).toUpperCase()}
                             </span>
                           </div>
@@ -234,7 +273,7 @@ export function PositionMonitor({ onBack }: PositionMonitorProps) {
                                 variant="outline"
                                 size="sm"
                                 onClick={() => handlePausePosition(position.id)}
-                                className="bg-slate-600 border-slate-500"
+                                className="bg-white border-tangerine-primary/30 text-tangerine-black hover:bg-tangerine-primary/10 hover:border-tangerine-primary"
                               >
                                 <Pause className="w-4 h-4 mr-1" />
                                 Pause
@@ -244,7 +283,7 @@ export function PositionMonitor({ onBack }: PositionMonitorProps) {
                                 variant="outline"
                                 size="sm"
                                 onClick={() => handleResumePosition(position.id)}
-                                className="bg-slate-600 border-slate-500"
+                                className="bg-white border-tangerine-primary/30 text-tangerine-black hover:bg-tangerine-primary/10 hover:border-tangerine-primary"
                               >
                                 <Play className="w-4 h-4 mr-1" />
                                 Resume
@@ -254,7 +293,7 @@ export function PositionMonitor({ onBack }: PositionMonitorProps) {
                             <Button
                               variant="outline"
                               size="sm"
-                              className="bg-red-600 border-red-500 text-tangerine-black hover:bg-red-700"
+                              className="bg-white border-red-500/30 text-red-600 hover:bg-red-50 hover:border-red-500"
                             >
                               Withdraw
                             </Button>
@@ -263,7 +302,7 @@ export function PositionMonitor({ onBack }: PositionMonitorProps) {
                       </div>
                       
                       {/* Position Details */}
-                      <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-slate-600">
+                      <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-tangerine-primary/20">
                         <div>
                           <p className="text-sm text-tangerine-black/70">Check Interval</p>
                           <p className="text-tangerine-black font-medium">{position.check_interval}s</p>

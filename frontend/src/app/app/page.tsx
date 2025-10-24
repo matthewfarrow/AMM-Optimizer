@@ -7,6 +7,7 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -97,9 +98,9 @@ function AppPageContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-tangerine-cream via-orange-50 to-tangerine-cream">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900">
       {/* Header */}
-      <header className="border-b border-tangerine-primary/20 bg-white/80 backdrop-blur-sm sticky top-0 z-50">
+      <header className="border-b border-tangerine-primary/30 glass-effect sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-4">
@@ -109,9 +110,9 @@ function AppPageContent() {
                   alt="Tangerine.trading" 
                   width={32} 
                   height={32}
-                  className="w-8 h-8"
+                  className="w-8 h-8 animate-glow"
                 />
-                <span className="text-xl font-bold text-tangerine-black">Tangerine.trading</span>
+                <span className="text-xl font-bold text-white gradient-text">Tangerine.trading</span>
               </Link>
               
               {/* Tab Navigation */}
@@ -123,8 +124,8 @@ function AppPageContent() {
                     router.push('/app?tab=pools');
                   }}
                   className={activeTab === 'pools' 
-                    ? "bg-tangerine-primary text-white hover:bg-tangerine-dark" 
-                    : "text-tangerine-black hover:text-tangerine-primary hover:bg-tangerine-primary/10"
+                    ? "bg-tangerine-primary text-white hover:bg-tangerine-dark neon-border" 
+                    : "text-white hover:text-tangerine-primary hover:bg-tangerine-primary/10 glass-effect"
                   }
                 >
                   Select Pool
@@ -137,8 +138,8 @@ function AppPageContent() {
                   }}
                   disabled={!selectedPool}
                   className={activeTab === 'strategy' 
-                    ? "bg-tangerine-primary text-white hover:bg-tangerine-dark" 
-                    : "text-tangerine-black hover:text-tangerine-primary hover:bg-tangerine-primary/10"
+                    ? "bg-tangerine-primary text-white hover:bg-tangerine-dark neon-border" 
+                    : "text-white hover:text-tangerine-primary hover:bg-tangerine-primary/10 glass-effect"
                   }
                 >
                   Configure Strategy
@@ -150,17 +151,34 @@ function AppPageContent() {
                     router.push('/app?tab=monitor');
                   }}
                   className={activeTab === 'monitor' 
-                    ? "bg-tangerine-primary text-white hover:bg-tangerine-dark" 
-                    : "text-tangerine-black hover:text-tangerine-primary hover:bg-tangerine-primary/10"
+                    ? "bg-tangerine-primary text-white hover:bg-tangerine-dark neon-border" 
+                    : "text-white hover:text-tangerine-primary hover:bg-tangerine-primary/10 glass-effect"
                   }
                 >
                   Deploy & Monitor
                 </Button>
               </nav>
+              
+              {/* Mobile Navigation */}
+              <div className="md:hidden">
+                <Select value={activeTab} onValueChange={(value) => {
+                  setActiveTab(value as Tab);
+                  router.push(`/app?tab=${value}`);
+                }}>
+                  <SelectTrigger className="w-40 glass-effect border-tangerine-primary/30 text-white">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="pools">Select Pool</SelectItem>
+                    <SelectItem value="strategy" disabled={!selectedPool}>Configure Strategy</SelectItem>
+                    <SelectItem value="monitor">Deploy & Monitor</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
             
             <div className="flex items-center space-x-4">
-              <Badge variant="secondary" className="hidden sm:inline-flex bg-tangerine-primary/10 text-tangerine-black border-tangerine-primary/20">
+              <Badge variant="secondary" className="hidden sm:inline-flex glass-effect text-white border-tangerine-primary/30">
                 {address?.slice(0, 6)}...{address?.slice(-4)}
               </Badge>
               <ConnectButton />
@@ -179,7 +197,16 @@ function AppPageContent() {
 
 export default function AppPage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 bg-gradient-to-r from-tangerine-primary to-tangerine-purple rounded-full flex items-center justify-center mx-auto mb-4 animate-glow">
+            <span className="text-white font-bold text-xl">⚡</span>
+          </div>
+          <p className="text-gray-300 text-lg">Loading Tangerine.trading...</p>
+        </div>
+      </div>
+    }>
       <AppPageContent />
     </Suspense>
   );
