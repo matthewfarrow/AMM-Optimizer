@@ -44,7 +44,7 @@ function AppPageContent() {
           <CardContent className="text-center">
             <ConnectButton />
             <Link href="/" className="block mt-4">
-              <Button variant="outline" className="w-full border-orange-500 text-white hover:bg-orange-500/20 hover:text-orange-300">
+              <Button variant="outline" className="w-full border-orange-500 text-orange-200 bg-orange-500/10 hover:bg-orange-500/30 hover:text-white">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back to Home
               </Button>
