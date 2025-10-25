@@ -25,10 +25,33 @@ function AppPageContent() {
   const [selectedPool, setSelectedPool] = useState<any>(null);
   const selectedPoolRef = useRef<any>(null);
   
+  // Load selectedPool from localStorage on mount
+  useEffect(() => {
+    const savedPool = localStorage.getItem('selectedPool');
+    if (savedPool) {
+      try {
+        const parsedPool = JSON.parse(savedPool);
+        console.log('🔄 Loading selectedPool from localStorage:', parsedPool);
+        setSelectedPool(parsedPool);
+        selectedPoolRef.current = parsedPool;
+      } catch (e) {
+        console.error('Failed to parse saved pool:', e);
+        localStorage.removeItem('selectedPool');
+      }
+    }
+  }, []);
+  
   // Debug selectedPool changes
   useEffect(() => {
     console.log('🔄 selectedPool changed:', selectedPool);
     selectedPoolRef.current = selectedPool;
+    
+    // Save to localStorage
+    if (selectedPool) {
+      localStorage.setItem('selectedPool', JSON.stringify(selectedPool));
+    } else {
+      localStorage.removeItem('selectedPool');
+    }
   }, [selectedPool]);
   // Whitelist feature removed - all users can access the app
 
@@ -99,8 +122,21 @@ function AppPageContent() {
         console.log('🔍 Strategy tab - selectedPool:', selectedPool);
         console.log('🔍 Strategy tab - selectedPoolRef:', selectedPoolRef.current);
         
-        // Use ref as fallback if state is null but ref has value
-        const poolToUse = selectedPool || selectedPoolRef.current;
+        // Use ref and localStorage as fallbacks if state is null
+        let poolToUse = selectedPool || selectedPoolRef.current;
+        
+        // If still null, try localStorage
+        if (!poolToUse) {
+          try {
+            const savedPool = localStorage.getItem('selectedPool');
+            if (savedPool) {
+              poolToUse = JSON.parse(savedPool);
+              console.log('🔄 Using pool from localStorage fallback:', poolToUse);
+            }
+          } catch (e) {
+            console.error('Failed to parse localStorage pool:', e);
+          }
+        }
         
         if (!poolToUse || !poolToUse.address || !poolToUse.token0 || !poolToUse.token1) {
           console.log('❌ Invalid pool, but NOT redirecting for debugging');
