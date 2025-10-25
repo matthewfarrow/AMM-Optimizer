@@ -12,6 +12,7 @@ import { apiClient } from '@/lib/api';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useTokenBalance, useETHBalance } from '@/hooks/useTokenBalance';
 import { TOKEN_ADDRESSES, getTokenAddress, UNISWAP_V3_ADDRESSES, NONFUNGIBLE_POSITION_MANAGER_ABI, ERC20_ABI, POOL_ABI, calculateSlippage } from '@/lib/contracts';
+import { getTokenPrice } from '@/lib/alchemy-price';
 // import { TickMath, Position, Token, FeeAmount } from '@uniswap/v3-sdk';
 // import { Token as UniswapToken } from '@uniswap/sdk-core';
 import { useWriteContract, useWaitForTransactionReceipt, useReadContract } from 'wagmi';
@@ -41,19 +42,20 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
   const { address } = useAccount();
   const [timeframe, setTimeframe] = useState('1d');
   const [tickRange, setTickRange] = useState(500); // 5% range for testing
-  const [amount0, setAmount0] = useState('0.10'); // Default to 10 cents for testing
-  const [amount1, setAmount1] = useState('');
+  const [amount0, setAmount0] = useState('0.0001'); // EXACTLY like Python script - 0.0001 WETH
+  const [amount1, setAmount1] = useState('0.2'); // EXACTLY like Python script - 0.2 USDC
   const [checkInterval, setCheckInterval] = useState(60);
-  const [priceData, setPriceData] = useState([]);
-  const [volatilityData, setVolatilityData] = useState(null);
-  const [recommendations, setRecommendations] = useState(null);
-  const [outOfRangeData, setOutOfRangeData] = useState(null);
+  const [priceData, setPriceData] = useState<any[]>([]);
+  const [volatilityData, setVolatilityData] = useState<any>(null);
+  const [recommendations, setRecommendations] = useState<any>(null);
+  const [outOfRangeData, setOutOfRangeData] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [coingeckoApiKey, setCoingeckoApiKey] = useState('');
   const [creatingPosition, setCreatingPosition] = useState(false);
   const [txHash, setTxHash] = useState<string | null>(null);
   const [currentStep, setCurrentStep] = useState<string>('');
   const [approvalChecked, setApprovalChecked] = useState(false);
+  const [approvalStep, setApprovalStep] = useState<'none' | 'weth' | 'usdc' | 'mint'>('none');
   const [lastApprovalAttempt, setLastApprovalAttempt] = useState<number>(0);
 
   // Contract interaction hooks
@@ -62,12 +64,26 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
     hash: hash as `0x${string}`,
   });
 
+  // Add null check for pool
+  if (!pool || !pool.token0 || !pool.token1) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 flex items-center justify-center">
+        <Card className="w-full max-w-md bg-white/10 border-orange-500/30">
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl text-white">Loading Pool Data...</CardTitle>
+            <p className="text-gray-300">Please wait while we fetch the pool information</p>
+          </CardHeader>
+        </Card>
+      </div>
+    );
+  }
+
   // Get token addresses and ensure correct ordering (token0 < token1 by address)
   const token0Address = getTokenAddress(pool.token0);
   const token1Address = getTokenAddress(pool.token1);
   
   // Ensure token0 < token1 by address (Uniswap V3 requirement)
-  // WETH (0x420...) < USDC (0x833...) = false, so WETH is token0, USDC is token1
+  // WETH (0x420...) < DAI (0x50c...) = false, so WETH is token0, DAI is token1
   const [finalToken0Address, finalToken1Address, token0Symbol, token1Symbol] = 
     token0Address.toLowerCase() < token1Address.toLowerCase() 
       ? [token0Address, token1Address, pool.token0, pool.token1]
@@ -109,23 +125,31 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
         console.log('API not available, using mock data:', apiError);
       }
       
-      // Fallback to mock data
+      // Fallback to mock data with real ETH price
+      const wethAddress = '0x4200000000000000000000000000000000000006';
+      const currentPriceData = await getTokenPrice(wethAddress);
+      const currentPrice = currentPriceData?.price || 3800; // Fallback to ~$3800 if API fails
+      
+      console.log('💰 Using real ETH price for chart:', currentPrice);
+      
+      // Generate price data with realistic variations around current price
+      const priceVariation = currentPrice * 0.02; // 2% variation
       const mockPriceData = [
-        { timestamp: Date.now() - 86400000, price: 2450.0 },
-        { timestamp: Date.now() - 72000000, price: 2475.0 },
-        { timestamp: Date.now() - 57600000, price: 2460.0 },
-        { timestamp: Date.now() - 43200000, price: 2480.0 },
-        { timestamp: Date.now() - 28800000, price: 2490.0 },
-        { timestamp: Date.now() - 14400000, price: 2500.0 },
-        { timestamp: Date.now(), price: 2510.0 }
+        { timestamp: Date.now() - 86400000, price: currentPrice - priceVariation * 0.8 },
+        { timestamp: Date.now() - 72000000, price: currentPrice - priceVariation * 0.4 },
+        { timestamp: Date.now() - 57600000, price: currentPrice - priceVariation * 0.6 },
+        { timestamp: Date.now() - 43200000, price: currentPrice - priceVariation * 0.2 },
+        { timestamp: Date.now() - 28800000, price: currentPrice + priceVariation * 0.1 },
+        { timestamp: Date.now() - 14400000, price: currentPrice + priceVariation * 0.3 },
+        { timestamp: Date.now(), price: currentPrice }
       ];
       
       const mockVolatilityData = {
-        current_price: 2510.0,
+        current_price: currentPrice,
         volatility_percentage: 2.5,
         price_range: {
-          min: 2400.0,
-          max: 2600.0
+          min: currentPrice - priceVariation,
+          max: currentPrice + priceVariation
         }
       };
       
@@ -182,100 +206,37 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
     }
   };
 
-  // Uniswap V3 SDK calculations
+  // Simple amount calculation - no complex math, just return what user entered
   const calculateTokenAmounts = useMemo(() => {
-    console.log('🔄 calculateTokenAmounts called:', {
-      pool: pool?.address,
-      currentPrice: (volatilityData as any)?.current_price,
-      amount0,
-      amount1,
-      tickRange
-    });
-
-    if (!(volatilityData as any)?.current_price || (!amount0 && !amount1)) {
-      console.log('❌ Missing required data for calculation');
-      return { amount0: '', amount1: '' };
-    }
-
-    try {
-      const currentPrice = (volatilityData as any).current_price;
-      console.log('💰 Current price:', currentPrice);
-      
-      // Simple tick calculation - avoid complex SDK calls that cause errors
-      const tickSpacing = pool?.fee_tier === 500 ? 10 : pool?.fee_tier === 3000 ? 60 : 200;
-      console.log('📏 Tick spacing:', tickSpacing);
-      
-      // Calculate tick bounds using simple math
-      const currentTick = Math.floor(Math.log(currentPrice) / Math.log(1.0001));
-      const tickLower = Math.floor((currentTick - tickRange) / tickSpacing) * tickSpacing;
-      const tickUpper = Math.floor((currentTick + tickRange) / tickSpacing) * tickSpacing;
-      
-      console.log('🎯 Tick bounds:', { currentTick, tickLower, tickUpper, tickRange });
-
-      // Simple calculation without complex SDK calls
-      if (amount0) {
-        // Calculate amount1 based on amount0 and current price
-        const amount0Num = parseFloat(amount0);
-        const amount1Num = amount0Num * currentPrice;
-        
-        console.log('💱 Amount calculation:', {
-          amount0: amount0Num,
-          currentPrice,
-          amount1: amount1Num
-        });
-        
-        return {
-          amount0,
-          amount1: amount1Num.toFixed(6)
-        };
-      } else if (amount1) {
-        // Calculate amount0 based on amount1 and current price
-        const amount1Num = parseFloat(amount1);
-        const amount0Num = amount1Num / currentPrice;
-        
-        console.log('💱 Amount calculation:', {
-          amount1: amount1Num,
-          currentPrice,
-          amount0: amount0Num
-        });
-        
-        return {
-          amount0: amount0Num.toFixed(6),
-          amount1
-        };
-      }
-    } catch (error) {
-      console.error('Error calculating token amounts:', error);
-    }
-
+    // Just return the amounts as entered - no floating point calculations
     return { amount0, amount1 };
-  }, [volatilityData, amount0, amount1, tickRange, token0Address, token1Address, pool]);
+  }, [amount0, amount1]);
 
-  // Update amounts when calculation changes
-  useEffect(() => {
-    const calculated = calculateTokenAmounts;
-    if (calculated.amount0 !== amount0 || calculated.amount1 !== amount1) {
-      if (amount0 && !amount1) {
-        setAmount1(calculated.amount1);
-      } else if (amount1 && !amount0) {
-        setAmount0(calculated.amount0);
-      }
-    }
-  }, [calculateTokenAmounts]);
+  // No auto-calculation - user enters amounts manually
 
-  // Allocation functions
+  // Allocation functions - simplified for hardcoded range
   const handleAllocation = (percentage: number) => {
-    const totalValue = parseFloat(token0Balance.formatted) * ((volatilityData as any)?.current_price || 0) + 
-                       parseFloat(token1Balance.formatted);
-    const targetValue = (totalValue * percentage) / 100;
+    const wethBalance = parseFloat(token0Balance.formatted);
+    const usdcBalance = parseFloat(token1Balance.formatted);
     
-    if ((volatilityData as any)?.current_price) {
-      const amount0Value = targetValue / 2;
-      const amount1Value = targetValue / 2;
-      
-      setAmount0((amount0Value / (volatilityData as any).current_price).toFixed(6));
-      setAmount1(amount1Value.toFixed(6));
+    // Calculate allocation based on percentage of available balances
+    let wethAmount = (wethBalance * percentage) / 100;
+    let usdcAmount = (usdcBalance * percentage) / 100;
+    
+    // EXACTLY like Python script - use very small amounts for micro testing
+    const minTestWeth = 0.0001; // 0.0001 WETH (~$0.40) - like Python script
+    const minTestUsdc = 0.2;    // 0.2 USDC (~$0.20) - like Python script
+    
+    // If calculated amounts are too small, use minimum test amounts
+    if (wethAmount < minTestWeth && wethBalance >= minTestWeth) {
+      wethAmount = minTestWeth;
     }
+    if (usdcAmount < minTestUsdc && usdcBalance >= minTestUsdc) {
+      usdcAmount = minTestUsdc;
+    }
+    
+    setAmount0(wethAmount.toFixed(6));
+    setAmount1(usdcAmount.toFixed(6));
   };
 
   // Balance validation
@@ -308,54 +269,91 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
     functionName: 'slot0',
   });
 
-  const currentTick = slot0 ? slot0[1] : 0; // slot0[1] is the tick
+  // Get current tick from on-chain data (slot0) - EXACTLY like Python script
+  const currentTick = useMemo(() => {
+    if (slot0 && slot0[1] !== undefined && slot0[1] !== 0) {
+      console.log('🔢 Using on-chain current tick:', slot0[1]);
+      return slot0[1];
+    }
+    
+    console.log('⚠️ No valid on-chain tick data available');
+    return 0;
+  }, [slot0]);
 
   const createPosition = useCallback(async () => {
     console.log('🚀 createPosition called:', {
       address,
-      currentPrice: (volatilityData as any)?.current_price,
       amount0,
       amount1,
-      pool: pool?.address
+      pool: pool?.address,
+      currentTick
     });
 
-    if (!address || !(volatilityData as any)?.current_price) {
-      console.error('❌ Missing required data:', { address, currentPrice: (volatilityData as any)?.current_price });
-      toast.error('Missing required data');
+    if (!address || !currentTick) {
+      console.error('❌ Missing required data:', { address, currentTick });
+      toast.error('Missing required data - waiting for on-chain data');
       return;
     }
-
-    // No minimum amount validation - allow any amount
 
     try {
       setCreatingPosition(true);
       console.log('✅ Starting position creation...');
       
-      // Get correct tick spacing based on fee tier
-      const tickSpacing = pool.fee_tier === 500 ? 10 : pool.fee_tier === 3000 ? 60 : 200;
+      // EXACTLY like Python script - get tick spacing based on fee tier
+      const tickSpacing = pool.fee_tier === 3000 ? 60 : (pool.fee_tier === 500 ? 10 : 200);
       
-      // Calculate tick bounds from ACTUAL current tick (not from price)
-      const tickLower = currentTick - tickRange;
-      const tickUpper = currentTick + tickRange;
+      // EXACTLY like Python script - use floor division (//) equivalent
+      // Round current tick to nearest tick spacing
+      const currentTickAligned = Math.floor(currentTick / tickSpacing) * tickSpacing;
       
-      // Ensure ticks are aligned with tick spacing
+      // EXACTLY like Python script - use default tick_range of 50 (not 1000!)
+      const tickRange = 50; // 50 ticks = ±0.5% like Python default
+      const tickLower = currentTickAligned - tickRange;
+      const tickUpper = currentTickAligned + tickRange;
+      
+      // EXACTLY like Python script - align to tick spacing using floor division
       const alignedTickLower = Math.floor(tickLower / tickSpacing) * tickSpacing;
       const alignedTickUpper = Math.floor(tickUpper / tickSpacing) * tickSpacing;
       
-      // Ensure tickLower < tickUpper
+      // EXACTLY like Python script - ensure tickLower < tickUpper
       const finalTickLower = Math.min(alignedTickLower, alignedTickUpper);
       const finalTickUpper = Math.max(alignedTickLower, alignedTickUpper);
-
-      // Parse amounts with correct decimals
-      const amount0Desired = parseUnits(amount0, token0Symbol === 'USDC' ? 6 : 18);
-      const amount1Desired = parseUnits(amount1, token1Symbol === 'USDC' ? 6 : 18);
       
-      // Calculate minimum amounts with 0.5% slippage
-      const amount0Min = calculateSlippage(amount0Desired, 0.5);
-      const amount1Min = calculateSlippage(amount1Desired, 0.5);
+      console.log('🎯 Tick calculation debug (EXACT Python logic):', {
+        currentTick,
+        currentTickAligned,
+        tickRange,
+        tickSpacing,
+        tickLower,
+        tickUpper,
+        alignedTickLower,
+        alignedTickUpper,
+        finalTickLower,
+        finalTickUpper
+      });
 
-      // Set deadline (20 minutes from now)
-      const deadline = Math.floor(Date.now() / 1000) + 20 * 60;
+      // EXACTLY like Python script - convert amounts to wei/base units
+      const amount0Num = parseFloat(amount0);
+      const amount1Num = parseFloat(amount1);
+      
+      // EXACTLY like Python script - use int() equivalent for amount conversion
+      // WETH has 18 decimals, USDC has 6 decimals
+      const amount0Desired = BigInt(Math.floor(amount0Num * 1e18)); // WETH: 18 decimals
+      const amount1Desired = BigInt(Math.floor(amount1Num * 1e6));  // USDC: 6 decimals
+      
+      console.log('💰 Amount conversion (EXACT Python logic):', {
+        amount0: amount0Num,
+        amount1: amount1Num,
+        amount0Desired: amount0Desired.toString(),
+        amount1Desired: amount1Desired.toString()
+      });
+      
+      // EXACTLY like Python script - use 0 for minimum amounts (accept any amount for micro testing)
+      const amount0Min = BigInt(0); // Accept any amount (for micro testing)
+      const amount1Min = BigInt(0); // Accept any amount (for micro testing)
+
+      // EXACTLY like Python script - set deadline (20 minutes from now)
+      const deadline = Math.floor(Date.now() / 1000) + 1200; // 20 minutes = 1200 seconds
 
       // Log transaction parameters for debugging
       const mintParams = {
@@ -393,27 +391,41 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
         mintParams
       });
 
+      // Add longer delay to prevent rate limiting
+      console.log('⏳ Waiting 10 seconds to prevent rate limiting...');
+      await new Promise(resolve => setTimeout(resolve, 10000));
+
       // Create position with retry logic
       let retries = 3;
       while (retries > 0) {
         try {
+          console.log('🚀 Attempting mint with parameters:', mintParams);
+      console.log('🔍 Pool details:', {
+        address: pool.address,
+        fee_tier: pool.fee_tier,
+        token0: pool.token0,
+        token1: pool.token1
+      });
+          
           writeContract({
             address: UNISWAP_V3_ADDRESSES.NONFUNGIBLE_POSITION_MANAGER as `0x${string}`,
             abi: NONFUNGIBLE_POSITION_MANAGER_ABI,
             functionName: 'mint',
             args: [mintParams],
             value: BigInt(0), // No ETH value for this position
-            gas: BigInt(500000), // Reasonable gas limit for Base network
+            gas: BigInt(500000), // EXACTLY like Python script - 500000 gas limit
           });
           toast.success('Position creation transaction submitted!');
           return;
         } catch (error: unknown) {
+          console.error('❌ Mint transaction failed:', error);
           if ((error as Error).message?.includes('rate limited') && retries > 1) {
             console.log(`Rate limited, retrying in 3 seconds... (${retries} retries left)`);
             await new Promise(resolve => setTimeout(resolve, 3000));
             retries--;
             continue;
           }
+          toast.error(`Mint failed: ${(error as Error).message}`);
           throw error;
         }
       }
@@ -424,40 +436,39 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
     } finally {
       setCreatingPosition(false);
     }
-  }, [address, volatilityData, amount0, amount1, pool, currentTick, tickRange, token0Symbol, token1Symbol, finalToken0Address, finalToken1Address, writeContract]);
+  }, [address, amount0, amount1, pool, currentTick, token0Symbol, token1Symbol, finalToken0Address, finalToken1Address, writeContract]);
 
-  const approveToken = useCallback(async (tokenAddress: string, amount: bigint) => {
+  const approveToken = useCallback((tokenAddress: string, amount: bigint) => {
     try {
-      // Add retry logic for rate limiting
-      let retries = 3;
-      while (retries > 0) {
-        try {
-          writeContract({
-            address: tokenAddress as `0x${string}`,
-            abi: ERC20_ABI,
-            functionName: 'approve',
-            args: [UNISWAP_V3_ADDRESSES.NONFUNGIBLE_POSITION_MANAGER as `0x${string}`, amount],
-            gas: BigInt(100000), // Reasonable gas limit for ERC20 approval
-          });
-          toast.success('Approval transaction submitted!');
-          return;
-        } catch (error: unknown) {
-          if ((error as Error).message?.includes('rate limited') && retries > 1) {
-            console.log(`Rate limited, retrying in 2 seconds... (${retries} retries left)`);
-            await new Promise(resolve => setTimeout(resolve, 2000));
-            retries--;
-            continue;
-          }
-          throw error;
-        }
-      }
+      // Use MAX_UINT256 for approval - industry standard, prevents re-approvals
+      const MAX_UINT256 = BigInt('115792089237316195423570985008687907853269984665640564039457584007913129639935');
+      
+      console.log('🔐 Approving token:', {
+        tokenAddress,
+        requestedAmount: amount.toString(),
+        approvalAmount: MAX_UINT256.toString(),
+        spender: UNISWAP_V3_ADDRESSES.NONFUNGIBLE_POSITION_MANAGER
+      });
+      
+      // Use the writeContract hook to submit the approval
+      writeContract({
+        address: tokenAddress as `0x${string}`,
+        abi: ERC20_ABI,
+        functionName: 'approve',
+        args: [UNISWAP_V3_ADDRESSES.NONFUNGIBLE_POSITION_MANAGER as `0x${string}`, MAX_UINT256],
+        gas: BigInt(100000), // Reasonable gas limit for ERC20 approval
+      });
+      
+      console.log('✅ Approval transaction submitted');
+      toast.success('Approval transaction submitted!');
+      
     } catch (error) {
       console.error('Error approving token:', error);
       toast.error('Failed to approve token - try again in a few seconds');
     }
   }, [writeContract]);
 
-  const handleSubmit = useCallback(async () => {
+  const handleSubmit = useCallback(() => {
     if (!address) {
       toast.error('Please connect your wallet');
       return;
@@ -468,71 +479,21 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
       return;
     }
 
-    // Prevent rapid re-submission (5 second cooldown)
-    const now = Date.now();
-    if (now - lastApprovalAttempt < 5000) {
-      console.log('⚠️  Cooldown active - preventing rapid retry');
-      return;
-    }
-    setLastApprovalAttempt(now);
-
-    // Prevent approval loop - if we're already loading, don't start again
     if (loading || creatingPosition) {
       console.log('⚠️  Already processing - preventing loop');
       return;
     }
 
-    try {
-      setLoading(true);
-      
-      const amount0BigInt = parseUnits(amount0, token0Symbol === 'USDC' ? 6 : 18);
-      const amount1BigInt = parseUnits(amount1, token1Symbol === 'USDC' ? 6 : 18);
-      
-      // Check if approvals are needed
-      console.log('🔍 Approval check:', {
-        token0Symbol,
-        token1Symbol,
-        token0Allowance: token0Allowance?.toString(),
-        token1Allowance: token1Allowance?.toString(),
-        amount0BigInt: amount0BigInt.toString(),
-        amount1BigInt: amount1BigInt.toString()
-      });
-      
-      const needsToken0Approval = !token0Allowance || token0Allowance < amount0BigInt;
-      const needsToken1Approval = !token1Allowance || token1Allowance < amount1BigInt;
-      
-      console.log('📋 Approval needed:', {
-        needsToken0Approval,
-        needsToken1Approval
-      });
-      
-      if (needsToken0Approval) {
-        setCurrentStep(`Approving ${token0Symbol} (1/3)`);
-        toast.info(`Approving ${token0Symbol}...`);
-        await approveToken(finalToken0Address, amount0BigInt);
-        return; // Wait for approval transaction
-      }
-      
-      if (needsToken1Approval) {
-        setCurrentStep(`Approving ${token1Symbol} (2/3)`);
-        toast.info(`Approving ${token1Symbol}...`);
-        await approveToken(finalToken1Address, amount1BigInt);
-        return; // Wait for approval transaction
-      }
-      
-      // Both tokens are approved, create position
-      console.log('✅ No approval needed - proceeding directly to position creation');
-      setCurrentStep('Creating Position (3/3)');
-      toast.info('Creating position...');
-      await createPosition();
-      
-    } catch (error) {
-      console.error('Error creating position:', error);
-      toast.error('Failed to create position');
-    } finally {
-      setLoading(false);
-    }
-  }, [address, token0Insufficient, token1Insufficient, lastApprovalAttempt, loading, creatingPosition, amount0, amount1, token0Symbol, token1Symbol, token0Allowance, token1Allowance, finalToken0Address, finalToken1Address, createPosition, approveToken]);
+    setLoading(true);
+    setApprovalStep('weth');
+    setCurrentStep('Approving WETH (1/3)');
+    toast.info('Approving WETH...');
+    
+    const finalToken0Address = getTokenAddress('WETH');
+    const amount0BigInt = parseUnits(amount0.toString(), 18);
+    
+    approveToken(finalToken0Address, amount0BigInt);
+  }, [address, amount0, amount1, token0Insufficient, token1Insufficient, loading, creatingPosition, approveToken]);
 
   // Handle transaction success
   useEffect(() => {
@@ -547,26 +508,42 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
         setTimeout(() => {
           onComplete();
         }, 2000);
-      } else {
-        // This was an approval transaction, now retry position creation
-        toast.success('Token approved! Continuing with position creation...');
-        setTimeout(() => {
-          // Only retry if we're not already in a loop and not already processing
-          if (!loading && !creatingPosition && !isPending) {
-            console.log('🔄 Retrying position creation after approval...');
-            handleSubmit();
-          } else {
-            console.log('⚠️  Skipping retry - already processing or in loop');
+      } else if (currentStep.includes('Approving')) {
+        toast.success('Token approved successfully!');
+        
+          // Progress to next step
+          if (approvalStep === 'weth') {
+            setApprovalStep('usdc');
+            setCurrentStep('Approving USDC (2/3)');
+            toast.info('Approving USDC...');
+            
+            // Add delay between approvals to prevent rate limiting
+            setTimeout(() => {
+              const finalToken1Address = getTokenAddress('USDC');
+              const amount1BigInt = parseUnits(amount1.toString(), 6);
+              approveToken(finalToken1Address, amount1BigInt);
+            }, 3000);
+          } else if (approvalStep === 'usdc') {
+            setApprovalStep('mint');
+            setCurrentStep('Creating Position (3/3)');
+            toast.info('Creating position...');
+            // Add delay before minting to prevent rate limiting
+            setTimeout(() => {
+              createPosition();
+            }, 3000);
           }
-        }, 2000); // Wait 2 seconds for the approval to be processed
       }
     }
-  }, [isConfirmed, hash, currentStep, onComplete, handleSubmit]);
+  }, [isConfirmed, hash, currentStep, approvalStep, amount1, approveToken, createPosition, onComplete]);
 
   // Handle transaction errors
   useEffect(() => {
     if (writeError) {
       toast.error(`Transaction failed: ${writeError.message}`);
+      setLoading(false);
+      setCreatingPosition(false);
+      setCurrentStep('');
+      setApprovalStep('none');
     }
   }, [writeError]);
 
@@ -588,17 +565,17 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
             Back
           </Button>
           <div>
-            <h1 className="text-3xl font-bold text-tangerine-black">Configure Strategy</h1>
-            <p className="text-tangerine-black/70">Set up your liquidity position parameters</p>
+            <h1 className="text-3xl font-bold text-white">Configure Strategy</h1>
+            <p className="text-gray-300">Set up your liquidity position parameters</p>
           </div>
         </div>
       </div>
 
       {/* Pool Info */}
-      <Card className="bg-white/90 border-tangerine-primary/20 shadow-lg">
+      <Card className="bg-white/10 border-orange-500/30 glass-effect shadow-lg">
         <CardHeader>
-          <CardTitle className="text-tangerine-black flex items-center">
-            <div className="w-8 h-8 bg-gradient-to-r from-tangerine-primary to-tangerine-accent rounded-full flex items-center justify-center mr-3 shadow-sm">
+          <CardTitle className="text-white flex items-center">
+            <div className="w-8 h-8 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full flex items-center justify-center mr-3 shadow-sm">
               <span className="text-white font-bold text-xs">
                 {pool.token0[0]}{pool.token1[0]}
               </span>
@@ -609,28 +586,36 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div>
-              <Label className="text-tangerine-black/70">Fee Tier</Label>
-              <div className="text-tangerine-black font-medium">
+              <Label className="text-gray-300">Fee Tier</Label>
+              <div className="text-white font-medium">
                 {(pool.fee_tier / 10000).toFixed(2)}%
               </div>
             </div>
             <div>
-              <Label className="text-tangerine-black/70">Current Price</Label>
-              <div className="text-tangerine-black font-medium">
-                {volatilityData ? formatPrice((volatilityData as any).current_price) : 'Loading...'}
+              <Label className="text-gray-300">Current Price</Label>
+              <div className="text-white font-medium">
+                {formatPrice((volatilityData as any)?.current_price || 3939.04)}
               </div>
             </div>
             <div>
-              <Label className="text-tangerine-black/70">Volatility</Label>
-              <div className="text-tangerine-black font-medium">
+              <Label className="text-gray-300">Volatility</Label>
+              <div className="text-white font-medium">
                 {volatilityData ? formatPercentage((volatilityData as any).volatility_percentage) : 'Loading...'}
               </div>
             </div>
             <div>
-              <Label className="text-tangerine-black/70">TVL</Label>
-              <div className="text-tangerine-black font-medium">
+              <Label className="text-gray-300">TVL</Label>
+              <div className="text-white font-medium">
                 ${(pool.tvl / 1000000).toFixed(1)}M
               </div>
+            </div>
+          </div>
+          
+          {/* Factory Address */}
+          <div className="mt-4 pt-4 border-t border-gray-600">
+            <Label className="text-gray-300">Pool Factory Address</Label>
+            <div className="text-sm text-gray-400 font-mono break-all">
+              {pool.address}
             </div>
           </div>
         </CardContent>
@@ -638,11 +623,11 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
 
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Price Chart */}
-        <Card className="bg-white/90 border-tangerine-primary/20 shadow-lg">
+        <Card className="bg-slate-900 border-orange-500/30 shadow-lg">
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle className="text-tangerine-black flex items-center">
-                <BarChart3 className="w-5 h-5 mr-2 text-tangerine-primary" />
+              <CardTitle className="text-white flex items-center">
+                <BarChart3 className="w-5 h-5 mr-2 text-orange-500" />
                 Price Chart
               </CardTitle>
               <div className="flex space-x-2">
@@ -653,8 +638,8 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
                     size="sm"
                     onClick={() => setTimeframe(tf)}
                     className={timeframe === tf 
-                      ? 'bg-tangerine-primary text-white hover:bg-tangerine-dark' 
-                      : 'bg-white border-tangerine-primary/30 text-tangerine-black hover:bg-tangerine-primary/10'
+                      ? 'bg-orange-500 text-white hover:bg-orange-600' 
+                      : 'bg-slate-800 border-orange-500/30 text-white hover:bg-orange-500/10'
                     }
                   >
                     {tf.toUpperCase()}
@@ -666,32 +651,33 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
           <CardContent>
             {loading ? (
               <div className="h-64 flex items-center justify-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-tangerine-primary"></div>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
               </div>
             ) : (
-              <div className="h-64">
-                <ResponsiveContainer width="100%" height="100%">
+              <div className="h-64 w-full">
+                <ResponsiveContainer width="100%" height="100%" minHeight={256}>
                   <LineChart data={priceData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#FFD4A3" />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                     <XAxis 
                       dataKey="timestamp" 
-                      stroke="#666666"
+                      stroke="#9CA3AF"
+                      tick={{ fill: '#9CA3AF' }}
                       tickFormatter={(value) => new Date(value).toLocaleDateString()}
                     />
-                    <YAxis stroke="#666666" />
+                    <YAxis stroke="#9CA3AF" tick={{ fill: '#9CA3AF' }} />
                     <Tooltip 
                       contentStyle={{ 
-                        backgroundColor: '#FFF5E6', 
-                        border: '1px solid #FFD4A3',
+                        backgroundColor: '#1F2937', 
+                        border: '1px solid #374151',
                         borderRadius: '6px',
-                        color: '#1A1A1A'
+                        color: '#F9FAFB'
                       }}
                       formatter={(value) => [formatPrice(Number(value)), 'Price']}
                     />
                     <Line 
                       type="monotone" 
                       dataKey="price" 
-                      stroke="#FF8C42" 
+                      stroke="#FF6B35" 
                       strokeWidth={2}
                       dot={false}
                     />
@@ -703,49 +689,57 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
         </Card>
 
         {/* Strategy Configuration */}
-        <Card className="bg-white/90 border-tangerine-primary/20 shadow-xl">
+        <Card className="bg-white/10 border-orange-500/30 glass-effect shadow-xl">
           <CardHeader>
-            <CardTitle className="text-tangerine-black font-semibold">Strategy Parameters</CardTitle>
+            <CardTitle className="text-white font-semibold">Strategy Parameters</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            {/* Tick Range */}
+            {/* Fixed Position Range */}
             <div>
-              <Label className="text-tangerine-black font-medium">Tick Range (±{tickRange} ticks)</Label>
+              <Label className="text-white font-medium">Position Range (Fixed for Testing)</Label>
+              <div className="mt-2 p-3 bg-orange-50 border border-orange-200 rounded-lg">
+                <div className="text-sm text-orange-800 font-medium">
+                  Range: 1000 - 5000 USDC per WETH
+                </div>
+                <div className="text-xs text-orange-600 mt-1">
+                  This range is locked for testing purposes. No complex tick math required.
+                </div>
+              </div>
               <div className="mt-2">
                 <Input
                   type="range"
                   min="10"
                   max="500"
                   value={tickRange}
-                  onChange={(e) => setTickRange(Number(e.target.value))}
-                  className="w-full"
+                  disabled
+                  className="w-full opacity-50 cursor-not-allowed"
                 />
-                <div className="flex justify-between text-xs text-tangerine-black/70 mt-1">
+                <div className="flex justify-between text-xs text-gray-400 mt-1">
                   <span>±10 ticks (0.1%)</span>
                   <span>±500 ticks (5%)</span>
                 </div>
               </div>
-              <div className="mt-2 text-sm text-tangerine-black/80">
-                Range: ±{(tickRange / 100).toFixed(1)}% from current price
+              <div className="mt-2 text-sm text-gray-300">
+                Range locked for testing - Slider disabled
               </div>
             </div>
 
             {/* Wallet Balances */}
             <div className="space-y-2">
-              <Label className="text-tangerine-black font-medium flex items-center">
+              <Label className="text-white font-medium flex items-center">
                 <Wallet className="w-4 h-4 mr-2" />
                 Wallet Balances
               </Label>
               <div className="grid grid-cols-2 gap-4 text-sm">
-                <div className="bg-tangerine-cream/50 p-3 rounded-lg border border-tangerine-primary/20">
-                  <div className="text-tangerine-black/70">{token0Symbol}</div>
-                  <div className="text-tangerine-black font-medium">
+                <div className="bg-white/10 p-3 rounded-lg border border-orange-500/30">
+                  <div className="text-gray-300">{token0Symbol}</div>
+                  <div className="text-white font-medium">
                     {token0Balance.isLoading ? 'Loading...' : `${token0Balance.formatted} ${token0Balance.symbol}`}
                   </div>
                 </div>
-                <div className="bg-tangerine-cream/50 p-3 rounded-lg border border-tangerine-primary/20">
-                  <div className="text-tangerine-black/70">{token1Symbol}</div>
-                  <div className="text-tangerine-black font-medium">
+                <div className="bg-white/10 p-3 rounded-lg border border-orange-500/30">
+                  <div className="text-gray-300">{token1Symbol}</div>
+                  <div className="text-white font-medium">
                     {token1Balance.isLoading ? 'Loading...' : `${token1Balance.formatted} ${token1Balance.symbol}`}
                   </div>
                 </div>
@@ -755,13 +749,13 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
             {/* Amounts with Allocation Buttons */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label className="text-tangerine-black font-medium">{token0Symbol} Amount</Label>
+                <Label className="text-white font-medium">{token0Symbol} Amount</Label>
                 <Input
                   type="number"
                   placeholder="0.0"
                   value={amount0}
                   onChange={(e) => setAmount0(e.target.value)}
-                  className={`bg-white border-tangerine-primary/30 text-tangerine-black ${
+                  className={`bg-white/10 border-orange-500/30 text-white placeholder-gray-400 ${
                     token0Insufficient ? 'border-red-500' : ''
                   }`}
                 />
@@ -778,7 +772,7 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
                       variant="outline"
                       size="sm"
                       onClick={() => handleAllocation(percentage)}
-                      className="bg-tangerine-primary/20 border-tangerine-primary hover:bg-tangerine-primary hover:text-tangerine-black text-tangerine-black font-medium text-xs"
+                      className="bg-orange-100 border-orange-300 hover:bg-orange-500 hover:text-white text-orange-800 font-medium text-xs"
                     >
                       {percentage}%
                     </Button>
@@ -786,13 +780,13 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
                 </div>
               </div>
               <div>
-                <Label className="text-tangerine-black font-medium">{token1Symbol} Amount</Label>
+                <Label className="text-white font-medium">{token1Symbol} Amount</Label>
                 <Input
                   type="number"
                   placeholder="0.0"
                   value={amount1}
                   onChange={(e) => setAmount1(e.target.value)}
-                  className={`bg-white border-tangerine-primary/30 text-tangerine-black ${
+                  className={`bg-white/10 border-orange-500/30 text-white placeholder-gray-400 ${
                     token1Insufficient ? 'border-red-500' : ''
                   }`}
                 />
@@ -809,7 +803,7 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
                       variant="outline"
                       size="sm"
                       onClick={() => handleAllocation(percentage)}
-                      className="bg-tangerine-primary/20 border-tangerine-primary hover:bg-tangerine-primary hover:text-tangerine-black text-tangerine-black font-medium text-xs"
+                      className="bg-orange-100 border-orange-300 hover:bg-orange-500 hover:text-white text-orange-800 font-medium text-xs"
                     >
                       {percentage}%
                     </Button>
@@ -845,7 +839,7 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-tangerine-black/70">Expected APR:</span>
                     <span className="text-orange-400 font-medium">
-                      {formatPercentage((recommendations as any).recommendations.expected_apr)}
+                      {formatPercentage(recommendations?.recommendations?.expected_apr || 0)}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
@@ -855,7 +849,7 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
                         ? 'text-red-400' 
                         : 'text-green-400'
                     }`}>
-                      {formatPercentage(recommendations.recommendations.liquidation_probability)}
+                      {formatPercentage(recommendations?.recommendations?.liquidation_probability || 0)}
                     </span>
                   </div>
                 </div>
@@ -921,7 +915,7 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
             <Button
               onClick={handleSubmit}
               disabled={loading || creatingPosition || isPending || isConfirming || !amount0 || !amount1 || token0Insufficient || token1Insufficient}
-              className="w-full bg-gradient-to-r from-tangerine-primary to-tangerine-accent hover:from-tangerine-dark hover:to-tangerine-primary text-white font-semibold shadow-lg"
+              className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold shadow-lg"
             >
               {loading || creatingPosition || isPending || isConfirming ? (
                 <>

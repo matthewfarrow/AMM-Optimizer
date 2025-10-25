@@ -1,93 +1,15 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import "@openzeppelin/contracts/utils/Address.sol";
 
-interface INonfungiblePositionManager {
-    struct MintParams {
-        address token0;
-        address token1;
-        uint24 fee;
-        int24 tickLower;
-        int24 tickUpper;
-        uint256 amount0Desired;
-        uint256 amount1Desired;
-        uint256 amount0Min;
-        uint256 amount1Min;
-        address recipient;
-        uint256 deadline;
-    }
+import "@openzeppelin/contracts/token/ERC721/IERC721Enumerable.sol";
+import "@uniswap/v3-core/contracts/interfaces/IUniswapV3Factory.sol";
+//import "@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol";
+//import "@uniswap/v3-core/contracts/libraries/TickMath.sol";
+import "@uniswap/v3-periphery/contracts/interfaces/INonfungiblePositionManager.sol";
+import "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
 
-    function mint(MintParams calldata params)
-        external
-        payable
-        returns (
-            uint256 tokenId,
-            uint128 liquidity,
-            uint256 amount0,
-            uint256 amount1
-        );
 
-    function decreaseLiquidity(
-        DecreaseLiquidityParams calldata params
-    ) external payable returns (uint256 amount0, uint256 amount1);
-
-    function increaseLiquidity(
-        IncreaseLiquidityParams calldata params
-    ) external payable returns (uint128 liquidity, uint256 amount0, uint256 amount1);
-
-    function collect(CollectParams calldata params) external payable returns (uint256 amount0, uint256 amount1);
-
-    function burn(uint256 tokenId) external payable;
-
-    function positions(uint256 tokenId)
-        external
-        view
-        returns (
-            uint96 nonce,
-            address operator,
-            address token0,
-            address token1,
-            uint24 fee,
-            int24 tickLower,
-            int24 tickUpper,
-            uint128 liquidity,
-            uint256 feeGrowthInside0LastX128,
-            uint256 feeGrowthInside1LastX128,
-            uint128 tokensOwed0,
-            uint128 tokensOwed1
-        );
-
-    function ownerOf(uint256 tokenId) external view returns (address owner);
-}
-
-struct DecreaseLiquidityParams {
-    uint256 tokenId;
-    uint128 liquidity;
-    uint256 amount0Min;
-    uint256 amount1Min;
-    uint256 deadline;
-}
-
-struct IncreaseLiquidityParams {
-    uint256 tokenId;
-    uint256 amount0Desired;
-    uint256 amount1Desired;
-    uint256 amount0Min;
-    uint256 amount1Min;
-    uint256 deadline;
-}
-
-struct CollectParams {
-    uint256 tokenId;
-    address recipient;
-    uint128 amount0Max;
-    uint128 amount1Max;
-}
 
 interface ISwapRouter {
     struct ExactInputSingleParams {
@@ -190,6 +112,177 @@ contract LiquidityManager is ReentrancyGuard, Ownable {
             emit UserWhitelisted(users[i], whitelisted);
         }
     }
+
+	function withdrawLiquidity(uint256 tokenId) external {
+		require(msg.sender == funder, "Unauthorized");
+
+		manager.safeTransferFrom(address(this), msg.sender, tokenId);
+
+		uint8 index = indexFromPositionId[tokenId];
+		Position storage position = positions[index];
+		if (index < nLiquidityPositions && position.tokenId == tokenId) {
+			numLiquidityPositionsByToken[position.base]--;
+			numLiquidityPositionsByToken[position.quote]--;
+			nLiquidityPositions--;
+			if (nLiquidityPositions > 0) {
+				positions[index] = positions[nLiquidityPositions];
+				indexFromPositionId[positions[index].tokenId] = index;
+			}
+		}
+	}
+
+	function closeLiquidity(uint256 tokenId) public override {
+		(,,,,,,, uint128 liquidity,,,,) = manager.positions(tokenId);
+		uint8 index = indexFromPositionId[tokenId];
+		Position storage position = positions[index];
+
+		if (liquidity > 0) {
+			// amount0Min and amount1Min are price slippage checks
+			// if the amount received after burning is not greater than these minimums, transaction will fail
+			INonfungiblePositionManager.DecreaseLiquidityParams memory params =
+				INonfungiblePositionManager.DecreaseLiquidityParams({
+					tokenId: tokenId,
+					liquidity: liquidity,
+					amount0Min: 0,
+					amount1Min: 0,
+					deadline: block.timestamp
+				});
+
+			manager.decreaseLiquidity(params);
+
+			emit LiquidityModified(tokenId, position.base, position.quote, -int128(liquidity));
+
+			// This is required for us to actually get the tokens out of the position
+			collectFees(tokenId);
+		}
+	}
+
+	// Destroys and liquidates the current liquidity position, if it exists.  Does not convert tokens.
+	function destroyPosition(uint256 tokenId) external override {
+		require(msg.sender == controller, "Unauthorized");
+
+		uint8 index = indexFromPositionId[tokenId];
+		Position storage position = positions[index];
+
+		address base = position.base;
+		address quote = position.quote;
+		uint256 baseBal = contractBalance(base);
+		uint256 quoteBal = contractBalance(quote);
+		closeLiquidity(tokenId);
+		collectFees(tokenId);
+		manager.burn(tokenId);
+
+		uint256 baseTaken = (contractBalance(base)) - baseBal;
+		uint256 quoteTaken = (contractBalance(quote))- quoteBal;
+
+		numLiquidityPositionsByToken[base]--;
+		numLiquidityPositionsByToken[quote]--;
+		nLiquidityPositions--;
+		if (nLiquidityPositions > 0) {
+			positions[index] = positions[nLiquidityPositions];
+			indexFromPositionId[positions[index].tokenId] = index;
+		}
+
+		// We need to call this because of the possible situation where we sent all
+		// of one token to the liquidity position, but received only the other token
+		// back.
+		if (baseTaken < 1000) onSendToken(base);
+		if (quoteTaken < 1000) onSendToken(quote);
+
+		emit PositionBurned(tokenId, base, quote, baseTaken, quoteTaken);
+	}
+
+	// Creates a new liquidity position with the given parameters, and returns the position ID.
+	// This function will automatically swap tokens to fill the position if needed, first between quote and base,
+	// then from available WETH, USDC, or ETH reserves.  If these are not available, the function will revert.
+	// Prices are specified in quote per 1e12 base, where base is the other token traded on the pool.
+	// toAdd is in quote units.
+	function createV3Position(IUniswapV3Pool pool, address base, address quote, uint80 lowPrice12, uint80 highPrice12, uint256 toAdd) external override returns (uint256 tokenId, uint8 idx) {
+		require(msg.sender == controller, "Unauthorized");
+		require(nLiquidityPositions < positions.length, "Out of memory");
+		require(base != quote, "Same token");
+
+		// Get info on the tokens
+		int8 decimalDiff = int8(IERC20(base).decimals()) - int8(IERC20(quote).decimals());
+
+		// Convert prices
+		// Note that these are in the pool's native ordering, not necessarily ours.
+		uint160 sqrtRatioAX96 = correctPriceDirection(base, quote, getSqrtPriceX96FromPrice(decimalDiff, lowPrice12));
+		uint160 sqrtRatioBX96 = correctPriceDirection(base, quote, getSqrtPriceX96FromPrice(decimalDiff, highPrice12));
+		(uint160 sqrtRatioX96,,,,,,) = pool.slot0();
+		if (sqrtRatioAX96 > sqrtRatioBX96)
+			(sqrtRatioAX96, sqrtRatioBX96) = (sqrtRatioBX96, sqrtRatioAX96);
+
+		// Get other random data about the pool
+		uint128 liquidity = getLiquidityForAmount0(sqrtRatioAX96, sqrtRatioBX96, toAdd);
+
+		uint256 feeGrowth;
+		(tokenId, feeGrowth) = _mintV3Raw(pool, base, quote, sqrtRatioX96, sqrtRatioAX96, sqrtRatioBX96, liquidity);
+
+		numLiquidityPositionsByToken[base]++;
+		numLiquidityPositionsByToken[quote]++;
+		positions[nLiquidityPositions] = Position(pool, feeGrowth, tokenId, base, quote);
+		indexFromPositionId[tokenId] = nLiquidityPositions;
+		idx = nLiquidityPositions;
+		nLiquidityPositions++;
+
+		// Not called because it won't do anything here
+		// onSendToken(base);
+		// onSendToken(quote);
+
+		emit PositionMinted(tokenId, base, quote, lowPrice12, highPrice12, toAdd);
+	}
+
+	function _mintV3Raw(IUniswapV3Pool pool, address base, address quote, uint160 sqrtRatioX96, uint160 sqrtRatioAX96, uint160 sqrtRatioBX96, uint128 liquidity) internal returns (uint256 tokenId, uint256 feeGrowth) {
+		// Much wow, such solidity!
+		// Boy do we love stack limitations!!!
+		uint72 tickVals = uint72(uint24(pool.tickSpacing()));
+		unchecked {
+			tickVals |= uint72(uint24((TickMath.getTickAtSqrtRatio(sqrtRatioAX96) / int24(uint24(tickVals))) * int24(uint24(tickVals)))) << 24;
+			tickVals |= uint72(uint24((TickMath.getTickAtSqrtRatio(sqrtRatioBX96) / int24(uint24(tickVals))) * int24(uint24(tickVals)))) << 48;
+		}
+
+		tokenId = _odeToSolidity(base, quote, sqrtRatioX96, liquidity, tickVals, pool.fee());
+
+		feeGrowth = address(base) < quote ? pool.feeGrowthGlobal0X128() : pool.feeGrowthGlobal1X128();
+	}
+
+	function _odeToSolidity(address base, address quote, uint160 sqrtRatioX96, uint128 liquidity, uint72 tickVals, uint24 fee) internal returns (uint256 tokenId) {
+
+		address token0 = base > quote ? quote : base;
+		address token1 = base > quote ? base : quote;
+
+		// Calculate amounts of each token
+		(uint256 amount0, uint256 amount1) = utils.getAmountsForLiquidity(
+			sqrtRatioX96,
+			TickMath.getSqrtRatioAtTick(int24(uint24(tickVals >> 24))),
+			TickMath.getSqrtRatioAtTick(int24(uint24(tickVals >> 48))),
+			liquidity
+		);
+
+		obtainTokens(token0, token1, amount0, amount1);
+
+		INonfungiblePositionManager.MintParams memory params =
+			INonfungiblePositionManager.MintParams({
+				token0: token0,
+				token1: token1,
+				fee: fee,
+				tickLower: int24(uint24(tickVals >> 24)),
+				tickUpper: int24(uint24(tickVals >> 48)),
+				amount0Desired: amount0,
+				amount1Desired: amount1,
+				amount0Min: 0,
+				amount1Min: 0,
+				recipient: address(this),
+				deadline: block.timestamp
+			});
+
+		(tokenId,,,) = manager.mint(params);
+	}
+
+	function onERC721Received(address, address, uint256, bytes calldata) external returns (bytes4) {
+		return this.onERC721Received.selector;
+	}
 
     /**
      * @dev Create a new liquidity position

@@ -2,17 +2,29 @@
 # Add pools you want to provide liquidity to
 
 pools:
-  # Base Mainnet Pools - MICRO TESTING MODE
+  # Base Mainnet Pools - USING CORRECT WETH-USDC POOLS
   - name: "WETH-USDC"
-    address: "0xd0b53D9277642d899DF5C87A3966A349A798F224"  # Uniswap V3 0.05% pool on Base Mainnet
+    address: "0xd0b53D9277642d899DF5C87A3966A349A798F224"  # WETH-USDC 0.05% pool on Base Mainnet - WORKING!
     token0: "WETH"
     token1: "USDC"
     token0_address: "0x4200000000000000000000000000000000000006"  # WETH on Base
     token1_address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"  # USDC on Base Mainnet
-    fee_tier: 500  # 0.05% - lower fees, good liquidity
+    fee_tier: 500  # 0.05% - this pool is working and has liquidity
     decimals0: 18
     decimals1: 6
     priority: 1  # Higher = allocate more capital
+    enabled: true
+    
+  - name: "WETH-USDC-0.3%"
+    address: "0x6c561B446416E1A00E8E93E221854d6eA4171372"  # WETH-USDC 0.3% pool on Base Mainnet
+    token0: "WETH"
+    token1: "USDC"
+    token0_address: "0x4200000000000000000000000000000000000006"  # WETH on Base
+    token1_address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"  # USDC on Base Mainnet
+    fee_tier: 3000  # 0.3% - alternative pool
+    decimals0: 18
+    decimals1: 6
+    priority: 2
     enabled: true
     
   - name: "WETH-USDbC"
