@@ -15,7 +15,7 @@ export default function LandingPage() {
   const { isConnected, address } = useAccount();
   const router = useRouter();
   
-  // Force Vercel deployment
+  // Force Vercel deployment - UI update
 
   // Redirect connected users to the app
   useEffect(() => {
