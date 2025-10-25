@@ -35,19 +35,6 @@ python start_all_services.py
 - **Backend API**: http://localhost:8000
 - **API Docs**: http://localhost:8000/docs
 
-## 🍊 Features
-
-### ✅ Implemented
-- [x] **Wedge Strategy Engine**: Each liquidity wedge operates as an isolated strategy
-- [x] **Smart Contract**: Multicall rebalancing with whitelist management
-- [x] **Pool Data Aggregation**: Real-time Uniswap V3 pool data
-- [x] **Volatility Analysis**: AI-powered risk calculations
-- [x] **Interactive Charts**: Real-time price visualization
-- [x] **Strategy Configuration**: Wedge-based position setup
-- [x] **Position Monitoring**: Automated rebalancing dashboard
-- [x] **Wallet Integration**: MetaMask, Rainbow, and more
-- [x] **Responsive Design**: Mobile and desktop optimized
-
 ## 🛠️ Development
 
 ### Smart Contract Development
