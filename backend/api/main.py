@@ -11,6 +11,9 @@ import os
 from dotenv import load_dotenv
 
 from routers import pools, analytics, whitelist, positions
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from database import init_db
 
 # Load environment variables
