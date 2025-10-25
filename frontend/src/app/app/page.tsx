@@ -25,6 +25,7 @@ function AppPageContent() {
   const [selectedPool, setSelectedPool] = useState<any>(null);
   const selectedPoolRef = useRef<any>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isNavigating, setIsNavigating] = useState(false);
   
   // Load selectedPool from localStorage on mount
   useEffect(() => {
@@ -108,23 +109,38 @@ function AppPageContent() {
   // Whitelist restrictions removed - proceed directly to app
 
   const handlePoolSelect = (pool: any) => {
+    // Set navigating state to show loading on current page
+    setIsNavigating(true);
+    
     // Set both the pool and active tab immediately
     setSelectedPool(pool);
     setActiveTab('strategy');
     
-    // Update URL to match the new state
-    router.push('/app?tab=strategy');
+    // Use setTimeout to delay URL update, allowing the new tab to render first
+    setTimeout(() => {
+      router.push('/app?tab=strategy');
+      setIsNavigating(false);
+    }, 100);
   };
 
   const handleStrategyComplete = () => {
+    setIsNavigating(true);
     setActiveTab('monitor');
-    router.push('/app?tab=monitor');
+    setTimeout(() => {
+      router.push('/app?tab=monitor');
+      setIsNavigating(false);
+    }, 100);
   };
 
   const handleBackToPools = () => {
+    setIsNavigating(true);
     setSelectedPool(null);
     setActiveTab('pools');
-    router.push('/app?tab=pools');
+    
+    setTimeout(() => {
+      router.push('/app?tab=pools');
+      setIsNavigating(false);
+    }, 100);
   };
 
   const renderTabContent = () => {
@@ -172,7 +188,19 @@ function AppPageContent() {
   };
 
   return (
-    <div className="min-h-screen bg-tangerine-black fruit-pattern">
+    <div className="min-h-screen bg-tangerine-black fruit-pattern relative">
+      {/* Navigation Loading Overlay */}
+      {isNavigating && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-orange-500/30">
+            <div className="flex items-center space-x-3">
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-orange-500"></div>
+              <span className="text-white">Loading...</span>
+            </div>
+          </div>
+        </div>
+      )}
+      
       {/* Header */}
       <header className="border-b border-tangerine-border sticky top-0 z-50 glass-effect">
         <div className="container mx-auto px-6 py-4">
@@ -201,8 +229,12 @@ function AppPageContent() {
                   variant={activeTab === 'strategy' ? 'default' : 'ghost'}
                   onClick={() => {
                     if (selectedPool) {
+                      setIsNavigating(true);
                       setActiveTab('strategy');
-                      router.push('/app?tab=strategy');
+                      setTimeout(() => {
+                        router.push('/app?tab=strategy');
+                        setIsNavigating(false);
+                      }, 100);
                     }
                   }}
                   disabled={!selectedPool}
@@ -216,8 +248,12 @@ function AppPageContent() {
                 <Button
                   variant={activeTab === 'monitor' ? 'default' : 'ghost'}
                   onClick={() => {
+                    setIsNavigating(true);
                     setActiveTab('monitor');
-                    router.push('/app?tab=monitor');
+                    setTimeout(() => {
+                      router.push('/app?tab=monitor');
+                      setIsNavigating(false);
+                    }, 100);
                   }}
                   className={activeTab === 'monitor' 
                     ? "bg-tangerine-primary text-white hover:bg-tangerine-dark" 
