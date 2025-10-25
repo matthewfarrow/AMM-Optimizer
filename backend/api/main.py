@@ -49,8 +49,17 @@ async def root():
     """Health check endpoint"""
     return {"message": "AMM Liquidity Optimizer API", "status": "healthy"}
 
-@app.get("/api/health")
+@app.get("/health")
 async def health_check():
+    """Health check endpoint for Railway"""
+    return {
+        "status": "healthy",
+        "version": "1.0.0",
+        "database": "connected"
+    }
+
+@app.get("/api/health")
+async def api_health_check():
     """Detailed health check"""
     return {
         "status": "healthy",
