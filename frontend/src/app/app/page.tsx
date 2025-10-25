@@ -39,7 +39,7 @@ function AppPageContent() {
     if (!selectedPool) {
       setActiveTab(urlTab);
     }
-  }, [urlTab, selectedPool]);
+  }, [urlTab]);
 
   // Redirect if not connected - TEMPORARILY DISABLED FOR TESTING
   if (false && !isConnected) {
@@ -83,6 +83,7 @@ function AppPageContent() {
 
   const handleBackToPools = () => {
     console.log('🔙 handleBackToPools called');
+    console.trace('Stack trace for handleBackToPools');
     setSelectedPool(null);
     setActiveTab('pools');
     router.push('/app?tab=pools');
@@ -95,11 +96,17 @@ function AppPageContent() {
       case 'strategy':
         console.log('🔍 Strategy tab - selectedPool:', selectedPool);
         if (!selectedPool || !selectedPool.address || !selectedPool.token0 || !selectedPool.token1) {
-          console.log('❌ Invalid pool, redirecting to pools');
-          // Redirect to pools if no valid pool is selected
-          setActiveTab('pools');
-          router.push('/app?tab=pools');
-          return <PoolSelector onPoolSelect={handlePoolSelect} />;
+          console.log('❌ Invalid pool, but NOT redirecting for debugging');
+          console.log('selectedPool details:', {
+            selectedPool,
+            hasAddress: !!selectedPool?.address,
+            hasToken0: !!selectedPool?.token0,
+            hasToken1: !!selectedPool?.token1
+          });
+          // TEMPORARILY DISABLED REDIRECT FOR DEBUGGING
+          // setActiveTab('pools');
+          // router.push('/app?tab=pools');
+          // return <PoolSelector onPoolSelect={handlePoolSelect} />;
         }
         return (
           <StrategyConfig 
