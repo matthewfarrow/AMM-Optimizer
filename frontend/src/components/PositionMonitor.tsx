@@ -104,7 +104,7 @@ export function PositionMonitor({ onBack }: PositionMonitorProps) {
         <Button 
           onClick={fetchPositions}
           variant="outline"
-          className="bg-white border-tangerine-primary/30 text-tangerine-black hover:bg-tangerine-primary/10 hover:border-tangerine-primary"
+          className="bg-orange-500/20 border-orange-500/30 text-orange-200 hover:bg-orange-500/30 hover:border-orange-400"
         >
           Refresh
         </Button>

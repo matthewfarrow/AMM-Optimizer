@@ -33,16 +33,9 @@ BASE_SEPOLIA_RPC_URL=https://sepolia.base.org
 4. Copy the HTTP URL
 5. Add to your `.env`:
    ```bash
-   BASE_RPC_URL=https://base-mainnet.g.alchemy.com/v2/YOUR_API_KEY
+   BASE_RPC_URL=https://base-mainnet.g.alchemy.com/v2/iIkAsMgibgkR4Rwsh_Tm0
    BASE_SEPOLIA_RPC_URL=https://base-sepolia.g.alchemy.com/v2/YOUR_API_KEY
    ```
-
-## 3. Testnet ETH
-
-### Base Sepolia Faucets:
-1. [Base Sepolia Faucet](https://faucet.circle.com/)
-2. [Alchemy Faucet](https://sepoliafaucet.com/)
-3. [QuickNode Faucet](https://faucet.quicknode.com/base/sepolia)
 
 ### Steps:
 1. Connect your wallet to Base Sepolia network

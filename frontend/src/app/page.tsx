@@ -17,12 +17,7 @@ export default function LandingPage() {
   
   // Force Vercel deployment - UI update
 
-  // Redirect connected users to the app
-  useEffect(() => {
-    if (isConnected) {
-      router.push('/app?tab=pools');
-    }
-  }, [isConnected, router]);
+  // Note: Removed automatic redirect to allow users to stay on home page
 
   return (
     <div className="min-h-screen bg-tangerine-black cyber-grid relative overflow-hidden">
