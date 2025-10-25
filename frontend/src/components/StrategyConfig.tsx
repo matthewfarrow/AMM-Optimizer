@@ -774,7 +774,7 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
                       variant="outline"
                       size="sm"
                       onClick={() => handleAllocation(percentage)}
-                      className="bg-orange-100 border-orange-300 hover:bg-orange-500 hover:text-white text-orange-800 font-medium text-xs"
+                      className="bg-orange-500/20 border-orange-400 hover:bg-orange-500 hover:text-white text-orange-200 font-medium text-xs"
                     >
                       {percentage}%
                     </Button>
@@ -805,7 +805,7 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
                       variant="outline"
                       size="sm"
                       onClick={() => handleAllocation(percentage)}
-                      className="bg-orange-100 border-orange-300 hover:bg-orange-500 hover:text-white text-orange-800 font-medium text-xs"
+                      className="bg-orange-500/20 border-orange-400 hover:bg-orange-500 hover:text-white text-orange-200 font-medium text-xs"
                     >
                       {percentage}%
                     </Button>
@@ -816,36 +816,36 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
 
             {/* Check Interval */}
             <div>
-              <Label className="text-tangerine-black/80">Check Interval (minutes)</Label>
+              <Label className="text-white font-medium">Check Interval (minutes)</Label>
               <Input
                 type="number"
                 min="1"
                 max="60"
                 value={checkInterval}
                 onChange={(e) => setCheckInterval(Number(e.target.value))}
-                className="bg-white border-tangerine-primary/30 text-tangerine-black"
+                className="bg-white/10 border-orange-500/30 text-white placeholder-gray-400"
               />
             </div>
 
             {/* Recommendations */}
             {recommendations && (
               <div className="space-y-2">
-                <Label className="text-tangerine-black/80">AI Recommendations</Label>
+                <Label className="text-white font-medium">AI Recommendations</Label>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-tangerine-black/70">Recommended Range:</span>
+                    <span className="text-sm text-gray-300">Recommended Range:</span>
                     <Badge variant="secondary">
                       ±{(recommendations as any).recommendations.tick_range} ticks
                     </Badge>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-tangerine-black/70">Expected APR:</span>
+                    <span className="text-sm text-gray-300">Expected APR:</span>
                     <span className="text-orange-400 font-medium">
                       {formatPercentage(recommendations?.recommendations?.expected_apr || 0)}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-tangerine-black/70">Liquidation Risk:</span>
+                    <span className="text-sm text-gray-300">Liquidation Risk:</span>
                     <span className={`font-medium ${
                       (recommendations as any).recommendations.liquidation_probability > 20 
                         ? 'text-red-400' 
@@ -861,7 +861,7 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
             {/* Real-time Risk Analysis */}
             {outOfRangeData && (
               <div className="space-y-2">
-                <Label className="text-tangerine-black/80">Risk Analysis</Label>
+                <Label className="text-white font-medium">Risk Analysis</Label>
                 <div className={`p-3 rounded-lg border ${
                   (outOfRangeData as any).risk_level === 'low' 
                     ? 'bg-green-900/20 border-green-800' 
@@ -887,12 +887,12 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
                       }`}>
                         Position has {(outOfRangeData as any).out_of_range_probability}% chance of going out of range
                       </div>
-                      <div className="text-xs text-tangerine-black/70">
+                      <div className="text-xs text-gray-300">
                         Volatility: {(outOfRangeData as any).volatility_percentage}% | 
                         Range: ${(outOfRangeData as any).price_bounds.lower} - ${(outOfRangeData as any).price_bounds.upper} | 
                         Check interval: {checkInterval} minutes
                       </div>
-                      <div className="text-xs text-tangerine-black/80">
+                      <div className="text-xs text-gray-300">
                         {(outOfRangeData as any).recommendation}
                       </div>
                     </div>
@@ -934,13 +934,13 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
             {/* Transaction Status */}
             {hash && (
               <div className="text-center">
-                <div className="text-sm text-tangerine-black/70">
+                <div className="text-sm text-gray-300">
                   Transaction Hash: 
                   <a 
                     href={`https://basescan.org/tx/${hash}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-tangerine-primary hover:text-tangerine-dark ml-1"
+                    className="text-orange-400 hover:text-orange-300 ml-1"
                   >
                     {hash.slice(0, 10)}...{hash.slice(-8)}
                   </a>
