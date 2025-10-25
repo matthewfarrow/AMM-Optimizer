@@ -12,7 +12,11 @@ from datetime import datetime
 import sys
 from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent.parent))
-from database import get_db, UserPosition, create_user_position, get_user_positions, is_whitelisted
+from database import get_db, UserPosition
+
+# Import the lazy initialization dependency
+sys.path.append(str(Path(__file__).parent.parent))
+from main import ensure_db_initialized, create_user_position, get_user_positions, is_whitelisted
 
 router = APIRouter()
 
@@ -42,7 +46,8 @@ class PositionResponse(BaseModel):
 @router.post("/create")
 async def create_position(
     request: CreatePositionRequest,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    _: None = Depends(ensure_db_initialized)
 ):
     """Create a new position for a user"""
     
@@ -95,7 +100,8 @@ async def create_position(
 @router.get("/user/{user_address}")
 async def get_user_positions_endpoint(
     user_address: str,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    _: None = Depends(ensure_db_initialized)
 ):
     """Get all positions for a user"""
     

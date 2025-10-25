@@ -15,6 +15,10 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent.parent))
 from database import get_db, Pool, PriceData
 
+# Import the lazy initialization dependency
+sys.path.append(str(Path(__file__).parent.parent))
+from main import ensure_db_initialized
+
 router = APIRouter()
 
 # GeckoTerminal API for Base network pool data
@@ -209,7 +213,8 @@ async def get_pools(
     sort_by: str = "tvl",
     sort_order: str = "desc",
     limit: int = 50,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    _: None = Depends(ensure_db_initialized)
 ):
     """Get list of Uniswap V3 pools with sorting and filtering"""
     
@@ -263,7 +268,7 @@ async def get_pools(
     return result
 
 @router.get("/{pool_address}")
-async def get_pool_details(pool_address: str, db: Session = Depends(get_db)):
+async def get_pool_details(pool_address: str, db: Session = Depends(get_db), _: None = Depends(ensure_db_initialized)):
     """Get detailed information about a specific pool"""
     
     # For now, return basic pool info
@@ -281,7 +286,7 @@ async def get_pool_details(pool_address: str, db: Session = Depends(get_db)):
     }
 
 @router.get("/{pool_address}/stats")
-async def get_pool_stats(pool_address: str, db: Session = Depends(get_db)):
+async def get_pool_stats(pool_address: str, db: Session = Depends(get_db), _: None = Depends(ensure_db_initialized)):
     """Get pool statistics and metrics"""
     
     # This would calculate real statistics

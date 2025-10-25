@@ -16,6 +16,9 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from database import init_db
 
+# Global flag to track database initialization
+_db_initialized = False
+
 # Load environment variables
 load_dotenv()
 
@@ -45,11 +48,16 @@ app.include_router(analytics.router, prefix="/api/analytics", tags=["analytics"]
 app.include_router(whitelist.router, prefix="/api/whitelist", tags=["whitelist"])
 app.include_router(positions.router, prefix="/api/positions", tags=["positions"])
 
-@app.on_event("startup")
-async def startup_event():
-    """Initialize database on startup"""
-    init_db()
-    print("🚀 AMM Optimizer API started")
+def ensure_db_initialized():
+    """Lazy initialize database on first request"""
+    global _db_initialized
+    if not _db_initialized:
+        try:
+            init_db()
+            _db_initialized = True
+        except Exception as e:
+            print(f"Database initialization failed: {e}")
+            raise HTTPException(status_code=503, detail="Database unavailable")
 
 @app.get("/")
 async def root():

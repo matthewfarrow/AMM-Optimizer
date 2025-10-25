@@ -9,13 +9,12 @@ from sqlalchemy.orm import sessionmaker
 import os
 from datetime import datetime
 
-# Database URL (SQLite for MVP, fallback to SQLite if PostgreSQL fails)
+# Database URL (SQLite for MVP, PostgreSQL for production)
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./app.db")
 
-# Force SQLite for now to avoid Railway PostgreSQL issues
-if "postgres" in DATABASE_URL.lower() or "railway" in DATABASE_URL.lower():
-    print("⚠️  PostgreSQL detected, falling back to SQLite for stability")
-    DATABASE_URL = "sqlite:///./app.db"
+# Handle PostgreSQL scheme compatibility (SQLAlchemy v2 requirement)
+if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
 print(f"🔧 Using database: {DATABASE_URL}")
 
@@ -94,22 +93,8 @@ def get_db():
 
 def init_db():
     """Initialize database tables"""
-    try:
-        Base.metadata.create_all(bind=engine)
-        print("✅ Database initialized successfully")
-    except Exception as e:
-        print(f"❌ Database initialization failed: {e}")
-        # Try to fallback to SQLite if PostgreSQL fails
-        if "postgres" in str(e).lower() or "railway" in str(e).lower():
-            print("🔄 Attempting fallback to SQLite...")
-            global DATABASE_URL, engine, SessionLocal
-            DATABASE_URL = "sqlite:///./app.db"
-            engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
-            SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-            Base.metadata.create_all(bind=engine)
-            print("✅ Database initialized with SQLite fallback")
-        else:
-            raise e
+    Base.metadata.create_all(bind=engine)
+    print("✅ Database initialized successfully")
 
 def add_whitelist_user(db, address: str, email: str = None, reason: str = None):
     """Add user to whitelist"""
