@@ -46,19 +46,20 @@
 :root {
   --radius: 0.625rem;
   
-  /* Tangerine Brand Colors - Cutting Edge Theme */
-  --tangerine-primary: #FF4500;      /* Vibrant orange-red */
-  --tangerine-dark: #CC3700;         /* Deep orange */
-  --tangerine-black: #000000;        /* Pure black */
-  --tangerine-cream: #FFFFFF;        /* Pure white */
-  --tangerine-green: #00FF41;        /* Matrix green */
-  --tangerine-accent: #FF6B00;       /* Electric orange */
-  --tangerine-purple: #8A2BE2;       /* Blue violet */
-  --tangerine-cyan: #00FFFF;         /* Pure cyan */
-  --tangerine-gray: #111111;         /* Near black */
-  --tangerine-light-gray: #333333;   /* Dark gray */
-  --tangerine-glow: #FF4500;         /* Glow effect */
-  --tangerine-shadow: rgba(255, 69, 0, 0.3); /* Shadow color */
+  /* Tangerine Brand Colors - Sophisticated Cyberpunk Theme */
+  --tangerine-primary: #FF6B35;      /* Sophisticated orange */
+  --tangerine-dark: #E55A2B;         /* Deep orange */
+  --tangerine-black: #0A0A0A;        /* Deep charcoal black */
+  --tangerine-cream: #F8FAFC;        /* Clean white */
+  --tangerine-green: #00FF88;        /* Electric green */
+  --tangerine-accent: #FF8C42;       /* Bright orange accent */
+  --tangerine-blue: #3B82F6;         /* Complementary blue */
+  --tangerine-cyan: #06B6D4;         /* Cyan accent */
+  --tangerine-gray: #1E293B;         /* Dark slate */
+  --tangerine-light-gray: #64748B;   /* Light slate */
+  --tangerine-glow: #FF6B35;         /* Glow effect */
+  --tangerine-shadow: rgba(255, 107, 53, 0.3); /* Shadow color */
+  --tangerine-blue-glow: rgba(59, 130, 246, 0.3); /* Blue glow */
   
   /* Light theme - Futuristic */
   --background: #F8FAFC;             /* Clean white */
@@ -95,38 +96,38 @@
 }
 
 .dark {
-  /* Dark theme - Cutting Edge Futuristic */
-  --background: #000000;             /* Pure black */
-  --foreground: #FFFFFF;             /* Pure white */
-  --card: #111111;                   /* Near black */
-  --card-foreground: #FFFFFF;
-  --popover: #111111;
-  --popover-foreground: #FFFFFF;
-  --primary: #FF4500;                /* Vibrant orange-red */
-  --primary-foreground: #000000;
-  --secondary: #222222;              /* Dark gray */
-  --secondary-foreground: #FFFFFF;
-  --muted: #333333;
-  --muted-foreground: #888888;
-  --accent: #FF6B00;                 /* Electric orange */
-  --accent-foreground: #FFFFFF;
-  --destructive: #FF0040;
-  --border: #333333;                 /* Dark border */
-  --input: #222222;
-  --ring: #FF4500;
-  --chart-1: #FF4500;                /* Vibrant orange-red */
-  --chart-2: #8A2BE2;                /* Blue violet */
-  --chart-3: #00FF41;                /* Matrix green */
-  --chart-4: #FF6B00;                /* Electric orange */
-  --chart-5: #00FFFF;                /* Pure cyan */
-  --sidebar: #111111;
-  --sidebar-foreground: #FFFFFF;
-  --sidebar-primary: #FF4500;
-  --sidebar-primary-foreground: #000000;
-  --sidebar-accent: #222222;
-  --sidebar-accent-foreground: #FFFFFF;
-  --sidebar-border: #333333;
-  --sidebar-ring: #FF4500;
+  /* Dark theme - Sophisticated Cyberpunk */
+  --background: #0A0A0A;             /* Deep charcoal black */
+  --foreground: #F8FAFC;             /* Clean white */
+  --card: #1E293B;                   /* Dark slate */
+  --card-foreground: #F8FAFC;
+  --popover: #1E293B;
+  --popover-foreground: #F8FAFC;
+  --primary: #FF6B35;                /* Sophisticated orange */
+  --primary-foreground: #0A0A0A;
+  --secondary: #334155;              /* Medium slate */
+  --secondary-foreground: #F8FAFC;
+  --muted: #475569;
+  --muted-foreground: #94A3B8;
+  --accent: #3B82F6;                 /* Complementary blue */
+  --accent-foreground: #F8FAFC;
+  --destructive: #EF4444;
+  --border: #475569;                 /* Slate border */
+  --input: #334155;
+  --ring: #FF6B35;
+  --chart-1: #FF6B35;                /* Sophisticated orange */
+  --chart-2: #3B82F6;                /* Complementary blue */
+  --chart-3: #00FF88;                /* Electric green */
+  --chart-4: #FF8C42;                /* Bright orange */
+  --chart-5: #06B6D4;                /* Cyan accent */
+  --sidebar: #1E293B;
+  --sidebar-foreground: #F8FAFC;
+  --sidebar-primary: #FF6B35;
+  --sidebar-primary-foreground: #0A0A0A;
+  --sidebar-accent: #334155;
+  --sidebar-accent-foreground: #F8FAFC;
+  --sidebar-border: #475569;
+  --sidebar-ring: #FF6B35;
 }
 
 @layer base {
@@ -164,7 +165,7 @@
   }
   
   .gradient-text {
-    background: linear-gradient(135deg, #FF4500, #FF6B00, #FF8C00);
+    background: linear-gradient(135deg, #FF6B35, #3B82F6, #FF8C42);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -172,55 +173,56 @@
   }
   
   .glass-effect {
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(10, 10, 10, 0.9);
     backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 69, 0, 0.3);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 107, 53, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   }
   
   .neon-border {
-    border: 1px solid #FF4500;
+    border: 1px solid #FF6B35;
     box-shadow: 
-      0 0 20px rgba(255, 69, 0, 0.5),
-      inset 0 0 20px rgba(255, 69, 0, 0.1),
-      0 0 40px rgba(255, 69, 0, 0.2);
+      0 0 20px rgba(255, 107, 53, 0.4),
+      inset 0 0 20px rgba(255, 107, 53, 0.1),
+      0 0 40px rgba(59, 130, 246, 0.2);
   }
   
   .cyber-grid {
     background-image: 
-      linear-gradient(rgba(255, 69, 0, 0.1) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 69, 0, 0.1) 1px, transparent 1px);
-    background-size: 20px 20px;
+      linear-gradient(rgba(255, 107, 53, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(59, 130, 246, 0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
   }
   
   .holographic {
     background: linear-gradient(45deg, 
-      #FF4500 0%, 
-      #FF6B00 25%, 
-      #FF8C00 50%, 
-      #FF6B00 75%, 
-      #FF4500 100%);
+      #FF6B35 0%, 
+      #3B82F6 25%, 
+      #FF8C42 50%, 
+      #3B82F6 75%, 
+      #FF6B35 100%);
     background-size: 400% 400%;
-    animation: holographic 3s ease-in-out infinite;
+    animation: holographic 4s ease-in-out infinite;
   }
   
   .matrix-text {
-    color: #00FF41;
-    text-shadow: 0 0 10px #00FF41, 0 0 20px #00FF41, 0 0 30px #00FF41;
+    color: #00FF88;
+    text-shadow: 0 0 10px #00FF88, 0 0 20px #00FF88, 0 0 30px #00FF88;
   }
   
   .cyber-button {
-    background: linear-gradient(135deg, #FF4500, #FF6B00);
-    border: 1px solid #FF4500;
+    background: linear-gradient(135deg, #FF6B35, #3B82F6);
+    border: 1px solid #FF6B35;
     box-shadow: 
-      0 0 20px rgba(255, 69, 0, 0.4),
+      0 0 20px rgba(255, 107, 53, 0.3),
       inset 0 1px 0 rgba(255, 255, 255, 0.2);
     transition: all 0.3s ease;
   }
   
   .cyber-button:hover {
     box-shadow: 
-      0 0 30px rgba(255, 69, 0, 0.6),
+      0 0 30px rgba(255, 107, 53, 0.5),
+      0 0 20px rgba(59, 130, 246, 0.3),
       inset 0 1px 0 rgba(255, 255, 255, 0.3);
     transform: translateY(-2px);
   }
@@ -239,9 +241,38 @@
     height: 100%;
     background: linear-gradient(90deg, 
       transparent, 
-      rgba(255, 69, 0, 0.3), 
+      rgba(255, 107, 53, 0.2), 
+      rgba(59, 130, 246, 0.2),
       transparent);
-    animation: dataStream 2s linear infinite;
+    animation: dataStream 3s linear infinite;
+  }
+  
+  .sophisticated-card {
+    background: linear-gradient(145deg, #1E293B, #334155);
+    border: 1px solid rgba(255, 107, 53, 0.1);
+    box-shadow: 
+      0 4px 20px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .sophisticated-card:hover {
+    border-color: rgba(255, 107, 53, 0.3);
+    box-shadow: 
+      0 8px 30px rgba(0, 0, 0, 0.4),
+      0 0 20px rgba(255, 107, 53, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    transform: translateY(-4px);
+  }
+  
+  .blue-accent {
+    color: #3B82F6;
+    text-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+  }
+  
+  .orange-accent {
+    color: #FF6B35;
+    text-shadow: 0 0 10px rgba(255, 107, 53, 0.3);
   }
 }
 
