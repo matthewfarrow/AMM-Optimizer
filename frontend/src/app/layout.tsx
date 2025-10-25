@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   title: 'Tangerine.trading - Modern Citrus Tech',
   description: 'Modern citrus-powered DeFi optimization for concentrated liquidity positions on Uniswap V3 for Base Network',
   icons: {
-    icon: '/favicon.svg',
+    icon: '/tangerine-logo.svg',
   },
 };
 

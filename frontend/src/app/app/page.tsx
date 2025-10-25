@@ -73,6 +73,12 @@ function AppPageContent() {
       case 'pools':
         return <PoolSelector onPoolSelect={handlePoolSelect} />;
       case 'strategy':
+        if (!selectedPool) {
+          // Redirect to pools if no pool is selected
+          setActiveTab('pools');
+          router.push('/app?tab=pools');
+          return <PoolSelector onPoolSelect={handlePoolSelect} />;
+        }
         return (
           <StrategyConfig 
             pool={selectedPool} 
