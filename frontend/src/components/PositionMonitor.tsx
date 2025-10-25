@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, TrendingUp, AlertCircle, CheckCircle, Pause, Play } from 'lucide-react';
+import { ArrowLeft, TrendingUp, AlertCircle, CheckCircle } from 'lucide-react';
 import { apiClient } from '@/lib/api';
 
 interface Position {
@@ -74,23 +74,6 @@ export function PositionMonitor({ onBack }: PositionMonitorProps) {
     }
   };
 
-  const handlePausePosition = async (positionId: number) => {
-    try {
-      await apiClient.pausePosition(positionId);
-      await fetchPositions();
-    } catch (error) {
-      console.error('Error pausing position:', error);
-    }
-  };
-
-  const handleResumePosition = async (positionId: number) => {
-    try {
-      await apiClient.resumePosition(positionId);
-      await fetchPositions();
-    } catch (error) {
-      console.error('Error resuming position:', error);
-    }
-  };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleString();
@@ -235,14 +218,6 @@ export function PositionMonitor({ onBack }: PositionMonitorProps) {
                             <p className="text-sm text-tangerine-black/70">
                               Amount: {position.amount0} WETH + {position.amount1} USDC
                             </p>
-                            <a 
-                              href={`https://app.uniswap.org/positions/v3/base/${position.token_id}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-sm text-tangerine-primary hover:text-tangerine-dark underline"
-                            >
-                              View on Uniswap ↗
-                            </a>
                           </div>
                         </div>
                         
@@ -263,35 +238,15 @@ export function PositionMonitor({ onBack }: PositionMonitorProps) {
                           </div>
                           
                           <div className="flex space-x-2">
-                            {position.active ? (
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => handlePausePosition(position.id)}
-                                className="bg-white border-tangerine-primary/30 text-tangerine-black hover:bg-tangerine-primary/10 hover:border-tangerine-primary"
-                              >
-                                <Pause className="w-4 h-4 mr-1" />
-                                Pause
-                              </Button>
-                            ) : (
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => handleResumePosition(position.id)}
-                                className="bg-white border-tangerine-primary/30 text-tangerine-black hover:bg-tangerine-primary/10 hover:border-tangerine-primary"
-                              >
-                                <Play className="w-4 h-4 mr-1" />
-                                Resume
-                              </Button>
-                            )}
-                            
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="bg-white border-red-500/30 text-red-600 hover:bg-red-50 hover:border-red-500"
+                            <a 
+                              href={`https://app.uniswap.org/positions/v3/base/${position.token_id}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-gradient-to-r from-tangerine-primary to-tangerine-accent hover:from-tangerine-dark hover:to-tangerine-primary rounded-lg transition-all duration-200 shadow-sm hover:shadow-md"
                             >
-                              Withdraw
-                            </Button>
+                              <TrendingUp className="w-4 h-4 mr-2" />
+                              Manage on Uniswap
+                            </a>
                           </div>
                         </div>
                       </div>
