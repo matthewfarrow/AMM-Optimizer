@@ -36,8 +36,8 @@ function AppPageContent() {
     }
   }, [urlTab, selectedPool]);
 
-  // Redirect if not connected
-  if (!isConnected) {
+  // Redirect if not connected - TEMPORARILY DISABLED FOR TESTING
+  if (false && !isConnected) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 flex items-center justify-center">
         <Card className="w-full max-w-md bg-white/10 border-orange-500/30 glass-effect">
