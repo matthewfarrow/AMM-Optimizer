@@ -23,6 +23,11 @@ function AppPageContent() {
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState<Tab>('pools');
   const [selectedPool, setSelectedPool] = useState<any>(null);
+  
+  // Debug selectedPool changes
+  useEffect(() => {
+    console.log('🔄 selectedPool changed:', selectedPool);
+  }, [selectedPool]);
   // Whitelist feature removed - all users can access the app
 
   // Get tab from URL params
@@ -77,6 +82,7 @@ function AppPageContent() {
   };
 
   const handleBackToPools = () => {
+    console.log('🔙 handleBackToPools called');
     setSelectedPool(null);
     setActiveTab('pools');
     router.push('/app?tab=pools');
