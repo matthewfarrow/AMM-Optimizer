@@ -211,9 +211,7 @@ def get_hardcoded_pools() -> List[PoolData]:
 async def get_pools(
     sort_by: str = "tvl",
     sort_order: str = "desc",
-    limit: int = 50,
-    db: Session = Depends(get_db),
-    _: None = Depends(ensure_db_initialized)
+    limit: int = 50
 ):
     """Get list of Uniswap V3 pools with sorting and filtering"""
     
@@ -267,7 +265,7 @@ async def get_pools(
     return result
 
 @router.get("/{pool_address}")
-async def get_pool_details(pool_address: str, db: Session = Depends(get_db), _: None = Depends(ensure_db_initialized)):
+async def get_pool_details(pool_address: str):
     """Get detailed information about a specific pool"""
     
     # For now, return basic pool info
@@ -285,7 +283,7 @@ async def get_pool_details(pool_address: str, db: Session = Depends(get_db), _: 
     }
 
 @router.get("/{pool_address}/stats")
-async def get_pool_stats(pool_address: str, db: Session = Depends(get_db), _: None = Depends(ensure_db_initialized)):
+async def get_pool_stats(pool_address: str):
     """Get pool statistics and metrics"""
     
     # This would calculate real statistics

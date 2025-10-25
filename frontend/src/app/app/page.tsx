@@ -58,6 +58,7 @@ function AppPageContent() {
   // Whitelist restrictions removed - proceed directly to app
 
   const handlePoolSelect = (pool: any) => {
+    console.log('🎯 Pool selected:', pool);
     setSelectedPool(pool);
     setActiveTab('strategy');
     router.push('/app?tab=strategy');
@@ -73,8 +74,10 @@ function AppPageContent() {
       case 'pools':
         return <PoolSelector onPoolSelect={handlePoolSelect} />;
       case 'strategy':
-        if (!selectedPool) {
-          // Redirect to pools if no pool is selected
+        console.log('🔍 Strategy tab - selectedPool:', selectedPool);
+        if (!selectedPool || !selectedPool.address || !selectedPool.token0 || !selectedPool.token1) {
+          console.log('❌ Invalid pool, redirecting to pools');
+          // Redirect to pools if no valid pool is selected
           setActiveTab('pools');
           router.push('/app?tab=pools');
           return <PoolSelector onPoolSelect={handlePoolSelect} />;
