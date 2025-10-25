@@ -25,9 +25,11 @@ interface Pool {
 
 interface PoolSelectorProps {
   onPoolSelect: (pool: Pool) => void;
+  onStartOver?: () => void;
+  hasSelectedPool?: boolean;
 }
 
-export function PoolSelector({ onPoolSelect }: PoolSelectorProps) {
+export function PoolSelector({ onPoolSelect, onStartOver, hasSelectedPool }: PoolSelectorProps) {
   const [pools, setPools] = useState<Pool[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -169,6 +171,17 @@ export function PoolSelector({ onPoolSelect }: PoolSelectorProps) {
         <p className="text-tangerine-text-secondary">
           Choose a Uniswap V3 pool to provide liquidity to
         </p>
+        {hasSelectedPool && onStartOver && (
+          <div className="mt-4">
+            <Button 
+              onClick={onStartOver}
+              variant="outline"
+              className="border-tangerine-border text-tangerine-text-secondary bg-tangerine-surface hover:bg-tangerine-gray hover:text-white"
+            >
+              Start Over
+            </Button>
+          </div>
+        )}
       </div>
 
       {/* Filters */}

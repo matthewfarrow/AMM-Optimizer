@@ -85,7 +85,7 @@ function AppPageContent() {
   // Redirect if not connected (only after loading is complete)
   // Skip wallet requirement if we have a saved pool (user was already using the app)
   // Also skip wallet requirement during navigation to prevent flashing
-  if (!isConnected && !selectedPool && !isNavigating) {
+  if (!isConnected && !selectedPool && !isNavigating && isLoading === false) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 flex items-center justify-center">
         <Card className="w-full max-w-md bg-white/10 border-orange-500/30 glass-effect">
@@ -139,16 +139,26 @@ function AppPageContent() {
     
     setTimeout(() => {
       router.push('/app?tab=pools');
-      // Clear selectedPool after navigation to prevent wallet check flash
-      setSelectedPool(null);
       setIsNavigating(false);
     }, 100);
+  };
+
+  const handleStartOver = () => {
+    setSelectedPool(null);
+    setActiveTab('pools');
+    router.push('/app?tab=pools');
   };
 
   const renderTabContent = () => {
     switch (activeTab) {
       case 'pools':
-        return <PoolSelector onPoolSelect={handlePoolSelect} />;
+        return (
+          <PoolSelector 
+            onPoolSelect={handlePoolSelect} 
+            onStartOver={handleStartOver}
+            hasSelectedPool={!!selectedPool}
+          />
+        );
       case 'strategy':
         // Use ref and localStorage as fallbacks if state is null
         let poolToUse = selectedPool || selectedPoolRef.current;
