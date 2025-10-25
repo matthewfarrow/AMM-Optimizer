@@ -12,11 +12,10 @@ from datetime import datetime
 import sys
 from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent.parent))
-from database import get_db, UserPosition
+from database import get_db, UserPosition, create_user_position, get_user_positions, is_whitelisted
 
 # Import the lazy initialization dependency
-sys.path.append(str(Path(__file__).parent.parent))
-from main import ensure_db_initialized, create_user_position, get_user_positions, is_whitelisted
+from dependencies import ensure_db_initialized
 
 router = APIRouter()
 

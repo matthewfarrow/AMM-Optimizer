@@ -16,8 +16,7 @@ sys.path.append(str(Path(__file__).parent.parent.parent))
 from database import get_db, Pool, PriceData
 
 # Import the lazy initialization dependency
-sys.path.append(str(Path(__file__).parent.parent))
-from main import ensure_db_initialized
+from dependencies import ensure_db_initialized
 
 router = APIRouter()
 
