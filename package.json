@@ -9,7 +9,20 @@
     "deploy": "./deploy.sh",
     "clean": "rm -rf node_modules frontend/node_modules backend/__pycache__ backend/api/__pycache__ backend/api/logs/*.log"
   },
-  "keywords": ["defi", "amm", "liquidity", "uniswap", "base", "optimizer"],
+  "keywords": [
+    "defi",
+    "amm",
+    "liquidity",
+    "uniswap",
+    "base",
+    "optimizer"
+  ],
   "author": "Tangerine.trading",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^6.1.0",
+    "@nomicfoundation/hardhat-verify": "^2.1.1",
+    "@openzeppelin/contracts": "^5.4.0",
+    "hardhat": "^3.0.9"
+  }
 }

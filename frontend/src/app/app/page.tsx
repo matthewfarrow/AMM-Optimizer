@@ -35,16 +35,16 @@ function AppPageContent() {
   // Redirect if not connected
   if (!isConnected) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-tangerine-cream via-orange-50 to-tangerine-cream flex items-center justify-center">
-        <Card className="w-full max-w-md bg-white/80 border-tangerine-primary/20">
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 flex items-center justify-center">
+        <Card className="w-full max-w-md bg-white/10 border-orange-500/30 glass-effect">
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl text-tangerine-black">Wallet Required</CardTitle>
-            <p className="text-tangerine-black/70">Please connect your wallet to access the app</p>
+            <CardTitle className="text-2xl text-white">Wallet Required</CardTitle>
+            <p className="text-gray-300">Please connect your wallet to access the app</p>
           </CardHeader>
           <CardContent className="text-center">
             <ConnectButton />
             <Link href="/" className="block mt-4">
-              <Button variant="outline" className="w-full border-tangerine-primary text-tangerine-black hover:bg-tangerine-primary/10">
+              <Button variant="outline" className="w-full border-orange-500 text-white hover:bg-orange-500/20 hover:text-orange-300">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back to Home
               </Button>

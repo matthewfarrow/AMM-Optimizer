@@ -1,124 +1,97 @@
-# Tangerine.trading Deployment Guide
+# 🚀 Tangerine.trading Deployment Guide
 
-## 🚀 Deploying to tangerine.trading
+## Overview
+This guide will help you deploy your AMM-Optimizer to your `tangerine.trading` domain.
 
-### Prerequisites
-- Domain: `tangerine.trading` (already configured with Namecheap)
-- Vercel account
-- GitHub repository
+## Prerequisites
+- ✅ Domain: `tangerine.trading` (registered with Namecheap)
+- ✅ GitHub repository: `https://github.com/matthewfarrow/AMM-Optimizer.git`
+- ✅ Working application locally
 
-### Step 1: Frontend Deployment (Vercel)
+## Deployment Options
 
-1. **Connect to Vercel:**
-   - Go to [vercel.com](https://vercel.com)
-   - Sign in with GitHub
-   - Click "New Project"
-   - Import your GitHub repository
+### Option 1: Vercel (Recommended)
+**Pros:** Free, easy setup, perfect for Next.js, automatic deployments
+**Cons:** Backend needs separate hosting
 
-2. **Configure Project:**
-   - **Framework Preset:** Next.js
-   - **Root Directory:** `frontend`
-   - **Build Command:** `npm run build`
-   - **Output Directory:** `.next`
-
-3. **Environment Variables:**
-   ```
-   NEXT_PUBLIC_API_BASE_URL=https://tangerine-api.vercel.app
-   NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID=your-project-id
-   NEXT_PUBLIC_CONTRACT_ADDRESS_BASE=0x0000000000000000000000000000000000000000
-   NEXT_PUBLIC_CONTRACT_ADDRESS_BASE_SEPOLIA=0x0000000000000000000000000000000000000000
+#### Steps:
+1. **Deploy Frontend to Vercel:**
+   ```bash
+   cd /Users/mattfarrow/GitRepos/AMM-Optimizer
+   vercel login
+   vercel --prod
    ```
 
-4. **Custom Domain:**
-   - In Vercel dashboard, go to Project Settings → Domains
-   - Add `tangerine.trading`
-   - Add `www.tangerine.trading`
-   - Update Namecheap DNS to point to Vercel
+2. **Connect Custom Domain:**
+   - Go to Vercel Dashboard
+   - Add `tangerine.trading` as custom domain
+   - Update Namecheap DNS settings
 
-### Step 2: Backend API Deployment (Vercel)
+3. **Deploy Backend Separately:**
+   - Use Railway, Render, or Heroku for Python backend
+   - Update frontend API URLs
 
-1. **Create Separate Project:**
-   - Create new Vercel project for backend
-   - Root Directory: `backend`
-   - Framework: Python
+### Option 2: Netlify
+**Pros:** Free, good for static sites, easy domain setup
+**Cons:** Backend needs separate hosting
 
-2. **Environment Variables:**
+### Option 3: Namecheap Hosting
+**Pros:** Everything in one place
+**Cons:** More complex setup, may need VPS
+
+## Recommended: Vercel + Railway Setup
+
+### Frontend (Vercel)
+1. Deploy to Vercel
+2. Connect `tangerine.trading` domain
+3. Set environment variables
+
+### Backend (Railway)
+1. Deploy Python backend to Railway
+2. Get backend URL
+3. Update frontend to use backend URL
+
+## Environment Variables Needed
+
+### Frontend (Vercel)
+```
+NEXT_PUBLIC_ALCHEMY_API_KEY=your_alchemy_key
+NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID=your_project_id
+NEXT_PUBLIC_ALCHEMY_RPC_URL=your_rpc_url
+NEXT_PUBLIC_BACKEND_URL=https://your-backend.railway.app
+```
+
+### Backend (Railway)
+```
+BASE_PRIVATE_KEY=your_private_key
+ALCHEMY_API_KEY=your_alchemy_key
+```
+
+## DNS Configuration (Namecheap)
+
+After deploying to Vercel, you'll need to update your DNS:
+
+1. **Go to Namecheap DNS settings**
+2. **Add these records:**
    ```
-   PYTHONPATH=/var/task
+   Type: A
+   Host: @
+   Value: 76.76.19.61 (Vercel IP)
+   
+   Type: CNAME
+   Host: www
+   Value: cname.vercel-dns.com
    ```
 
-3. **Custom Domain:**
-   - Add `api.tangerine.trading` or use Vercel subdomain
+## Testing Checklist
 
-### Step 3: DNS Configuration (Namecheap)
+- [ ] Frontend loads at `tangerine.trading`
+- [ ] Wallet connection works
+- [ ] Pool selection works
+- [ ] Position creation works
+- [ ] Monitor tab shows positions
+- [ ] All API calls work
 
-Update your DNS records in Namecheap:
+## Support
 
-```
-Type: A Record
-Host: @
-Value: 76.76.19.61 (Vercel IP)
-
-Type: CNAME Record  
-Host: www
-Value: cname.vercel-dns.com
-
-Type: CNAME Record
-Host: api
-Value: tangerine-api.vercel.app
-```
-
-### Step 4: Alternative - Railway/Render Backend
-
-If Vercel backend doesn't work well:
-
-1. **Railway Deployment:**
-   - Connect GitHub repository
-   - Select `backend` folder
-   - Set environment variables
-   - Get Railway URL for API
-
-2. **Render Deployment:**
-   - Create new Web Service
-   - Connect GitHub repository
-   - Root Directory: `backend`
-   - Build Command: `pip install -r requirements.txt`
-   - Start Command: `python api/main.py`
-
-### Step 5: Update Frontend API URL
-
-Once backend is deployed, update the frontend environment variable:
-```
-NEXT_PUBLIC_API_BASE_URL=https://your-backend-url.com
-```
-
-### Step 6: Test Deployment
-
-1. Visit `https://tangerine.trading`
-2. Test all functionality:
-   - Pool selection
-   - Strategy configuration  
-   - Position monitoring
-3. Verify mobile responsiveness
-4. Test wallet connection
-
-### Current Status
-
-✅ **Frontend:** Ready for deployment with futuristic design
-✅ **Backend:** Has mock data fallback for offline functionality
-✅ **Domain:** Configured with Namecheap
-⏳ **Deployment:** Ready for Vercel deployment
-
-### Features Available
-
-- 🎨 Futuristic Gemini-inspired design
-- 🔗 Wallet connection (RainbowKit)
-- 📊 Pool selection with real Base network data
-- ⚙️ Strategy configuration with analytics
-- 📈 Position monitoring
-- 📱 Mobile responsive design
-- 🌙 Dark theme with glass morphism effects
-
-The website is fully functional with mock data and will work even without the backend API running!
-
-
+If you need help with any step, I can guide you through it!

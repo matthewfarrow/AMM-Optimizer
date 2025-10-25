@@ -46,13 +46,13 @@
 :root {
   --radius: 0.625rem;
   
-  /* Futuristic Brand Colors - Gemini Inspired */
-  --tangerine-primary: #00D4FF;      /* Electric blue */
-  --tangerine-dark: #0099CC;         /* Deep blue */
+  /* Tangerine Brand Colors - Orange Theme */
+  --tangerine-primary: #FF6B35;      /* Primary orange */
+  --tangerine-dark: #E55A2B;         /* Dark orange */
   --tangerine-black: #0A0A0A;        /* Deep black */
   --tangerine-cream: #F8FAFC;        /* Clean white */
   --tangerine-green: #00FF88;        /* Electric green */
-  --tangerine-accent: #FF6B35;       /* Orange accent */
+  --tangerine-accent: #FF8C42;       /* Bright orange accent */
   --tangerine-purple: #8B5CF6;       /* Purple accent */
   --tangerine-cyan: #06B6D4;         /* Cyan accent */
   --tangerine-gray: #1E293B;         /* Dark gray */
@@ -65,31 +65,31 @@
   --card-foreground: #0A0A0A;
   --popover: #FFFFFF;
   --popover-foreground: #0A0A0A;
-  --primary: #00D4FF;                /* Electric blue */
+  --primary: #FF6B35;                /* Primary orange */
   --primary-foreground: #FFFFFF;
   --secondary: #F1F5F9;              /* Light gray */
   --secondary-foreground: #0A0A0A;
   --muted: #F1F5F9;
   --muted-foreground: #64748B;
-  --accent: #8B5CF6;                 /* Purple accent */
+  --accent: #FF8C42;                 /* Orange accent */
   --accent-foreground: #FFFFFF;
   --destructive: #EF4444;
   --border: #E2E8F0;                 /* Light border */
   --input: #F1F5F9;
-  --ring: #00D4FF;
-  --chart-1: #00D4FF;                /* Electric blue */
+  --ring: #FF6B35;
+  --chart-1: #FF6B35;                /* Primary orange */
   --chart-2: #8B5CF6;                /* Purple */
   --chart-3: #00FF88;                /* Electric green */
-  --chart-4: #FF6B35;                /* Orange */
+  --chart-4: #FF8C42;                /* Bright orange */
   --chart-5: #06B6D4;                /* Cyan */
   --sidebar: #FFFFFF;
   --sidebar-foreground: #0A0A0A;
-  --sidebar-primary: #00D4FF;
+  --sidebar-primary: #FF6B35;
   --sidebar-primary-foreground: #FFFFFF;
   --sidebar-accent: #F1F5F9;
   --sidebar-accent-foreground: #0A0A0A;
   --sidebar-border: #E2E8F0;
-  --sidebar-ring: #00D4FF;
+  --sidebar-ring: #FF6B35;
 }
 
 .dark {
@@ -100,31 +100,31 @@
   --card-foreground: #F8FAFC;
   --popover: #1E293B;
   --popover-foreground: #F8FAFC;
-  --primary: #00D4FF;                /* Electric blue */
+  --primary: #FF6B35;                /* Primary orange */
   --primary-foreground: #0A0A0A;
   --secondary: #334155;              /* Dark gray */
   --secondary-foreground: #F8FAFC;
   --muted: #334155;
   --muted-foreground: #94A3B8;
-  --accent: #8B5CF6;                 /* Purple accent */
+  --accent: #FF8C42;                 /* Orange accent */
   --accent-foreground: #F8FAFC;
   --destructive: #EF4444;
   --border: #475569;                 /* Dark border */
   --input: #334155;
-  --ring: #00D4FF;
-  --chart-1: #00D4FF;                /* Electric blue */
+  --ring: #FF6B35;
+  --chart-1: #FF6B35;                /* Primary orange */
   --chart-2: #8B5CF6;                /* Purple */
   --chart-3: #00FF88;                /* Electric green */
-  --chart-4: #FF6B35;                /* Orange */
+  --chart-4: #FF8C42;                /* Bright orange */
   --chart-5: #06B6D4;                /* Cyan */
   --sidebar: #1E293B;
   --sidebar-foreground: #F8FAFC;
-  --sidebar-primary: #00D4FF;
+  --sidebar-primary: #FF6B35;
   --sidebar-primary-foreground: #0A0A0A;
   --sidebar-accent: #334155;
   --sidebar-accent-foreground: #F8FAFC;
   --sidebar-border: #475569;
-  --sidebar-ring: #00D4FF;
+  --sidebar-ring: #FF6B35;
 }
 
 @layer base {
@@ -162,7 +162,7 @@
   }
   
   .gradient-text {
-    background: linear-gradient(135deg, #00D4FF, #8B5CF6, #00FF88);
+    background: linear-gradient(135deg, #FF6B35, #FF8C42, #FFB347);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -175,8 +175,8 @@
   }
   
   .neon-border {
-    border: 1px solid #00D4FF;
-    box-shadow: 0 0 10px rgba(0, 212, 255, 0.3), inset 0 0 10px rgba(0, 212, 255, 0.1);
+    border: 1px solid #FF6B35;
+    box-shadow: 0 0 10px rgba(255, 107, 53, 0.3), inset 0 0 10px rgba(255, 107, 53, 0.1);
   }
 }
 
@@ -216,10 +216,10 @@
 
 @keyframes glow {
   from {
-    box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+    box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
   }
   to {
-    box-shadow: 0 0 30px rgba(0, 212, 255, 0.6), 0 0 40px rgba(139, 92, 246, 0.3);
+    box-shadow: 0 0 30px rgba(255, 107, 53, 0.6), 0 0 40px rgba(255, 140, 66, 0.3);
   }
 }
 

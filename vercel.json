@@ -9,10 +9,7 @@
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "frontend/$1"
+      "dest": "/frontend/$1"
     }
-  ],
-  "env": {
-    "NEXT_PUBLIC_API_BASE_URL": "https://tangerine-api.vercel.app"
-  }
+  ]
 }

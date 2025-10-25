@@ -57,3 +57,5 @@ Thumbs.db
 # Secrets
 secrets/
 private_keys.txt
+node_modules
+.vercel

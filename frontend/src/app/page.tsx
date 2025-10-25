@@ -44,10 +44,6 @@ export default function LandingPage() {
       {/* Hero Section */}
       <main className="container mx-auto px-4 py-16">
         <div className="text-center mb-16">
-          <Badge className="mb-4 bg-tangerine-primary/20 text-tangerine-primary border-tangerine-primary/50 neon-border">
-            <Sparkles className="w-4 h-4 mr-1" />
-            The Future of DeFi Trading
-          </Badge>
           
           <h1 className="text-6xl font-bold text-white mb-6 animate-fade-in">
             Optimize Maximum

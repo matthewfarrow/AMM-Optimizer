@@ -92,9 +92,9 @@ class Config:
     @property
     def private_key(self) -> str:
         """Get private key from environment."""
-        key = os.getenv('BASE_PRIVATE_KEY')
+        key = os.getenv('BASE_PRIVATE_KEY') or os.getenv('PRIVATE_KEY')
         if not key:
-            raise ValueError("BASE_PRIVATE_KEY not set in environment")
+            raise ValueError("BASE_PRIVATE_KEY or PRIVATE_KEY not set in environment")
         return key
     
     @property
