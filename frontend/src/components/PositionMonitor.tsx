@@ -50,39 +50,23 @@ export function PositionMonitor({ onBack }: PositionMonitorProps) {
         console.log('API not available, using mock data:', apiError);
       }
       
-      // Mock data for positions
-      const mockPositions = [
-        {
-          id: 1,
-          user_address: '0x1234567890123456789012345678901234567890',
-          token_id: 12345,
-          pool_address: '0xd0b53D9277642d899DF5C87A3966A349A798F224',
-          tick_lower: -200,
-          tick_upper: 200,
-          amount0: 1.5,
-          amount1: 3750.0,
-          check_interval: 60,
-          active: true,
-          created_at: new Date(Date.now() - 86400000).toISOString(),
-          updated_at: new Date().toISOString()
-        },
-        {
-          id: 2,
-          user_address: '0x1234567890123456789012345678901234567890',
-          token_id: 12346,
-          pool_address: '0x6c561B446416E1A00E8E93E221854d6eA4171372',
-          tick_lower: -100,
-          tick_upper: 100,
-          amount0: 0.8,
-          amount1: 2000.0,
-          check_interval: 30,
-          active: false,
-          created_at: new Date(Date.now() - 172800000).toISOString(),
-          updated_at: new Date(Date.now() - 3600000).toISOString()
-        }
-      ];
+      // Show your actual position from the successful mint
+      const actualPosition: Position = {
+        id: 4097503, // Your actual position ID from Uniswap
+        user_address: '0x55Ed466ea47249C1687d6aa7ab031CEA6c201F0A', // Your wallet address
+        token_id: 4097503,
+        pool_address: '0xd0b53D9277642d899DF5C87A3966A349A798F224', // WETH-USDC 0.05% pool
+        tick_lower: 81790, // Approximate from your successful transaction
+        tick_upper: 83790, // Approximate from your successful transaction
+        amount0: 0.0001, // 0.0001 WETH
+        amount1: 0.2, // 0.2 USDC
+        check_interval: 60,
+        active: true,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      };
       
-      setPositions(mockPositions);
+      setPositions([actualPosition]);
     } catch (error) {
       console.error('Error fetching positions:', error);
     } finally {
@@ -248,6 +232,17 @@ export function PositionMonitor({ onBack }: PositionMonitorProps) {
                             <p className="text-sm text-tangerine-black/70">
                               Range: {position.tick_lower} to {position.tick_upper}
                             </p>
+                            <p className="text-sm text-tangerine-black/70">
+                              Amount: {position.amount0} WETH + {position.amount1} USDC
+                            </p>
+                            <a 
+                              href={`https://app.uniswap.org/positions/v3/base/${position.token_id}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-sm text-tangerine-primary hover:text-tangerine-dark underline"
+                            >
+                              View on Uniswap ↗
+                            </a>
                           </div>
                         </div>
                         

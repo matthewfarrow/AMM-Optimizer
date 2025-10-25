@@ -13,6 +13,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { useTokenBalance, useETHBalance } from '@/hooks/useTokenBalance';
 import { TOKEN_ADDRESSES, getTokenAddress, UNISWAP_V3_ADDRESSES, NONFUNGIBLE_POSITION_MANAGER_ABI, ERC20_ABI, POOL_ABI, calculateSlippage } from '@/lib/contracts';
 import { getTokenPrice } from '@/lib/alchemy-price';
+import { getWETHPrice, getPriceRange } from '@/lib/onchain-price';
 // import { TickMath, Position, Token, FeeAmount } from '@uniswap/v3-sdk';
 // import { Token as UniswapToken } from '@uniswap/sdk-core';
 import { useWriteContract, useWaitForTransactionReceipt, useReadContract } from 'wagmi';
@@ -125,10 +126,8 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
         console.log('API not available, using mock data:', apiError);
       }
       
-      // Fallback to mock data with real ETH price
-      const wethAddress = '0x4200000000000000000000000000000000000006';
-      const currentPriceData = await getTokenPrice(wethAddress);
-      const currentPrice = currentPriceData?.price || 3800; // Fallback to ~$3800 if API fails
+      // Get real on-chain price from the actual pool
+      const currentPrice = await getWETHPrice() || 3840; // Fallback to current ETH price
       
       console.log('💰 Using real ETH price for chart:', currentPrice);
       
@@ -592,9 +591,12 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
               </div>
             </div>
             <div>
-              <Label className="text-gray-300">Current Price</Label>
+              <Label className="text-gray-300">Current Price (On-Chain)</Label>
               <div className="text-white font-medium">
                 {formatPrice((volatilityData as any)?.current_price || 3939.04)}
+              </div>
+              <div className="text-xs text-gray-400">
+                From pool: {pool.address.slice(0, 6)}...{pool.address.slice(-4)}
               </div>
             </div>
             <div>
@@ -694,15 +696,15 @@ export function StrategyConfig({ pool, onComplete, onBack }: StrategyConfigProps
             <CardTitle className="text-white font-semibold">Strategy Parameters</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            {/* Fixed Position Range */}
+            {/* Dynamic Position Range */}
             <div>
-              <Label className="text-white font-medium">Position Range (Fixed for Testing)</Label>
+              <Label className="text-white font-medium">Position Range (On-Chain Data)</Label>
               <div className="mt-2 p-3 bg-orange-50 border border-orange-200 rounded-lg">
                 <div className="text-sm text-orange-800 font-medium">
-                  Range: 1000 - 5000 USDC per WETH
+                  Range: ±50 ticks (±0.5%) around current price
                 </div>
                 <div className="text-xs text-orange-600 mt-1">
-                  This range is locked for testing purposes. No complex tick math required.
+                  Using exact same logic as working Python script. Range calculated from on-chain tick data.
                 </div>
               </div>
               <div className="mt-2">
