@@ -166,30 +166,30 @@ export function PoolSelector({ onPoolSelect }: PoolSelectorProps) {
     <div className="space-y-6">
       <div className="text-center">
         <h1 className="text-3xl font-bold text-white mb-2 gradient-text">Select a Pool</h1>
-        <p className="text-gray-300">
+        <p className="text-tangerine-text-secondary">
           Choose a Uniswap V3 pool to provide liquidity to
         </p>
       </div>
 
       {/* Filters */}
-      <Card className="glass-effect border-tangerine-primary/30 shadow-lg neon-border">
+      <Card className="organic-shape shadow-lg">
         <CardContent className="p-6">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-tangerine-text-secondary w-4 h-4" />
                 <Input
                   placeholder="Search pools by token name..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 glass-effect border-tangerine-primary/30 text-white placeholder-gray-400 focus:border-tangerine-primary focus:ring-tangerine-primary/20"
+                  className="pl-10 bg-tangerine-surface border-tangerine-border text-white placeholder-tangerine-text-secondary focus:border-teal-primary focus:ring-teal-primary/20"
                 />
               </div>
             </div>
             
             <div className="flex gap-2">
               <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="w-40 glass-effect border-tangerine-primary/30 text-white focus:border-tangerine-primary focus:ring-tangerine-primary/20">
+                <SelectTrigger className="w-40 bg-tangerine-surface border-tangerine-border text-white focus:border-teal-primary focus:ring-teal-primary/20">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -204,7 +204,7 @@ export function PoolSelector({ onPoolSelect }: PoolSelectorProps) {
               <Button
                 variant="outline"
                 onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-                className="glass-effect border-tangerine-primary/30 text-white hover:bg-tangerine-primary/10 hover:border-tangerine-primary"
+                className="border-tangerine-border text-tangerine-text-secondary hover:bg-tangerine-surface hover:border-teal-primary"
               >
                 {sortOrder === 'asc' ? '↑' : '↓'}
               </Button>
@@ -214,7 +214,7 @@ export function PoolSelector({ onPoolSelect }: PoolSelectorProps) {
       </Card>
 
       {/* Pools Table */}
-      <Card className="glass-effect border-tangerine-primary/30 shadow-lg neon-border">
+      <Card className="organic-shape shadow-lg">
         <CardHeader>
           <CardTitle className="text-white flex items-center">
             <Activity className="w-5 h-5 mr-2 text-tangerine-primary" />
@@ -225,29 +225,29 @@ export function PoolSelector({ onPoolSelect }: PoolSelectorProps) {
           {loading ? (
             <div className="text-center py-8">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-tangerine-primary mx-auto mb-4"></div>
-              <p className="text-gray-300">Loading pools...</p>
+              <p className="text-tangerine-text-secondary">Loading pools...</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
-                  <TableRow className="border-tangerine-primary/20">
-                    <TableHead className="text-gray-300 font-semibold">Pool</TableHead>
-                    <TableHead className="text-gray-300 font-semibold">Fee Tier</TableHead>
-                    <TableHead className="text-gray-300 font-semibold">TVL</TableHead>
-                    <TableHead className="text-gray-300 font-semibold">APR</TableHead>
-                    <TableHead className="text-gray-300 font-semibold">1D Volume</TableHead>
-                    <TableHead className="text-gray-300 font-semibold">30D Volume</TableHead>
-                    <TableHead className="text-gray-300 font-semibold">Vol/TVL</TableHead>
-                    <TableHead className="text-gray-300 font-semibold">Action</TableHead>
+                  <TableRow className="border-tangerine-border">
+                    <TableHead className="text-tangerine-text-secondary font-semibold">Pool</TableHead>
+                    <TableHead className="text-tangerine-text-secondary font-semibold">Fee Tier</TableHead>
+                    <TableHead className="text-tangerine-text-secondary font-semibold">TVL</TableHead>
+                    <TableHead className="text-tangerine-text-secondary font-semibold">APR</TableHead>
+                    <TableHead className="text-tangerine-text-secondary font-semibold">1D Volume</TableHead>
+                    <TableHead className="text-tangerine-text-secondary font-semibold">30D Volume</TableHead>
+                    <TableHead className="text-tangerine-text-secondary font-semibold">Vol/TVL</TableHead>
+                    <TableHead className="text-tangerine-text-secondary font-semibold">Action</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {filteredPools.map((pool) => (
-                    <TableRow key={pool.address} className="border-tangerine-primary/10 hover:bg-tangerine-primary/5 transition-colors">
+                    <TableRow key={pool.address} className="border-tangerine-border hover:bg-tangerine-surface/50 transition-colors">
                       <TableCell className="text-white">
                         <div className="flex items-center space-x-2">
-                          <div className="w-8 h-8 bg-gradient-to-r from-tangerine-primary to-tangerine-purple rounded-full flex items-center justify-center shadow-sm animate-glow">
+                          <div className="w-8 h-8 tangerine-gradient rounded-full flex items-center justify-center shadow-sm citrus-glow">
                             <span className="text-white font-bold text-xs">
                               {pool.token0[0]}{pool.token1[0]}
                             </span>
@@ -258,7 +258,7 @@ export function PoolSelector({ onPoolSelect }: PoolSelectorProps) {
                               href={`https://basescan.org/address/${pool.address}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-xs text-tangerine-primary hover:text-tangerine-dark underline"
+                              className="text-xs text-teal-primary hover:text-teal-light underline"
                             >
                               {pool.address.slice(0, 6)}...{pool.address.slice(-4)}
                             </a>
@@ -266,13 +266,13 @@ export function PoolSelector({ onPoolSelect }: PoolSelectorProps) {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <Badge variant="secondary" className="glass-effect text-white border-tangerine-primary/30">
+                        <Badge variant="secondary" className="bg-tangerine-surface text-white border-tangerine-border">
                           {(pool.fee_tier / 10000).toFixed(2)}%
                         </Badge>
                       </TableCell>
                       <TableCell className="text-white">
                         <div className="flex items-center">
-                          <DollarSign className="w-4 h-4 mr-1 text-tangerine-green" />
+                          <DollarSign className="w-4 h-4 mr-1 text-success-green" />
                           {formatNumber(pool.tvl)}
                         </div>
                       </TableCell>
@@ -282,19 +282,19 @@ export function PoolSelector({ onPoolSelect }: PoolSelectorProps) {
                           {formatPercentage(pool.apr)}
                         </div>
                       </TableCell>
-                      <TableCell className="text-gray-300">
+                      <TableCell className="text-tangerine-text-secondary">
                         {formatNumber(pool.volume_1d)}
                       </TableCell>
-                      <TableCell className="text-gray-300">
+                      <TableCell className="text-tangerine-text-secondary">
                         {formatNumber(pool.volume_30d)}
                       </TableCell>
-                      <TableCell className="text-gray-300">
+                      <TableCell className="text-tangerine-text-secondary">
                         {pool.vol_tvl_ratio.toFixed(2)}
                       </TableCell>
                       <TableCell>
                         <Button
                           onClick={() => onPoolSelect(pool)}
-                          className="bg-gradient-to-r from-tangerine-primary to-tangerine-purple hover:from-tangerine-dark hover:to-tangerine-primary text-white font-semibold shadow-sm neon-border"
+                          className="tangerine-gradient hover:opacity-90 text-white font-semibold shadow-sm"
                         >
                           Select Pool
                         </Button>

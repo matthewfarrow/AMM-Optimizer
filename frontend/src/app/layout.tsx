@@ -7,8 +7,8 @@ import { Toaster } from 'sonner';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Tangerine.trading - Squeeze Maximum Yields',
-  description: 'The Citrus Swap Revolution - Optimize your concentrated liquidity positions on Uniswap V3 for Base Network',
+  title: 'Tangerine.trading - Modern Citrus Tech',
+  description: 'Modern citrus-powered DeFi optimization for concentrated liquidity positions on Uniswap V3 for Base Network',
   icons: {
     icon: '/favicon.svg',
   },

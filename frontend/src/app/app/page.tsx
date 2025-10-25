@@ -44,7 +44,7 @@ function AppPageContent() {
           <CardContent className="text-center">
             <ConnectButton />
             <Link href="/" className="block mt-4">
-              <Button variant="outline" className="w-full border-slate-600 text-slate-300 bg-slate-800 hover:bg-slate-700 hover:text-white">
+              <Button variant="outline" className="w-full border-tangerine-border text-tangerine-text-secondary bg-tangerine-surface hover:bg-tangerine-gray hover:text-white">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back to Home
               </Button>
@@ -98,17 +98,17 @@ function AppPageContent() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-900">
+    <div className="min-h-screen bg-tangerine-black fruit-pattern">
       {/* Header */}
-      <header className="border-b border-slate-800 sticky top-0 z-50 bg-slate-900/95 backdrop-blur">
+      <header className="border-b border-tangerine-border sticky top-0 z-50 glass-effect">
         <div className="container mx-auto px-6 py-4">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-4">
               <Link href="/" className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">A</span>
+                <div className="w-8 h-8 tangerine-gradient rounded-lg flex items-center justify-center citrus-glow">
+                  <span className="text-white font-bold text-sm">🍊</span>
                 </div>
-                <span className="text-xl font-semibold text-white">Arrakis Finance</span>
+                <span className="text-xl font-semibold text-white">Tangerine.trading</span>
               </Link>
               
               {/* Tab Navigation */}
@@ -120,8 +120,8 @@ function AppPageContent() {
                     router.push('/app?tab=pools');
                   }}
                   className={activeTab === 'pools' 
-                    ? "bg-blue-600 text-white hover:bg-blue-700" 
-                    : "text-slate-300 hover:text-white hover:bg-slate-800"
+                    ? "bg-tangerine-primary text-white hover:bg-tangerine-dark" 
+                    : "text-tangerine-text-secondary hover:text-white hover:bg-tangerine-surface"
                   }
                 >
                   Select Pool
@@ -134,8 +134,8 @@ function AppPageContent() {
                   }}
                   disabled={!selectedPool}
                   className={activeTab === 'strategy' 
-                    ? "bg-blue-600 text-white hover:bg-blue-700" 
-                    : "text-slate-300 hover:text-white hover:bg-slate-800"
+                    ? "bg-tangerine-primary text-white hover:bg-tangerine-dark" 
+                    : "text-tangerine-text-secondary hover:text-white hover:bg-tangerine-surface"
                   }
                 >
                   Configure Strategy
@@ -147,8 +147,8 @@ function AppPageContent() {
                     router.push('/app?tab=monitor');
                   }}
                   className={activeTab === 'monitor' 
-                    ? "bg-blue-600 text-white hover:bg-blue-700" 
-                    : "text-slate-300 hover:text-white hover:bg-slate-800"
+                    ? "bg-tangerine-primary text-white hover:bg-tangerine-dark" 
+                    : "text-tangerine-text-secondary hover:text-white hover:bg-tangerine-surface"
                   }
                 >
                   Deploy & Monitor
@@ -161,7 +161,7 @@ function AppPageContent() {
                   setActiveTab(value as Tab);
                   router.push(`/app?tab=${value}`);
                 }}>
-                  <SelectTrigger className="w-40 bg-slate-800 border-slate-700 text-white">
+                  <SelectTrigger className="w-40 bg-tangerine-surface border-tangerine-border text-white">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -174,7 +174,7 @@ function AppPageContent() {
             </div>
             
             <div className="flex items-center space-x-4">
-              <Badge variant="secondary" className="hidden sm:inline-flex bg-slate-800 text-slate-300 border-slate-700">
+              <Badge variant="secondary" className="hidden sm:inline-flex bg-tangerine-surface text-tangerine-text-secondary border-tangerine-border">
                 {address?.slice(0, 6)}...{address?.slice(-4)}
               </Badge>
               <ConnectButton />

@@ -104,7 +104,7 @@ export function PositionMonitor({ onBack }: PositionMonitorProps) {
         <Button 
           onClick={fetchPositions}
           variant="outline"
-          className="bg-orange-500/20 border-orange-500/30 text-orange-200 hover:bg-orange-500/30 hover:border-orange-400"
+          className="bg-tangerine-surface border-tangerine-border text-tangerine-text-secondary hover:bg-tangerine-gray hover:border-teal-primary"
         >
           Refresh
         </Button>
@@ -112,52 +112,52 @@ export function PositionMonitor({ onBack }: PositionMonitorProps) {
 
       {/* Positions Overview */}
       <div className="grid md:grid-cols-4 gap-4">
-        <Card className="bg-white/90 border-tangerine-primary/20 shadow-lg">
+        <Card className="organic-shape shadow-lg">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-tangerine-black/70 text-sm">Total Positions</p>
-                <p className="text-2xl font-bold text-tangerine-black">{positions.length}</p>
+                <p className="text-tangerine-text-secondary text-sm">Total Positions</p>
+                <p className="text-2xl font-bold text-white">{positions.length}</p>
               </div>
               <TrendingUp className="w-8 h-8 text-tangerine-primary" />
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-white/90 border-tangerine-primary/20 shadow-lg">
+        <Card className="organic-shape shadow-lg">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-tangerine-black/70 text-sm">Active</p>
-                <p className="text-2xl font-bold text-tangerine-green">
+                <p className="text-tangerine-text-secondary text-sm">Active</p>
+                <p className="text-2xl font-bold text-success-green">
                   {positions.filter(p => p.active).length}
                 </p>
               </div>
-              <CheckCircle className="w-8 h-8 text-tangerine-green" />
+              <CheckCircle className="w-8 h-8 text-success-green" />
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-white/90 border-tangerine-primary/20 shadow-lg">
+        <Card className="organic-shape shadow-lg">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-tangerine-black/70 text-sm">Paused</p>
-                <p className="text-2xl font-bold text-tangerine-accent">
+                <p className="text-tangerine-text-secondary text-sm">Paused</p>
+                <p className="text-2xl font-bold text-warning-amber">
                   {positions.filter(p => !p.active).length}
                 </p>
               </div>
-              <Pause className="w-8 h-8 text-tangerine-accent" />
+              <Pause className="w-8 h-8 text-warning-amber" />
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-white/90 border-tangerine-primary/20 shadow-lg">
+        <Card className="organic-shape shadow-lg">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-tangerine-black/70 text-sm">Total Value</p>
-                <p className="text-2xl font-bold text-tangerine-black">
+                <p className="text-tangerine-text-secondary text-sm">Total Value</p>
+                <p className="text-2xl font-bold text-white">
                   ${positions.reduce((sum, p) => sum + p.amount0 + p.amount1, 0).toFixed(0)}
                 </p>
               </div>
