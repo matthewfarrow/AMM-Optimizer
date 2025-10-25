@@ -46,17 +46,19 @@
 :root {
   --radius: 0.625rem;
   
-  /* Tangerine Brand Colors - Orange Theme */
-  --tangerine-primary: #FF6B35;      /* Primary orange */
-  --tangerine-dark: #E55A2B;         /* Dark orange */
-  --tangerine-black: #0A0A0A;        /* Deep black */
-  --tangerine-cream: #F8FAFC;        /* Clean white */
-  --tangerine-green: #00FF88;        /* Electric green */
-  --tangerine-accent: #FF8C42;       /* Bright orange accent */
-  --tangerine-purple: #8B5CF6;       /* Purple accent */
-  --tangerine-cyan: #06B6D4;         /* Cyan accent */
-  --tangerine-gray: #1E293B;         /* Dark gray */
-  --tangerine-light-gray: #64748B;   /* Light gray */
+  /* Tangerine Brand Colors - Cutting Edge Theme */
+  --tangerine-primary: #FF4500;      /* Vibrant orange-red */
+  --tangerine-dark: #CC3700;         /* Deep orange */
+  --tangerine-black: #000000;        /* Pure black */
+  --tangerine-cream: #FFFFFF;        /* Pure white */
+  --tangerine-green: #00FF41;        /* Matrix green */
+  --tangerine-accent: #FF6B00;       /* Electric orange */
+  --tangerine-purple: #8A2BE2;       /* Blue violet */
+  --tangerine-cyan: #00FFFF;         /* Pure cyan */
+  --tangerine-gray: #111111;         /* Near black */
+  --tangerine-light-gray: #333333;   /* Dark gray */
+  --tangerine-glow: #FF4500;         /* Glow effect */
+  --tangerine-shadow: rgba(255, 69, 0, 0.3); /* Shadow color */
   
   /* Light theme - Futuristic */
   --background: #F8FAFC;             /* Clean white */
@@ -93,38 +95,38 @@
 }
 
 .dark {
-  /* Dark theme - Futuristic */
-  --background: #0A0A0A;             /* Deep black */
-  --foreground: #F8FAFC;             /* Clean white */
-  --card: #1E293B;                   /* Dark gray */
-  --card-foreground: #F8FAFC;
-  --popover: #1E293B;
-  --popover-foreground: #F8FAFC;
-  --primary: #FF6B35;                /* Primary orange */
-  --primary-foreground: #0A0A0A;
-  --secondary: #334155;              /* Dark gray */
-  --secondary-foreground: #F8FAFC;
-  --muted: #334155;
-  --muted-foreground: #94A3B8;
-  --accent: #FF8C42;                 /* Orange accent */
-  --accent-foreground: #F8FAFC;
-  --destructive: #EF4444;
-  --border: #475569;                 /* Dark border */
-  --input: #334155;
-  --ring: #FF6B35;
-  --chart-1: #FF6B35;                /* Primary orange */
-  --chart-2: #8B5CF6;                /* Purple */
-  --chart-3: #00FF88;                /* Electric green */
-  --chart-4: #FF8C42;                /* Bright orange */
-  --chart-5: #06B6D4;                /* Cyan */
-  --sidebar: #1E293B;
-  --sidebar-foreground: #F8FAFC;
-  --sidebar-primary: #FF6B35;
-  --sidebar-primary-foreground: #0A0A0A;
-  --sidebar-accent: #334155;
-  --sidebar-accent-foreground: #F8FAFC;
-  --sidebar-border: #475569;
-  --sidebar-ring: #FF6B35;
+  /* Dark theme - Cutting Edge Futuristic */
+  --background: #000000;             /* Pure black */
+  --foreground: #FFFFFF;             /* Pure white */
+  --card: #111111;                   /* Near black */
+  --card-foreground: #FFFFFF;
+  --popover: #111111;
+  --popover-foreground: #FFFFFF;
+  --primary: #FF4500;                /* Vibrant orange-red */
+  --primary-foreground: #000000;
+  --secondary: #222222;              /* Dark gray */
+  --secondary-foreground: #FFFFFF;
+  --muted: #333333;
+  --muted-foreground: #888888;
+  --accent: #FF6B00;                 /* Electric orange */
+  --accent-foreground: #FFFFFF;
+  --destructive: #FF0040;
+  --border: #333333;                 /* Dark border */
+  --input: #222222;
+  --ring: #FF4500;
+  --chart-1: #FF4500;                /* Vibrant orange-red */
+  --chart-2: #8A2BE2;                /* Blue violet */
+  --chart-3: #00FF41;                /* Matrix green */
+  --chart-4: #FF6B00;                /* Electric orange */
+  --chart-5: #00FFFF;                /* Pure cyan */
+  --sidebar: #111111;
+  --sidebar-foreground: #FFFFFF;
+  --sidebar-primary: #FF4500;
+  --sidebar-primary-foreground: #000000;
+  --sidebar-accent: #222222;
+  --sidebar-accent-foreground: #FFFFFF;
+  --sidebar-border: #333333;
+  --sidebar-ring: #FF4500;
 }
 
 @layer base {
@@ -162,21 +164,84 @@
   }
   
   .gradient-text {
-    background: linear-gradient(135deg, #FF6B35, #FF8C42, #FFB347);
+    background: linear-gradient(135deg, #FF4500, #FF6B00, #FF8C00);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    font-weight: 700;
   }
   
   .glass-effect {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 69, 0, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   }
   
   .neon-border {
-    border: 1px solid #FF6B35;
-    box-shadow: 0 0 10px rgba(255, 107, 53, 0.3), inset 0 0 10px rgba(255, 107, 53, 0.1);
+    border: 1px solid #FF4500;
+    box-shadow: 
+      0 0 20px rgba(255, 69, 0, 0.5),
+      inset 0 0 20px rgba(255, 69, 0, 0.1),
+      0 0 40px rgba(255, 69, 0, 0.2);
+  }
+  
+  .cyber-grid {
+    background-image: 
+      linear-gradient(rgba(255, 69, 0, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 69, 0, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+  
+  .holographic {
+    background: linear-gradient(45deg, 
+      #FF4500 0%, 
+      #FF6B00 25%, 
+      #FF8C00 50%, 
+      #FF6B00 75%, 
+      #FF4500 100%);
+    background-size: 400% 400%;
+    animation: holographic 3s ease-in-out infinite;
+  }
+  
+  .matrix-text {
+    color: #00FF41;
+    text-shadow: 0 0 10px #00FF41, 0 0 20px #00FF41, 0 0 30px #00FF41;
+  }
+  
+  .cyber-button {
+    background: linear-gradient(135deg, #FF4500, #FF6B00);
+    border: 1px solid #FF4500;
+    box-shadow: 
+      0 0 20px rgba(255, 69, 0, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+  }
+  
+  .cyber-button:hover {
+    box-shadow: 
+      0 0 30px rgba(255, 69, 0, 0.6),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+  }
+  
+  .data-stream {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .data-stream::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+      transparent, 
+      rgba(255, 69, 0, 0.3), 
+      transparent);
+    animation: dataStream 2s linear infinite;
   }
 }
 
@@ -238,5 +303,49 @@
   }
   50% {
     transform: translateY(-20px);
+  }
+}
+
+@keyframes holographic {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes dataStream {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+@keyframes cyberPulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(255, 69, 0, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(255, 69, 0, 0.8), 0 0 60px rgba(255, 69, 0, 0.4);
+  }
+}
+
+@keyframes matrixRain {
+  0% {
+    transform: translateY(-100vh);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh);
+    opacity: 0;
   }
 }
