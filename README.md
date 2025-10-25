@@ -1,8 +1,8 @@
 # 🍊 Tangerine Trading
 
-> Slice your liquidity into optimized wedges. Each wedge, is an isolated liquidity providing stratagy build for having concentrated positions and automatic rebalancing on uniswapv3 for the base network.
+> Slice your liquidity into optimized wedges! Each wedge is an isolated liquidity providing stratagy build for having concentrated positions and automatic rebalancing on uniswapv3 for the base network.
 
-Tangerine Trading leverages advanced AI to optimize your concentrated liquidity positions on Uniswap V3 for Base Network. Experience the next generation of automated yield farming through intelligent wedge-based strategies.
+Tangerine Trading leverages advanced automatic LP manegment to optimize your concentrated positions on Uniswap V3, specifically designed for Base Network.
 
 ## 🚀 Quick Start (3 steps)
 
