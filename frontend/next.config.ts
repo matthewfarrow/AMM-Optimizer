@@ -10,7 +10,6 @@ const nextConfig: NextConfig = {
   },
   // Production optimizations
   output: 'standalone',
-  outputFileTracingRoot: '/Users/mattfarrow/GitRepos/AMM-Optimizer',
   // Environment variables for production
   env: {
     NEXT_PUBLIC_ALCHEMY_API_KEY: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY,
