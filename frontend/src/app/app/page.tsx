@@ -44,7 +44,7 @@ function AppPageContent() {
           <CardContent className="text-center">
             <ConnectButton />
             <Link href="/" className="block mt-4">
-              <Button variant="outline" className="w-full border-orange-500 text-orange-200 bg-orange-500/10 hover:bg-orange-500/30 hover:text-white">
+              <Button variant="outline" className="w-full border-slate-600 text-slate-300 bg-slate-800 hover:bg-slate-700 hover:text-white">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back to Home
               </Button>
@@ -98,25 +98,21 @@ function AppPageContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900">
+    <div className="min-h-screen bg-slate-900">
       {/* Header */}
-      <header className="border-b border-tangerine-primary/30 glass-effect sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
+      <header className="border-b border-slate-800 sticky top-0 z-50 bg-slate-900/95 backdrop-blur">
+        <div className="container mx-auto px-6 py-4">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-4">
               <Link href="/" className="flex items-center space-x-3">
-                <Image 
-                  src="/tangerine-logo.svg" 
-                  alt="Tangerine.trading" 
-                  width={32} 
-                  height={32}
-                  className="w-8 h-8 animate-glow"
-                />
-                <span className="text-xl font-bold text-white gradient-text">Tangerine.trading</span>
+                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold text-sm">A</span>
+                </div>
+                <span className="text-xl font-semibold text-white">Arrakis Finance</span>
               </Link>
               
               {/* Tab Navigation */}
-              <nav className="hidden md:flex space-x-1">
+              <nav className="hidden md:flex space-x-2">
                 <Button
                   variant={activeTab === 'pools' ? 'default' : 'ghost'}
                   onClick={() => {
@@ -124,8 +120,8 @@ function AppPageContent() {
                     router.push('/app?tab=pools');
                   }}
                   className={activeTab === 'pools' 
-                    ? "bg-tangerine-primary text-white hover:bg-tangerine-dark neon-border" 
-                    : "text-white hover:text-tangerine-primary hover:bg-tangerine-primary/10 glass-effect"
+                    ? "bg-blue-600 text-white hover:bg-blue-700" 
+                    : "text-slate-300 hover:text-white hover:bg-slate-800"
                   }
                 >
                   Select Pool
@@ -138,8 +134,8 @@ function AppPageContent() {
                   }}
                   disabled={!selectedPool}
                   className={activeTab === 'strategy' 
-                    ? "bg-tangerine-primary text-white hover:bg-tangerine-dark neon-border" 
-                    : "text-white hover:text-tangerine-primary hover:bg-tangerine-primary/10 glass-effect"
+                    ? "bg-blue-600 text-white hover:bg-blue-700" 
+                    : "text-slate-300 hover:text-white hover:bg-slate-800"
                   }
                 >
                   Configure Strategy
@@ -151,8 +147,8 @@ function AppPageContent() {
                     router.push('/app?tab=monitor');
                   }}
                   className={activeTab === 'monitor' 
-                    ? "bg-tangerine-primary text-white hover:bg-tangerine-dark neon-border" 
-                    : "text-white hover:text-tangerine-primary hover:bg-tangerine-primary/10 glass-effect"
+                    ? "bg-blue-600 text-white hover:bg-blue-700" 
+                    : "text-slate-300 hover:text-white hover:bg-slate-800"
                   }
                 >
                   Deploy & Monitor
@@ -165,7 +161,7 @@ function AppPageContent() {
                   setActiveTab(value as Tab);
                   router.push(`/app?tab=${value}`);
                 }}>
-                  <SelectTrigger className="w-40 glass-effect border-tangerine-primary/30 text-white">
+                  <SelectTrigger className="w-40 bg-slate-800 border-slate-700 text-white">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -178,7 +174,7 @@ function AppPageContent() {
             </div>
             
             <div className="flex items-center space-x-4">
-              <Badge variant="secondary" className="hidden sm:inline-flex glass-effect text-white border-tangerine-primary/30">
+              <Badge variant="secondary" className="hidden sm:inline-flex bg-slate-800 text-slate-300 border-slate-700">
                 {address?.slice(0, 6)}...{address?.slice(-4)}
               </Badge>
               <ConnectButton />
