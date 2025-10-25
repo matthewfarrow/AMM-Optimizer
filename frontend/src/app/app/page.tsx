@@ -29,8 +29,12 @@ function AppPageContent() {
   const urlTab = searchParams.get('tab') as Tab || 'pools';
 
   useEffect(() => {
-    setActiveTab(urlTab);
-  }, [urlTab]);
+    // Only update activeTab from URL if we don't have a selected pool
+    // This prevents the redirect loop when a pool is selected
+    if (!selectedPool) {
+      setActiveTab(urlTab);
+    }
+  }, [urlTab, selectedPool]);
 
   // Redirect if not connected
   if (!isConnected) {
@@ -59,14 +63,23 @@ function AppPageContent() {
 
   const handlePoolSelect = (pool: any) => {
     console.log('🎯 Pool selected:', pool);
+    // Set both the pool and active tab immediately
     setSelectedPool(pool);
     setActiveTab('strategy');
+    
+    // Update URL to match the new state
     router.push('/app?tab=strategy');
   };
 
   const handleStrategyComplete = () => {
     setActiveTab('monitor');
     router.push('/app?tab=monitor');
+  };
+
+  const handleBackToPools = () => {
+    setSelectedPool(null);
+    setActiveTab('pools');
+    router.push('/app?tab=pools');
   };
 
   const renderTabContent = () => {
@@ -86,19 +99,13 @@ function AppPageContent() {
           <StrategyConfig 
             pool={selectedPool} 
             onComplete={handleStrategyComplete}
-            onBack={() => {
-              setActiveTab('pools');
-              router.push('/app?tab=pools');
-            }}
+            onBack={handleBackToPools}
           />
         );
       case 'monitor':
         return (
           <PositionMonitor 
-            onBack={() => {
-              setActiveTab('pools');
-              router.push('/app?tab=pools');
-            }}
+            onBack={handleBackToPools}
           />
         );
       default:
@@ -124,10 +131,7 @@ function AppPageContent() {
               <nav className="hidden md:flex space-x-2">
                 <Button
                   variant={activeTab === 'pools' ? 'default' : 'ghost'}
-                  onClick={() => {
-                    setActiveTab('pools');
-                    router.push('/app?tab=pools');
-                  }}
+                  onClick={handleBackToPools}
                   className={activeTab === 'pools' 
                     ? "bg-tangerine-primary text-white hover:bg-tangerine-dark" 
                     : "text-tangerine-text-secondary hover:text-white hover:bg-tangerine-surface"
@@ -138,8 +142,10 @@ function AppPageContent() {
                 <Button
                   variant={activeTab === 'strategy' ? 'default' : 'ghost'}
                   onClick={() => {
-                    setActiveTab('strategy');
-                    router.push('/app?tab=strategy');
+                    if (selectedPool) {
+                      setActiveTab('strategy');
+                      router.push('/app?tab=strategy');
+                    }
                   }}
                   disabled={!selectedPool}
                   className={activeTab === 'strategy' 
