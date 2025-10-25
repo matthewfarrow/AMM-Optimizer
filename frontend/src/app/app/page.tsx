@@ -41,9 +41,8 @@ function AppPageContent() {
     }
   }, []);
   
-  // Debug selectedPool changes
+  // Persist selectedPool to localStorage and ref
   useEffect(() => {
-    console.log('🔄 selectedPool changed:', selectedPool);
     selectedPoolRef.current = selectedPool;
     
     // Save to localStorage
@@ -66,8 +65,8 @@ function AppPageContent() {
     }
   }, [urlTab]);
 
-  // Redirect if not connected - TEMPORARILY DISABLED FOR TESTING
-  if (false && !isConnected) {
+  // Redirect if not connected
+  if (!isConnected) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 flex items-center justify-center">
         <Card className="w-full max-w-md bg-white/10 border-orange-500/30 glass-effect">
@@ -92,7 +91,6 @@ function AppPageContent() {
   // Whitelist restrictions removed - proceed directly to app
 
   const handlePoolSelect = (pool: any) => {
-    console.log('🎯 Pool selected:', pool);
     // Set both the pool and active tab immediately
     setSelectedPool(pool);
     setActiveTab('strategy');
@@ -107,8 +105,6 @@ function AppPageContent() {
   };
 
   const handleBackToPools = () => {
-    console.log('🔙 handleBackToPools called');
-    console.trace('Stack trace for handleBackToPools');
     setSelectedPool(null);
     setActiveTab('pools');
     router.push('/app?tab=pools');
@@ -119,9 +115,6 @@ function AppPageContent() {
       case 'pools':
         return <PoolSelector onPoolSelect={handlePoolSelect} />;
       case 'strategy':
-        console.log('🔍 Strategy tab - selectedPool:', selectedPool);
-        console.log('🔍 Strategy tab - selectedPoolRef:', selectedPoolRef.current);
-        
         // Use ref and localStorage as fallbacks if state is null
         let poolToUse = selectedPool || selectedPoolRef.current;
         
@@ -131,7 +124,6 @@ function AppPageContent() {
             const savedPool = localStorage.getItem('selectedPool');
             if (savedPool) {
               poolToUse = JSON.parse(savedPool);
-              console.log('🔄 Using pool from localStorage fallback:', poolToUse);
             }
           } catch (e) {
             console.error('Failed to parse localStorage pool:', e);
@@ -139,19 +131,10 @@ function AppPageContent() {
         }
         
         if (!poolToUse || !poolToUse.address || !poolToUse.token0 || !poolToUse.token1) {
-          console.log('❌ Invalid pool, but NOT redirecting for debugging');
-          console.log('selectedPool details:', {
-            selectedPool,
-            selectedPoolRef: selectedPoolRef.current,
-            poolToUse,
-            hasAddress: !!poolToUse?.address,
-            hasToken0: !!poolToUse?.token0,
-            hasToken1: !!poolToUse?.token1
-          });
-          // TEMPORARILY DISABLED REDIRECT FOR DEBUGGING
-          // setActiveTab('pools');
-          // router.push('/app?tab=pools');
-          // return <PoolSelector onPoolSelect={handlePoolSelect} />;
+          // Redirect to pools if no valid pool is selected
+          setActiveTab('pools');
+          router.push('/app?tab=pools');
+          return <PoolSelector onPoolSelect={handlePoolSelect} />;
         }
         return (
           <StrategyConfig 
