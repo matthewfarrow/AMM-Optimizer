@@ -11,9 +11,9 @@
 
 ### Environment Variables to Set:
 ```
-BASE_PRIVATE_KEY=0c48906942de66ecba5b59a5a074d1b223d8b051438e0f05c1c3b21d39eff6b4
-ALCHEMY_API_KEY=iIkAsMgibgkR4Rwsh_Tm0
-BASE_RPC_URL=https://base-mainnet.g.alchemy.com/v2/iIkAsMgibgkR4Rwsh_Tm0
+BASE_PRIVATE_KEY=YOUR_PRIVATE_KEY_HERE
+ALCHEMY_API_KEY=YOUR_ALCHEMY_API_KEY_HERE
+BASE_RPC_URL=https://base-mainnet.g.alchemy.com/v2/YOUR_ALCHEMY_API_KEY_HERE
 ```
 
 ### After Deployment:
@@ -50,8 +50,8 @@ BASE_RPC_URL=https://base-mainnet.g.alchemy.com/v2/iIkAsMgibgkR4Rwsh_Tm0
    ```
 3. **Set environment variables:**
    ```bash
-   heroku config:set BASE_PRIVATE_KEY=0c48906942de66ecba5b59a5a074d1b223d8b051438e0f05c1c3b21d39eff6b4
-   heroku config:set ALCHEMY_API_KEY=iIkAsMgibgkR4Rwsh_Tm0
+   heroku config:set BASE_PRIVATE_KEY=YOUR_PRIVATE_KEY_HERE
+   heroku config:set ALCHEMY_API_KEY=YOUR_ALCHEMY_API_KEY_HERE
    ```
 4. **Deploy:**
    ```bash

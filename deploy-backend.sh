@@ -25,9 +25,9 @@ case $choice in
         echo "5. Railway will auto-detect Python and deploy"
         echo ""
         echo "🔧 Environment Variables to set in Railway:"
-        echo "BASE_PRIVATE_KEY=0c48906942de66ecba5b59a5a074d1b223d8b051438e0f05c1c3b21d39eff6b4"
-        echo "ALCHEMY_API_KEY=iIkAsMgibgkR4Rwsh_Tm0"
-        echo "BASE_RPC_URL=https://base-mainnet.g.alchemy.com/v2/iIkAsMgibgkR4Rwsh_Tm0"
+        echo "BASE_PRIVATE_KEY=YOUR_PRIVATE_KEY_HERE"
+        echo "ALCHEMY_API_KEY=YOUR_ALCHEMY_API_KEY_HERE"
+        echo "BASE_RPC_URL=https://base-mainnet.g.alchemy.com/v2/YOUR_ALCHEMY_API_KEY_HERE"
         echo ""
         echo "🌐 After deployment, get your Railway URL and run:"
         echo "vercel env add NEXT_PUBLIC_BACKEND_URL production"
@@ -57,8 +57,8 @@ case $choice in
         echo ""
         echo "🚀 Commands to run:"
         echo "heroku create tangerine-trading-backend"
-        echo "heroku config:set BASE_PRIVATE_KEY=0c48906942de66ecba5b59a5a074d1b223d8b051438e0f05c1c3b21d39eff6b4"
-        echo "heroku config:set ALCHEMY_API_KEY=iIkAsMgibgkR4Rwsh_Tm0"
+        echo "heroku config:set BASE_PRIVATE_KEY=YOUR_PRIVATE_KEY_HERE"
+        echo "heroku config:set ALCHEMY_API_KEY=YOUR_ALCHEMY_API_KEY_HERE"
         echo "git subtree push --prefix backend heroku main"
         ;;
     *)
