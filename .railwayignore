@@ -1,0 +1,16 @@
+# Ignore frontend files for Railway deployment
+frontend/
+node_modules/
+package.json
+package-lock.json
+hardhat.config.ts
+artifacts/
+cache/
+typechain-types/
+test/
+scripts/
+contracts/
+*.md
+.env
+.env.local
+.env.example
