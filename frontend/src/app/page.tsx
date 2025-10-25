@@ -14,6 +14,8 @@ import Image from 'next/image';
 export default function LandingPage() {
   const { isConnected, address } = useAccount();
   const router = useRouter();
+  
+  // Force Vercel deployment
 
   // Redirect connected users to the app
   useEffect(() => {
