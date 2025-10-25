@@ -75,12 +75,12 @@ async def api_health_check():
     }
 
 if __name__ == "__main__":
-    port = int(os.getenv("BACKEND_PORT", 8000))
+    port = int(os.getenv("PORT", os.getenv("BACKEND_PORT", 8000)))
     uvicorn.run(
         "api.main:app",
         host="0.0.0.0",
         port=port,
-        reload=True
+        reload=False  # Disable reload in production
     )
 
 
