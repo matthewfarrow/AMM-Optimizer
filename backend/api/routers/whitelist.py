@@ -5,7 +5,7 @@ Handles beta tester signup and whitelist status checking
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 from typing import List, Optional
 import re
 
