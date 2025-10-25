@@ -24,7 +24,7 @@ function AppPageContent() {
   const [activeTab, setActiveTab] = useState<Tab>('pools');
   const [selectedPool, setSelectedPool] = useState<any>(null);
   const selectedPoolRef = useRef<any>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
   
   // Load selectedPool from localStorage on mount
@@ -68,24 +68,12 @@ function AppPageContent() {
     }
   }, [urlTab]);
 
-  // Show loading while checking localStorage
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 flex items-center justify-center">
-        <Card className="w-full max-w-md bg-white/10 border-orange-500/30 glass-effect">
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl text-white">Loading...</CardTitle>
-            <p className="text-gray-300">Initializing application</p>
-          </CardHeader>
-        </Card>
-      </div>
-    );
-  }
+  // Loading screen removed - no longer needed
 
   // Redirect if not connected (only after loading is complete)
   // Skip wallet requirement if we have a saved pool (user was already using the app)
   // Also skip wallet requirement during navigation to prevent flashing
-  if (!isConnected && !selectedPool && !isNavigating && isLoading === false) {
+  if (!isConnected && !selectedPool && !isNavigating) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 flex items-center justify-center">
         <Card className="w-full max-w-md bg-white/10 border-orange-500/30 glass-effect">
