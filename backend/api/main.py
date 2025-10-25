@@ -59,11 +59,18 @@ async def root():
 @app.get("/health")
 async def health_check():
     """Health check endpoint for Railway"""
-    return {
-        "status": "healthy",
-        "version": "1.0.0",
-        "database": "connected"
-    }
+    try:
+        # Simple health check that doesn't depend on database
+        return {
+            "status": "healthy",
+            "version": "1.0.0",
+            "timestamp": "2024-01-01T00:00:00Z"
+        }
+    except Exception as e:
+        return {
+            "status": "unhealthy",
+            "error": str(e)
+        }
 
 @app.get("/api/health")
 async def api_health_check():
