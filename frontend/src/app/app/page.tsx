@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect, useRef, Suspense } from 'react';
 import { useAccount } from 'wagmi';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
@@ -23,10 +23,12 @@ function AppPageContent() {
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState<Tab>('pools');
   const [selectedPool, setSelectedPool] = useState<any>(null);
+  const selectedPoolRef = useRef<any>(null);
   
   // Debug selectedPool changes
   useEffect(() => {
     console.log('🔄 selectedPool changed:', selectedPool);
+    selectedPoolRef.current = selectedPool;
   }, [selectedPool]);
   // Whitelist feature removed - all users can access the app
 
@@ -95,13 +97,20 @@ function AppPageContent() {
         return <PoolSelector onPoolSelect={handlePoolSelect} />;
       case 'strategy':
         console.log('🔍 Strategy tab - selectedPool:', selectedPool);
-        if (!selectedPool || !selectedPool.address || !selectedPool.token0 || !selectedPool.token1) {
+        console.log('🔍 Strategy tab - selectedPoolRef:', selectedPoolRef.current);
+        
+        // Use ref as fallback if state is null but ref has value
+        const poolToUse = selectedPool || selectedPoolRef.current;
+        
+        if (!poolToUse || !poolToUse.address || !poolToUse.token0 || !poolToUse.token1) {
           console.log('❌ Invalid pool, but NOT redirecting for debugging');
           console.log('selectedPool details:', {
             selectedPool,
-            hasAddress: !!selectedPool?.address,
-            hasToken0: !!selectedPool?.token0,
-            hasToken1: !!selectedPool?.token1
+            selectedPoolRef: selectedPoolRef.current,
+            poolToUse,
+            hasAddress: !!poolToUse?.address,
+            hasToken0: !!poolToUse?.token0,
+            hasToken1: !!poolToUse?.token1
           });
           // TEMPORARILY DISABLED REDIRECT FOR DEBUGGING
           // setActiveTab('pools');
@@ -110,7 +119,7 @@ function AppPageContent() {
         }
         return (
           <StrategyConfig 
-            pool={selectedPool} 
+            pool={poolToUse} 
             onComplete={handleStrategyComplete}
             onBack={handleBackToPools}
           />
