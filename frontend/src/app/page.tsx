@@ -37,14 +37,13 @@ export default function LandingPage() {
       {/* Hero Section */}
       <main className="container mx-auto px-6 py-20">
         <div className="text-center mb-20">
-          <h1 className="text-6xl font-bold text-white mb-6 leading-tight">
-            Squeeze Maximum Yields
+          <h1 className="text-6xl font-bold text-tangerine-text-secondary mb-6 leading-tight">
+            <span className="tangerine-accent">Squeeze Maximum Yields</span>
             <br />
             <span className="gradient-text">from Your Liquidity</span>
           </h1>
           
           <p className="text-xl text-tangerine-text-secondary mb-12 max-w-3xl mx-auto leading-relaxed">
-            Modern citrus-powered DeFi optimization for concentrated liquidity positions. 
             Automated liquidity management for Uniswap V3 on Base Network with 
             <span className="tangerine-accent"> intelligent rebalancing</span> and 
             <span className="teal-accent"> real-time market analysis</span>.
@@ -79,9 +78,9 @@ export default function LandingPage() {
             <div className="w-12 h-12 tangerine-gradient rounded-lg flex items-center justify-center mb-6">
               <Zap className="w-6 h-6 text-white" />
             </div>
-            <h3 className="text-white text-xl font-semibold mb-4">AI-Powered Rebalancing</h3>
-            <p className="text-tangerine-text-secondary leading-relaxed">
-              Advanced ML algorithms automatically rebalance when price moves out of range, 
+            <h3 className="text-white text-xl font-semibold mb-4">Automated Position Management</h3>
+            <p className="text-white leading-relaxed">
+              Advanced stratagies can be configured to automatically rebalance your position when price moves out of range, 
               maximizing your fee earnings with <span className="tangerine-accent">intelligent optimization</span>.
             </p>
           </div>
@@ -91,7 +90,7 @@ export default function LandingPage() {
               <BarChart3 className="w-6 h-6 text-white" />
             </div>
             <h3 className="text-white text-xl font-semibold mb-4">Smart Liquidity Segmentation</h3>
-            <p className="text-tangerine-text-secondary leading-relaxed">
+            <p className="text-white leading-relaxed">
               Real-time volatility analysis and predictive modeling 
               to optimize your liquidity distribution across <span className="teal-accent">multiple ranges</span>.
             </p>
@@ -102,7 +101,7 @@ export default function LandingPage() {
               <Target className="w-6 h-6 text-white" />
             </div>
             <h3 className="text-white text-xl font-semibold mb-4">Risk-Optimized Strategies</h3>
-            <p className="text-tangerine-text-secondary leading-relaxed">
+            <p className="text-white leading-relaxed">
               Built-in risk controls and profitability algorithms ensure 
               your positions remain optimized and profitable in <span className="tangerine-accent">all market conditions</span>.
             </p>
@@ -119,19 +118,19 @@ export default function LandingPage() {
             <span className="text-error-red font-semibold">WARNING:</span> This application is in beta testing phase. 
             Please use only <span className="text-error-red font-semibold">test funds</span> that you are willing to lose. 
             The application is largely untested, unaudited, and is an MVP for a hackathon. 
-            <span className="text-error-red font-semibold">Use extreme caution.</span>
+            <span className="text-error-red font-semibold">Use extreme caution.</span> None / Not all features listed above are active or implemented yet, this website serves as a MVP.
           </p>
         </div>
 
         {/* How it Works */}
         <div className="text-center">
-          <h2 className="text-4xl font-bold text-white mb-16">How it Works</h2>
+          <h2 className="text-4xl font-bold text-white mb-16"><span className="tangerine-accent">How it Works</span></h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="space-y-6">
               <div className="w-16 h-16 tangerine-gradient rounded-lg flex items-center justify-center mx-auto citrus-glow">
                 <span className="text-white font-bold text-xl">1</span>
               </div>
-              <h3 className="text-xl font-semibold text-white">Connect Wallet</h3>
+              <h3 className="text-xl font-semibold text-white"><span className="tangerine-accent">Connect Wallet</span></h3>
               <p className="text-tangerine-text-secondary leading-relaxed">
                 Connect your wallet to access the most <span className="tangerine-accent">advanced liquidity pools</span> on Base Network.
               </p>
@@ -141,7 +140,7 @@ export default function LandingPage() {
               <div className="w-16 h-16 tangerine-gradient rounded-lg flex items-center justify-center mx-auto citrus-glow">
                 <span className="text-white font-bold text-xl">2</span>
               </div>
-              <h3 className="text-xl font-semibold text-white">Select Pool</h3>
+              <h3 className="text-xl font-semibold text-white"><span className="tangerine-accent">Select Pool</span></h3>
               <p className="text-tangerine-text-secondary leading-relaxed">
                 Choose from available Uniswap V3 pools with <span className="teal-accent">real-time TVL, APR, and volume data</span>.
               </p>
@@ -151,7 +150,7 @@ export default function LandingPage() {
               <div className="w-16 h-16 tangerine-gradient rounded-lg flex items-center justify-center mx-auto citrus-glow">
                 <span className="text-white font-bold text-xl">3</span>
               </div>
-              <h3 className="text-xl font-semibold text-white">Configure Strategy</h3>
+              <h3 className="text-xl font-semibold text-white"><span className="tangerine-accent">Configure Strategy</span></h3>
               <p className="text-tangerine-text-secondary leading-relaxed">
                 Set your parameters and let <span className="tangerine-accent">AI analyze volatility</span> to optimize your position ranges.
               </p>
@@ -161,7 +160,7 @@ export default function LandingPage() {
               <div className="w-16 h-16 tangerine-gradient rounded-lg flex items-center justify-center mx-auto citrus-glow">
                 <span className="text-white font-bold text-xl">4</span>
               </div>
-              <h3 className="text-xl font-semibold text-white">Deploy & Monitor</h3>
+              <h3 className="text-xl font-semibold text-white"><span className="tangerine-accent">Deploy & Monitor</span></h3>
               <p className="text-tangerine-text-secondary leading-relaxed">
                 Deploy your position and let our <span className="teal-accent">AI system automatically monitor and rebalance</span> as needed.
               </p>
@@ -179,7 +178,7 @@ export default function LandingPage() {
                 <div className="w-6 h-6 tangerine-gradient rounded flex items-center justify-center">
                   <span className="text-white font-bold text-xs">🍊</span>
                 </div>
-                <span className="text-lg font-semibold text-white">Tangerine.trading</span>
+                <span className="text-lg font-semibold text-white"><span className="tangerine-accent">Tangerine.trading</span></span>
               </div>
               <p className="text-tangerine-text-secondary text-sm">
                 Modern citrus-powered DeFi optimization. Automated liquidity management for Uniswap V3 on Base Network.
@@ -187,7 +186,7 @@ export default function LandingPage() {
             </div>
             
             <div>
-              <h4 className="font-semibold text-white mb-4">Features</h4>
+              <h4 className="font-semibold text-white mb-4"><span className="tangerine-accent">Features</span></h4>
               <ul className="space-y-2 text-sm text-tangerine-text-secondary">
                 <li>• AI-Powered Rebalancing</li>
                 <li>• Predictive Analytics</li>
@@ -197,7 +196,7 @@ export default function LandingPage() {
             </div>
             
             <div>
-              <h4 className="font-semibold text-white mb-4">Network</h4>
+              <h4 className="font-semibold text-white mb-4"><span className="tangerine-accent">Network</span></h4>
               <ul className="space-y-2 text-sm text-tangerine-text-secondary">
                 <li>• Built on Base Network</li>
                 <li>• Uniswap V3 Integration</li>
@@ -208,8 +207,8 @@ export default function LandingPage() {
           </div>
           
           <div className="border-t border-tangerine-border pt-8 text-center text-tangerine-text-secondary">
-            <p>&copy; 2024 Tangerine.trading - Modern Citrus Tech. Built for Base Hackathon.</p>
-            <p className="text-xs mt-2">⚠️ Beta Software - Use at your own risk</p>
+            <p>&copy; 2025 Tangerine.trading</p>
+            <p className="text-xs mt-2">⚠️ Beta version - Use at your own risk</p>
           </div>
         </div>
       </footer>
