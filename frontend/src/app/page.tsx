@@ -80,7 +80,7 @@ export default function LandingPage() {
             </div>
             <h3 className="text-white text-xl font-semibold mb-4">Automated Position Management</h3>
             <p className="text-white leading-relaxed">
-              Advanced stratagies can be configured to automatically rebalance your position when price moves out of range, 
+              Advanced strategies can be configured to automatically rebalance your position when price moves out of range, 
               maximizing your fee earnings with <span className="tangerine-accent">intelligent optimization</span>.
             </p>
           </div>
