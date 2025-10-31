@@ -1,5 +1,15 @@
 {
   "version": 2,
-  "rootDirectory": "frontend",
-  "buildCommand": "npm run build"
+  "builds": [
+    {
+      "src": "frontend/package.json",
+      "use": "@vercel/next"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/frontend/$1"
+    }
+  ]
 }
